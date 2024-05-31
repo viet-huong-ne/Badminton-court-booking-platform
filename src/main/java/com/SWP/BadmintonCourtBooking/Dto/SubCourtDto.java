@@ -1,2 +1,4 @@
-package com.SWP.BadmintonCourtBooking.Dto;public class SubCourtDto {
+package com.SWP.BadmintonCourtBooking.Dto;
+
+public class SubCourtDto {
 }
