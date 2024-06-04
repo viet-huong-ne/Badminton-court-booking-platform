@@ -26,7 +26,7 @@ public class User {
     @Column(name = "Phone")
     private String phone;
 
-    @Column(name = "Username", nullable = false)
+    @Column(name = "Username")
     private String username;
 
     @Column(name = "Password", nullable = false)
@@ -34,6 +34,15 @@ public class User {
 
     @Column(name = "Fullname", nullable = false, columnDefinition = "nvarchar(255)")
     private String fullName;
+
+    public User(String email, String phone, String username, String password, String fullName, Role role) {
+        this.email = email;
+        this.phone = phone;
+        this.username = username;
+        this.password = password;
+        this.fullName = fullName;
+        this.role = role;
+    }
 
     @ManyToOne
     @JoinColumn(name = "RoleID", nullable = false)

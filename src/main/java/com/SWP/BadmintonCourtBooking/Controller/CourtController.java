@@ -18,15 +18,17 @@ import java.util.List;
 @RestController
 @RequestMapping("/court")
 public class CourtController {
+
     @Autowired
     private CourtService courtService;
     @Autowired
     private PriceService priceService;
+
     @GetMapping("/getAllCourt")
     public List<Court> getAllCourt(){
         return courtService.getAllCourt();
     }
-    // API de tim kiem cac san theo quan
+//     API de tim kiem cac san theo quan
 //    @GetMapping("/{district}")
 //    public List<Court> getCourtByDistrict(@PathVariable String district){
 //        return courtService.getCourtByDistrict(district);
@@ -44,4 +46,3 @@ public class CourtController {
         return courtDtoList;
     }
 }
-//

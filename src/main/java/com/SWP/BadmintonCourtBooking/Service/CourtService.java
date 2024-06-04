@@ -8,4 +8,6 @@ import java.util.List;
 public interface CourtService {
     public List<Court> getAllCourt();
     public List<Court> getCourtByDistrict(String district);
+    public Court createCourt(Court court);
+    public Court updateCourt(Court court);
 }

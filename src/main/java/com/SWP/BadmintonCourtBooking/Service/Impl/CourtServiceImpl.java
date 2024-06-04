@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public class CourtServiceImpl implements CourtService {
     @Autowired
@@ -19,5 +21,22 @@ public class CourtServiceImpl implements CourtService {
     @Override
     public List<Court> getCourtByDistrict(String district) {
         return courtRepository.getCourtByDistrict(district);
+    }
+
+    @Override
+    public Court updateCourt(Court courtDetails) {
+        Court court = courtRepository.findById(courtDetails.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
+        court.setCourtName(courtDetails.getCourtName());
+        court.setCourtAddress(courtDetails.getCourtAddress());
+        court.setCourtQuantity(courtDetails.getCourtQuantity());
+        court.setDuration(courtDetails.getDuration());
+        court.setPrice(courtDetails.getPrice());
+
+        return null;
+    }
+
+    @Override
+    public Court createCourt(Court court) {
+        return null;
     }
 }

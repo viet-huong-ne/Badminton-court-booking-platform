@@ -38,7 +38,7 @@ public class Court {
 
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubCourt> subCourt;
-    @JsonIgnore
+    //@JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> price;
 
