@@ -4,6 +4,7 @@ import com.SWP.BadmintonCourtBooking.Dto.UserDto;
 import com.SWP.BadmintonCourtBooking.Entity.User;
 import com.SWP.BadmintonCourtBooking.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,12 +15,12 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/registration")
-    public String save(@RequestBody UserDto userDto) {
+    public ResponseEntity<String> save(@RequestBody UserDto userDto) {
         if (userService.checkEmailUser(userDto.getEmail())) {
-            return "This email address is already in use";
+            return ResponseEntity.ok("This email address is already in use");
         }
         userService.saveUser(userDto);
-        return "Add successfully";
+        return ResponseEntity.ok("Add successfully");
     }
 
 

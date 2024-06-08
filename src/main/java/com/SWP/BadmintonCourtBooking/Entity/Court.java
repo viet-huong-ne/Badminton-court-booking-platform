@@ -36,6 +36,9 @@ public class Court {
     @Column(name = "slot_duration")
     private Integer  duration;
 
+    @Column(name = "Images")
+    private String images;
+
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubCourt> subCourt;
     //@JsonIgnore

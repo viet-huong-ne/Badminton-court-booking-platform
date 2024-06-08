@@ -24,9 +24,9 @@ public class CourtDto {
 
     private Integer  duration;
 
-    private List<SubCourt> subCourt;
+    private List<SubCourtDto> subCourt;
 
     private List<Price> price;
 
-    private List<SlotOfCourt> slotOfCourt;
+    private List<SlotOfCourtDto> slotOfCourt;
 }

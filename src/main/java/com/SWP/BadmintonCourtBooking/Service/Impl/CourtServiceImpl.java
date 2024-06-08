@@ -24,6 +24,11 @@ public class CourtServiceImpl implements CourtService {
     }
 
     @Override
+    public Optional<Court> getCourtByID(int courtID) {
+        return courtRepository.findById(courtID);
+    }
+
+    @Override
     public Court updateCourt(Court courtDetails) {
         Court court = courtRepository.findById(courtDetails.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
         court.setCourtName(courtDetails.getCourtName());

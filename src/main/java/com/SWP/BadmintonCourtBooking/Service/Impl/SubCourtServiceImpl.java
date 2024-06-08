@@ -1,5 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Service.Impl;
 
+import com.SWP.BadmintonCourtBooking.Dto.SubCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import com.SWP.BadmintonCourtBooking.Repository.SubCourtRepository;
 import com.SWP.BadmintonCourtBooking.Service.SubCourtService;
@@ -12,8 +13,8 @@ public class SubCourtServiceImpl implements SubCourtService {
     @Autowired
     private SubCourtRepository subCourtRepository;
     @Override
-    public List<SubCourt> getSubCourtBySubCourtId(int subCourtId) {
-        return List.of();
+    public List<SubCourt> getSubCourtByCourtId(int courtID) {
+        return subCourtRepository.getSubCourtByCourtID(courtID);
     }
 
 }
