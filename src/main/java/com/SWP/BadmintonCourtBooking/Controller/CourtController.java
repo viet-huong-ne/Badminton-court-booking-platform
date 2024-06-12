@@ -68,7 +68,7 @@ public class CourtController {
 
             for (SubCourt s : subCourtList) {
 
-                subCourtDtoList.add(new SubCourtDto(s.getSubCourtName(), s.getSubCourtStatus()));
+                subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.getSubCourtStatus(), false));
             }
 
             courtDtoList.add(new CourtDto(
@@ -79,7 +79,7 @@ public class CourtController {
         }
         return courtDtoList;
     }
-
+    //TODO GET COURT BY ID TO BOOKING
     @GetMapping("/id/{courtID}")
     public CourtDto getCourtByID(@PathVariable Integer courtID) {
         Optional<Court> court = courtService.getCourtByID(courtID);
@@ -94,7 +94,7 @@ public class CourtController {
             }
 
             for (SubCourt s : subCourtList) {
-                subCourtDtoList.add(new SubCourtDto(s.getSubCourtName(), s.getSubCourtStatus()));
+                subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.getSubCourtStatus(), false));
             }
 
             return new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(), subCourtDtoList, price, slotOfCourtDtoList);

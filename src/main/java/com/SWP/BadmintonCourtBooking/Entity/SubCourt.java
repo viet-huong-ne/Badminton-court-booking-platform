@@ -28,6 +28,7 @@ public class SubCourt {
     @JsonIgnore
     @OneToMany(mappedBy = "subCourt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookingDetails> bookingDetails;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "courtID")
     private Court court;

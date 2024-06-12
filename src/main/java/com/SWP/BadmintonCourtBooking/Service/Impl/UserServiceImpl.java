@@ -21,7 +21,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User saveUser(UserDto userDto) {
         Role role = roleRepository.findByName("Customer");
-        User user = new User(userDto.getEmail(),null, null, userDto.getPassword(), userDto.getFullName(),role );
+        User user = new User(userDto.getEmail(),null, null, userDto.getPassword(), userDto.getFullName(),role);
         userRepository.save(user);
         return user;
     }

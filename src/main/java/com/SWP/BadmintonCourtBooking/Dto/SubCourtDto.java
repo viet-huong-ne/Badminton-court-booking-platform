@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Data
 public class SubCourtDto {
-    //private int subCourtId;
+    private int subCourtId;
     private String subCourtName;
     private String subCourtStatus;
+    private boolean status;
 }

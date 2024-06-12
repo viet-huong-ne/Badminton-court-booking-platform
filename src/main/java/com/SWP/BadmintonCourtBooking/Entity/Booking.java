@@ -17,9 +17,9 @@ public class Booking {
     @Column(name = "BookingID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer BookingID;
-
-    @Column(name = "CourtID")
-    private Integer CourtID;
+    @ManyToOne
+    @JoinColumn(name = "CourtID", nullable = false)
+    private Court court;
 
     @ManyToOne
     @JoinColumn(name = "UserID", nullable = false)

@@ -38,7 +38,7 @@ public class Court {
 
     @Column(name = "Images")
     private String images;
-
+    @JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubCourt> subCourt;
     //@JsonIgnore
@@ -52,4 +52,6 @@ public class Court {
 
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL)
     private List<SlotOfCourt> slotOfCourt;
+    @OneToMany(mappedBy = "court")
+    private List<Booking> booking;
 }
