@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 @NoArgsConstructor
@@ -15,8 +17,8 @@ public class ResponseCourtDto {
     private int courtID;
     //private int subcourtId;
     private List<SubCourt> subCourt;
-    private Date bookingDate;
-    private Time startTime;
-    private Time endTime;
+    private LocalDate bookingDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
     //private boolean status;
 }

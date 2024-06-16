@@ -6,17 +6,18 @@ import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class BookingDetailsDto {
-    private Booking booking;
-    private SubCourt subCourt;
-    private Integer Quantity;
-    private Integer UnitPrice;
-    private String ServiceID;
-    private Time StartTime;
-    private Time EndTime;
+    private int subCourtID;
+    //private double unitPrice;
+    private LocalTime StartTime;
+    private LocalTime EndTime;
 }

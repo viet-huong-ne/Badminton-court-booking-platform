@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.sql.Time;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Data
 @Entity
@@ -29,19 +30,19 @@ public class BookingDetails {
     private SubCourt subCourt;
 
     @Column(name = "Quantity")
-    private Integer Quantity;
+    private int Quantity;
 
     @Column(name = "UnitPrice")
-    private Integer UnitPrice;
+    private Double UnitPrice;
 
-    @Column(name = "ServiceID")
-    private String ServiceID;
+//    @Column(name = "ServiceID")
+//    private String ServiceID;
 
     @Column(name = "StartTime")
-    //private LocalDate StartTime;
-    private Time StartTime;
+    private LocalTime StartTime;
+    //private Time StartTime;
 
     @Column(name = "EndTime")
-    //private LocalDate EndTime;
-    private Time EndTime;
+    private LocalTime EndTime;
+    //private Time EndTime;
 }

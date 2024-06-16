@@ -6,14 +6,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Time;
+import java.time.LocalTime;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class SlotOfCourtDto {
 
-    private Time openTime;
+    private LocalTime openTime;
 
-    private Time closeTime;
+    private LocalTime closeTime;
 
     private String activeStatus;
 }

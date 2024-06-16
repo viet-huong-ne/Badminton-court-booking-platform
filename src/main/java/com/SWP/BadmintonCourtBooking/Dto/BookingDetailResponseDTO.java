@@ -4,12 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-public class SubCourtDto {
-    private int subCourtId;
+public class BookingDetailResponseDTO {
+    private Double price;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private int quantity;
     private String subCourtName;
-    private boolean subCourtStatus;
-    //private boolean status;
 }

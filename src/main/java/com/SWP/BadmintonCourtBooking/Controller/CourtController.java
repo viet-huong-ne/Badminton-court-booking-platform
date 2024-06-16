@@ -38,7 +38,7 @@ public class CourtController {
     private SlotOfCourtService slotOfCourtService;
     @Autowired
     private SubCourtService subCourtService;
-
+    //API DÙNG ĐỂ TÌM TẤT CẢ CÁC SÂN
     @GetMapping("/getAllCourt")
     public List<Court> getAllCourt() {
         return courtService.getAllCourt();
@@ -48,7 +48,7 @@ public class CourtController {
 //    public List<Court> getCourtByDistrict(@PathVariable String district){
 //        return courtService.getCourtByDistrict(district);
 //    }
-
+    //API DÙNG ĐỂ TÌM SÂN THEO QUẬN
     @GetMapping("/{district}")
     public List<CourtDto> getCourtByDistrict(@PathVariable String district) {
         List<Court> court = courtService.getCourtByDistrict(district);
@@ -68,7 +68,7 @@ public class CourtController {
 
             for (SubCourt s : subCourtList) {
 
-                subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.getSubCourtStatus(), false));
+                subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.isSubCourtStatus()));
             }
 
             courtDtoList.add(new CourtDto(
@@ -94,7 +94,7 @@ public class CourtController {
             }
 
             for (SubCourt s : subCourtList) {
-                subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.getSubCourtStatus(), false));
+                subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.isSubCourtStatus()));
             }
 
             return new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(), subCourtDtoList, price, slotOfCourtDtoList);

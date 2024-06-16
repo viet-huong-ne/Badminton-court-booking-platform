@@ -7,6 +7,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +20,7 @@ public interface BookingDetailsRepository extends JpaRepository<BookingDetails, 
     //    @Query("SELECT bd FROM BookingDetails bd WHERE :endTime < bd.StartTime OR bd.EndTime < :startTime")
 //    List<BookingDetails> findOverlappingBookings(@Param("startTime") Time startTime, @Param("endTime") Time endTime);
     @Query("SELECT bd FROM BookingDetails bd WHERE bd.booking.booking_date = :bookingDate AND bd.booking.court.courtID = :courtID AND ((:startTime >= bd.StartTime AND :startTime < bd.EndTime) OR (:endTime > bd.StartTime AND :endTime <= bd.EndTime))")
-    List<BookingDetails> findExistingTime(@Param("startTime") Time startTime, @Param("endTime") Time endTime, @Param("courtID") int courtID, @Param("bookingDate") Date bookingDate);
+    List<BookingDetails> findExistingTime(@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime, @Param("courtID") int courtID, @Param("bookingDate") LocalDate bookingDate);
 }
 //if (endTime.after(x.getStartTime()) || startTime.before(x.getEndTime()) || (startTime.equals(x.getStartTime())) ||
 // ((startTime.equals(x.getStartTime()) || startTime.after(x.getStartTime())) & (endTime.equals(x.getEndTime()) || endTime.before(x.getEndTime()))))

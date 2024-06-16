@@ -6,6 +6,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "Payment")
@@ -20,7 +21,7 @@ public class Payment {
     private BigDecimal paymentAmount;
 
     @Column(name = "PaymentTime")
-    private Date paymentTime;
+    private LocalDate paymentTime;
 
     @Column(name = "PaymentStatus")
     private String paymentStatus;

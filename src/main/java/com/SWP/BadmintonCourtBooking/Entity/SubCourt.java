@@ -24,7 +24,7 @@ public class SubCourt {
     private String SubCourtName;
 
     @Column(name = "SubCourtStatus")
-    private String SubCourtStatus;
+    private boolean SubCourtStatus;
     @JsonIgnore
     @OneToMany(mappedBy = "subCourt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookingDetails> bookingDetails;

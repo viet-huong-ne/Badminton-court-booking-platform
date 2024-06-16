@@ -1,5 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -47,7 +48,8 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "RoleID", nullable = false)
     private Role role;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Booking> booking;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Court> court;

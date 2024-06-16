@@ -53,5 +53,6 @@ public class Court {
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL)
     private List<SlotOfCourt> slotOfCourt;
     @OneToMany(mappedBy = "court")
+    @JsonIgnore
     private List<Booking> booking;
 }
