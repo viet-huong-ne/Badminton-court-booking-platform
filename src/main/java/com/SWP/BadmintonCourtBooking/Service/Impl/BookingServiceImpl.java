@@ -123,7 +123,7 @@ public class BookingServiceImpl implements BookingService {
     private BookingResponseDTO convertToResponseDTO(Booking booking) {
         BookingResponseDTO responseDTO = new BookingResponseDTO();
 
-        responseDTO.setCustomerName(booking.getUser().getFullName());
+        responseDTO.setCustomerName(booking.getUser().getLastName());
         responseDTO.setPhone(booking.getUser().getPhone());
         responseDTO.setCourtName(booking.getCourt().getCourtName());
         responseDTO.setAddress(booking.getCourt().getCourtAddress());

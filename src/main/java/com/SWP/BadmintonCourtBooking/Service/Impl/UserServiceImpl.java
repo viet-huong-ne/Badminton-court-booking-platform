@@ -18,13 +18,13 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     //@Autowired
     //private PasswordEncoder passwordEncoder;
-    @Override
-    public User saveUser(UserDto userDto) {
-        Role role = roleRepository.findByName("Customer");
-        User user = new User(userDto.getEmail(),null, null, userDto.getPassword(), userDto.getFullName(),role);
-        userRepository.save(user);
-        return user;
-    }
+//    @Override
+//    public User saveUser(UserDto userDto) {
+//        Role role = roleRepository.findByName("Customer");
+//        User user = new User(userDto.getEmail(),null, null, userDto.getPassword(), userDto.getFullName(),role);
+//        userRepository.save(user);
+//        return user;
+//    }
 
     @Override
     public boolean checkPassword(String email, String password) {

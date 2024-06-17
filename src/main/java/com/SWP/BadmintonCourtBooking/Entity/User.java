@@ -33,17 +33,12 @@ public class User {
     @Column(name = "Password", nullable = false)
     private String password;
 
-    @Column(name = "Fullname", nullable = false, columnDefinition = "nvarchar(255)")
-    private String fullName;
+    @Column(name = "FirstName")
+    private String firstName;
 
-    public User(String email, String phone, String username, String password, String fullName, Role role) {
-        this.email = email;
-        this.phone = phone;
-        this.username = username;
-        this.password = password;
-        this.fullName = fullName;
-        this.role = role;
-    }
+    @Column(name = "LastName")
+    private String lastName;
+
 
     @ManyToOne
     @JoinColumn(name = "RoleID", nullable = false)

@@ -14,14 +14,14 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/registration")
-    public ResponseEntity<String> save(@RequestBody UserDto userDto) {
-        if (userService.checkEmailUser(userDto.getEmail())) {
-            return ResponseEntity.ok("This email address is already in use");
-        }
-        userService.saveUser(userDto);
-        return ResponseEntity.ok("Add successfully");
-    }
+//    @PostMapping("/registration")
+//    public ResponseEntity<String> save(@RequestBody UserDto userDto) {
+//        if (userService.checkEmailUser(userDto.getEmail())) {
+//            return ResponseEntity.ok("This email address is already in use");
+//        }
+//        userService.saveUser(userDto);
+//        return ResponseEntity.ok("Add successfully");
+//    }
 
 
 }
