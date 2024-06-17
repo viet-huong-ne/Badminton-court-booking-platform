@@ -36,29 +36,20 @@ public class BookingServiceImpl implements BookingService {
     @Autowired
     private PriceRepository priceRepository;
     private ResponseCourtDto lastAvailabilityCheck;
+
+    private BookingResponseDTO responseBookingDTO;
+
     private static final Logger logger = LoggerFactory.getLogger(BookingServiceImpl.class);
     @Override
     public ResponseCourtDto checkCourtAvailability(ResponseBooking responseBooking) {
         List<SubCourt> subCourts = subCourtRepository.getSubCourtByCourtID(responseBooking.getCourtID());
-//        for (SubCourt x : subCourts) {
-//            x.setSubCourtStatus("true");
-//        }
         LocalTime startTime = responseBooking.getStartTime();
         LocalTime endTime = responseBooking.getEndTime();
         ResponseCourtDto responseCourtDto;
         List<BookingDetails> bookingDetails = new ArrayList<>();
         List<Booking> booking = bookingRepository.findByBookingDate(responseBooking.getBookingDate(), responseBooking.getCourtID());
-        //for (Booking x : booking) {
         bookingDetails = bookingDetailsRepository.findExistingTime(responseBooking.getStartTime(), responseBooking.getEndTime(), responseBooking.getCourtID(), responseBooking.getBookingDate());
 
-        //}
-
-//        for (BookingDetails x  : bookingDetails){
-//            if (endTime.after(x.getStartTime()) || startTime.before(x.getEndTime())  || ((startTime.equals(x.getStartTime()) || startTime.after(x.getStartTime())) & (endTime.equals(x.getEndTime()) || endTime.before(x.getEndTime())))){
-//
-//            }
-//
-//        }
         for (SubCourt x : subCourts) {
             for (BookingDetails y : bookingDetails) {
                 if (x.getSubCourtID() == y.getSubCourt().getSubCourtID()) x.setSubCourtStatus(false);
@@ -93,7 +84,7 @@ public class BookingServiceImpl implements BookingService {
 //            }
 //        }
 
-        //DayOfWeek date = bookingDto.getBookingDate().getDayOfWeek();
+//        DayOfWeek date = bookingDto.getBookingDate().getDayOfWeek();
 //        String status;
 //        if (isWeekend(bookingDto.getBookingDate())) {
 //             status = "CT";
@@ -109,7 +100,6 @@ public class BookingServiceImpl implements BookingService {
         booking.setCourt(court);
         booking.setBooking_type("theo ngay");
         booking.setBooking_date(bookingDto.getBookingDate());
-        //BookingDetails bookingDetails = new BookingDetails();
         List<BookingDetails> bookingDetails = bookingDto.getBookingDetails().stream()
                 .map(detailDTO -> {
                     BookingDetails detail = new BookingDetails();
@@ -152,9 +142,13 @@ public class BookingServiceImpl implements BookingService {
                 }).collect(Collectors.toList());
 
         responseDTO.setBookingDetails(detailResponseDTOs);
+        responseBookingDTO = responseDTO;
         return responseDTO;
     }
-
+    @Override
+    public BookingResponseDTO showBill() {
+        return responseBookingDTO;
+    }
     private static boolean isWeekend(LocalDate date) {
         DayOfWeek dayOfWeek = date.getDayOfWeek();
         return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;

@@ -32,6 +32,7 @@ public class BookingController {
     public ResponseCourtDto getCourtStatus() {
         return bookingService.getLastAvailabilityCheck();
     }
+    //API ĐẶT SÂN THEO NGÀY
     @PostMapping("/book")
     public ResponseEntity<BookingResponseDTO> createBooking(@RequestBody BookingDto bookingDto) {
         //log.info("BookingDto: {}", bookingDto);
@@ -39,4 +40,10 @@ public class BookingController {
 
         return new ResponseEntity<>(bookingResponse, HttpStatus.CREATED);
     }
+    //API TRẢ VỀ THÔNG TIN BILL ĐÃ ĐẶT
+    @GetMapping("/book/bill")
+    public ResponseEntity<BookingResponseDTO> bookBill() {
+        return new ResponseEntity<>(bookingService.showBill(), HttpStatus.OK);
+    }
+
 }

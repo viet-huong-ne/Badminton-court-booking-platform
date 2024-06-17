@@ -15,5 +15,5 @@ public interface BookingService {
     ResponseCourtDto checkCourtAvailability(ResponseBooking responseBooking);
     ResponseCourtDto getLastAvailabilityCheck();
     BookingResponseDTO saveBooking(BookingDto bookingDTO);
-
+    BookingResponseDTO showBill();
 }
