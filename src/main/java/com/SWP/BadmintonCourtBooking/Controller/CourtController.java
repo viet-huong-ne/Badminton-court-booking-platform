@@ -32,16 +32,16 @@ public class CourtController {
 //        return courtService.getCourtByDistrict(district);
 //    }
 
-    @GetMapping("/{district}")
-    public List<CourtDto> getCourtByDistrict(@PathVariable String district){
-        List<Court> court = courtService.getCourtByDistrict(district);
-        List<CourtDto> courtDtoList = new ArrayList<>();
-        for (Court i : court){
-        List<Price> price = priceService.getPriceOfCourt(i.getCourtID());
-        courtDtoList.add(new CourtDto(
-                i.getCourtID(),i.getCourtName(),i.getDistrict(),i.getCourtAddress(),i.getCourtQuantity(),i.getDuration(),null,price,null));
-        }
-        return courtDtoList;
-    }
+//    @GetMapping("/{district}")
+//    public List<CourtDto> getCourtByDistrict(@PathVariable String district){
+//        List<Court> court = courtService.getCourtByDistrict(district);
+//        List<CourtDto> courtDtoList = new ArrayList<>();
+//        for (Court i : court){
+//        List<Price> price = priceService.getPriceOfCourt(i.getCourtID());
+//        courtDtoList.add(new CourtDto(
+//             //   i.getCourtID(),i.getCourtName(),i.getDistrict(),i.getCourtAddress(),i.getCourtQuantity(),i.getDuration(),null,price,null));
+//        }
+//        return courtDtoList;
+//    }
 }
 //
