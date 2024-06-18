@@ -28,5 +28,5 @@ public class CourtDto {
 
     private List<Price> price;
 
-    private List<SlotOfCourtDto> slotOfCourt;
+   // private List<SlotOfCourtDto> slotOfCourt;
 }
