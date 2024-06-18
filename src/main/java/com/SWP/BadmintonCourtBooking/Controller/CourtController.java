@@ -69,7 +69,7 @@ public class CourtController {
             }
 
             courtDtoList.add(new CourtDto(
-                    i.getCourtID(), i.getCourtName(), i.getDistrict(), i.getCourtAddress(), i.getCourtQuantity(), i.getDuration(), subCourtDtoList, price));
+                    i.getCourtID(), i.getCourtName(), i.getDistrict(), i.getCourtAddress(), i.getCourtQuantity(), i.getDuration(), subCourtDtoList, price, i.getOpenTime(), i.getCloseTime()));
            // slotOfCourtDtoList = new ArrayList<>();
             subCourtDtoList = new ArrayList<>();
 
@@ -94,7 +94,7 @@ public class CourtController {
                 subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.isSubCourtStatus()));
             }
 
-            return new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(), subCourtDtoList, price);
+            return new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(), subCourtDtoList, price, court.get().getOpenTime(), court.get().getCloseTime());
         } else throw new IllegalArgumentException("Court not found for ID: " + courtID);
 
     }

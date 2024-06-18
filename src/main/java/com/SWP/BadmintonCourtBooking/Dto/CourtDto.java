@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
 import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +28,10 @@ public class CourtDto {
     private List<SubCourtDto> subCourt;
 
     private List<Price> price;
+
+    private LocalTime startTime;
+
+    private LocalTime endTime;
 
    // private List<SlotOfCourtDto> slotOfCourt;
 }
