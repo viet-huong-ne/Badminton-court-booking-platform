@@ -2,37 +2,35 @@ package com.SWP.BadmintonCourtBooking.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
 import java.util.List;
 
 
-@Entity
-@Table(name = "Users")
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Entity
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
-    @Id
-    @Column(name = "UserID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userID;
 
-    @Column(name = "Username", nullable = false)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //tự tạo ra chuỗi
+    private Integer id;
+
+    @Column(name = "User_Name", nullable = false)
     private String userName;
 
     @Column(name = "Password", nullable = false)
     private String password;
 
-    @Column(name = "FirstName")
+    @Column(name = "First_Name")
     private String firstName;
 
-    @Column(name = "LastName")
+    @Column(name = "Last_Name" )
     private String lastName;
 
     @Column(name = "Email", nullable = false)
@@ -42,7 +40,7 @@ public class User {
     private String phone;
 
     @ManyToOne
-    @JoinColumn(name = "RoleID", nullable = false)
+    @JoinColumn(name = "Role_ID", nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -54,4 +52,5 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Payment> payment;
+
 }

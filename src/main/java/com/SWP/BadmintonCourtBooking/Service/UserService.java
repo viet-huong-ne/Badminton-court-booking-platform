@@ -1,14 +1,13 @@
 package com.SWP.BadmintonCourtBooking.Service;
 
-import com.SWP.BadmintonCourtBooking.Dto.UserDto;
-import com.SWP.BadmintonCourtBooking.Entity.User;
+import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Respone.RegisterRespone;
 import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService {
-    //User saveUser(UserDto userDto);
-    //boolean checkPassword(String email, String password);
-    //boolean checkEmailUser(String email);
-    //User getUser(String email);
+
+    //TODO: REGISTER
+    RegisterRespone registerUser(RegisterRequest request);
 
 }
