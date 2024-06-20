@@ -14,10 +14,11 @@ public class Role {
     @Id
     @Column(name = "RoleID", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer RoleID;
+    private Integer roleID;
 
-    @Column(name = "role_name")
-    private String RoleName;
+    @Column(name = "Role_Name")
+    private String roleName;
+
     @JsonIgnore
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> user;
