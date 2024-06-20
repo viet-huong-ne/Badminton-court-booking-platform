@@ -8,10 +8,10 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-@Repository
-public interface SlotOfCourtRepository extends JpaRepository<SlotOfCourt, Integer> {
-//    @Query("SELECT sl.openTime, sl.closeTime, sl.activeStatus FROM SlotOfCourt sl WHERE sl.court.courtID = :courtID")
-//    List<SlotOfCourtDto> getSlotOfCourtByCourtID(@Param("courtID") int courtID);
-@Query("SELECT sl FROM SlotOfCourt sl WHERE sl.court.courtID = :courtID")
-List<SlotOfCourt> getSlotOfCourtByCourtID(@Param("courtID") int courtID);
-}
+//@Repository
+//public interface SlotOfCourtRepository extends JpaRepository<SlotOfCourt, Integer> {
+////    @Query("SELECT sl.openTime, sl.closeTime, sl.activeStatus FROM SlotOfCourt sl WHERE sl.court.courtID = :courtID")
+////    List<SlotOfCourtDto> getSlotOfCourtByCourtID(@Param("courtID") int courtID);
+//@Query("SELECT sl FROM SlotOfCourt sl WHERE sl.court.courtID = :courtID")
+//List<SlotOfCourt> getSlotOfCourtByCourtID(@Param("courtID") int courtID);
+//}

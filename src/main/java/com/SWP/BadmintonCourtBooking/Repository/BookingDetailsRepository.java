@@ -19,7 +19,7 @@ public interface BookingDetailsRepository extends JpaRepository<BookingDetails, 
 
     //    @Query("SELECT bd FROM BookingDetails bd WHERE :endTime < bd.StartTime OR bd.EndTime < :startTime")
 //    List<BookingDetails> findOverlappingBookings(@Param("startTime") Time startTime, @Param("endTime") Time endTime);
-    @Query("SELECT bd FROM BookingDetails bd WHERE bd.booking.booking_date = :bookingDate AND bd.booking.court.courtID = :courtID AND ((:startTime >= bd.StartTime AND :startTime < bd.EndTime) OR (:endTime > bd.StartTime AND :endTime <= bd.EndTime))")
+    @Query("SELECT bd FROM BookingDetails bd WHERE bd.booking.booking_date = :bookingDate AND bd.booking.court.courtID = :courtID AND ((:startTime >= bd.StartTime AND :startTime < bd.EndTime) OR (:endTime > bd.StartTime AND :endTime <= bd.EndTime) OR (:startTime <= bd.StartTime AND :endTime >= bd.EndTime))")
     List<BookingDetails> findExistingTime(@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime, @Param("courtID") int courtID, @Param("bookingDate") LocalDate bookingDate);
 }
 //if (endTime.after(x.getStartTime()) || startTime.before(x.getEndTime()) || (startTime.equals(x.getStartTime())) ||
