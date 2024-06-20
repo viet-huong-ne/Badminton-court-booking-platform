@@ -4,7 +4,6 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
 
 import com.SWP.BadmintonCourtBooking.Dto.Response.APIResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.RegisterResponse;
-import com.SWP.BadmintonCourtBooking.Exception.ErrorCode;
 import com.SWP.BadmintonCourtBooking.Service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

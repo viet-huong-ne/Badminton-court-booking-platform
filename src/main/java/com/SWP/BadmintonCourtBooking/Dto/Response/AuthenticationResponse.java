@@ -1,4 +1,4 @@
-package com.SWP.BadmintonCourtBooking.Dto.Request;
+package com.SWP.BadmintonCourtBooking.Dto.Response;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -8,7 +8,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRequest {
-    private String userName;
-    private String password;
+public class AuthenticationResponse {
+    String token;
+    boolean isAuthenticated;
 }
