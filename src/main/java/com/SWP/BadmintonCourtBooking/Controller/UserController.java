@@ -1,10 +1,11 @@
 package com.SWP.BadmintonCourtBooking.Controller;
 
-import com.SWP.BadmintonCourtBooking.Dto.UserDto;
-import com.SWP.BadmintonCourtBooking.Entity.User;
+import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Respone.APIRespone;
+import com.SWP.BadmintonCourtBooking.Dto.Respone.RegisterRespone;
 import com.SWP.BadmintonCourtBooking.Service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -14,14 +15,10 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-//    @PostMapping("/registration")
-//    public ResponseEntity<String> save(@RequestBody UserDto userDto) {
-//        if (userService.checkEmailUser(userDto.getEmail())) {
-//            return ResponseEntity.ok("This email address is already in use");
-//        }
-//        userService.saveUser(userDto);
-//        return ResponseEntity.ok("Add successfully");
-//    }
-
-
+    @PostMapping("/register")
+    public APIRespone<RegisterRespone> registerUser(@RequestBody @Valid RegisterRequest request){
+        APIRespone<RegisterRespone> apiRespone = new APIRespone<>();
+        apiRespone.setResult(userService.registerUser(request));
+        return apiRespone;
+    }
 }
