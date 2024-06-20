@@ -15,6 +15,7 @@ import java.util.List;
 @Entity
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "Users")
 public class User {
 
     @Id

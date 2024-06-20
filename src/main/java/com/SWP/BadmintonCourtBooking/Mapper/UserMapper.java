@@ -1,7 +1,8 @@
 package com.SWP.BadmintonCourtBooking.Mapper;
 
 import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
-import com.SWP.BadmintonCourtBooking.Dto.Respone.RegisterRespone;
+
+import com.SWP.BadmintonCourtBooking.Dto.Response.RegisterResponse;
 import com.SWP.BadmintonCourtBooking.Entity.User;
 import org.mapstruct.Mapper;
 
@@ -12,5 +13,5 @@ public interface UserMapper {
 
     //void updateUser(@MappingTarget User user, UserUpdateRequest request);
 
-    RegisterRespone toUserResponse(User user);
+    RegisterResponse toUserResponse(User user);
 }

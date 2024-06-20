@@ -1,4 +1,4 @@
-package com.SWP.BadmintonCourtBooking.Dto.Respone;
+package com.SWP.BadmintonCourtBooking.Dto.Response;
 
 import com.SWP.BadmintonCourtBooking.Entity.Role;
 import lombok.*;
@@ -10,7 +10,7 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegisterRespone {
+public class RegisterResponse {
     private String id;
     private String userName;
     //private String password;

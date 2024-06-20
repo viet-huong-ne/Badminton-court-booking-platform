@@ -1,15 +1,14 @@
 package com.SWP.BadmintonCourtBooking.Dto.Request;
 
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegisterRequest {
     @Size(min = 6, message = "USERNAME_INVALID")
     private String userName;
@@ -17,9 +16,9 @@ public class RegisterRequest {
     @Size (min = 8, message = "INVALID_PASSWORD") //Phải xài key của errorMessage
     private String password;
 
-    //private String firstName;
+    private String firstName;
 
-    //private String lastName;
+    private String lastName;
 
     private String email;
 

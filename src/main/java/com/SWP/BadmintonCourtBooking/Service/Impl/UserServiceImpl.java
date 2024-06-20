@@ -2,7 +2,7 @@ package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 
 import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
-import com.SWP.BadmintonCourtBooking.Dto.Respone.RegisterRespone;
+import com.SWP.BadmintonCourtBooking.Dto.Response.RegisterResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Role;
 import com.SWP.BadmintonCourtBooking.Entity.User;
 import com.SWP.BadmintonCourtBooking.Exception.AppException;
@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
 
     //TODO: REGISTER
     @Override
-    public RegisterRespone registerUser(RegisterRequest request){
+    public RegisterResponse registerUser(RegisterRequest request){
         if(userRepository.existsByUserName(request.getUserName())){
             throw new AppException(ErrorCode.USER_EXISTED);
         }
@@ -47,9 +47,11 @@ public class UserServiceImpl implements UserService {
         user.setUserName(request.getUserName());
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
-        Role role = roleRepository.findByName("User");
+        Role role = roleRepository.findByName("Customer");
         user.setRole(role);
         return userMapper.toUserResponse(userRepository.save(user));
     }
