@@ -1,7 +1,9 @@
 package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateNewUserRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateNewUserResponse;
+import com.SWP.BadmintonCourtBooking.Dto.Response.UpdateUserResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Role;
 import com.SWP.BadmintonCourtBooking.Entity.User;
 import com.SWP.BadmintonCourtBooking.Exception.AppException;
@@ -15,6 +17,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +37,8 @@ public class AdminServiceImpl implements AdminService {
     private UserMapper userMapper;
     @Autowired
     private RoleRepository roleRepository;
+
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
     public CreateNewUserResponse createNewUser(CreateNewUserRequest request) {
@@ -53,13 +59,22 @@ public class AdminServiceImpl implements AdminService {
         //Role role = roleRepository.findByName("User");
         Role role = roleRepository.findById(request.getRoleId()).orElseThrow(() -> new RuntimeException("Role not found"));
         user.setRole(role);
-
         return userMapper.toCreateNewUserResponse(userRepository.save(user));
     }
 
-    /*
     @Override
-    public UserUpdateResponse updateUser(String userId, UserUpdateRequest request) {
-        return null;
-    }*/
+    public UpdateUserResponse updateUser(Integer userId, UpdateUserRequest request) {
+        User user = userRepository.findById(userId).orElseThrow(()->new RuntimeException("User Not Found"));
+        user.setUserName(request.getUserName());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
+        //Role role = roleRepository.findByName(request.getRoleName());
+        //log.info(request.getRoleName());
+        Role role = roleRepository.findById(request.getRoleID()).orElseThrow(()->new RuntimeException("UserID Not Found"));
+        user.setRole(role);
+        return userMapper.toUpdateUserResponse(userRepository.save(user));
+    }
+
 }

@@ -5,13 +5,11 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateNewUserResponse {
-
-    private String id;
+public class UpdateUserResponse {
 
     private String userName;
 
@@ -21,9 +19,9 @@ public class CreateNewUserResponse {
 
     private String email;
 
-    private String password;
-
+    //private String password;
     private String phone;
 
     private Role role;
+    //private int roleID;
 }

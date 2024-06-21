@@ -1,17 +1,15 @@
-package com.SWP.BadmintonCourtBooking.Dto.Response;
+package com.SWP.BadmintonCourtBooking.Dto.Request;
 
-import com.SWP.BadmintonCourtBooking.Entity.Role;
+
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateNewUserResponse {
-
-    private String id;
+public class UpdateUserRequest {
 
     private String userName;
 
@@ -21,9 +19,10 @@ public class CreateNewUserResponse {
 
     private String email;
 
-    private String password;
-
+    //private String password;
     private String phone;
 
-    private Role role;
+    //private String roleName;
+    private Integer roleID;
+
 }

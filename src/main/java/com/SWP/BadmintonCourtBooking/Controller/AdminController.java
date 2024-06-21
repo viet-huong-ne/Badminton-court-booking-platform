@@ -1,10 +1,12 @@
 package com.SWP.BadmintonCourtBooking.Controller;
 
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateNewUserRequest;
-import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.APIResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateNewUserResponse;
-import com.SWP.BadmintonCourtBooking.Dto.Response.RegisterResponse;
+
+
+import com.SWP.BadmintonCourtBooking.Dto.Response.UpdateUserResponse;
 import com.SWP.BadmintonCourtBooking.Service.AdminService;
 import com.SWP.BadmintonCourtBooking.Service.Impl.AdminServiceImpl;
 import jakarta.validation.Valid;
@@ -27,4 +29,14 @@ public class AdminController {
                 .result(result)
                 .build();
     }
+
+
+    @PutMapping("/updateUser/{userId}")
+    public APIResponse<UpdateUserResponse> createUser(@PathVariable Integer userId, @RequestBody @Valid UpdateUserRequest request){
+        var result = adminServiceImpl.updateUser(userId, request);
+        return APIResponse.<UpdateUserResponse>builder()
+                .result(result)
+                .build();
+    }
 }
+
