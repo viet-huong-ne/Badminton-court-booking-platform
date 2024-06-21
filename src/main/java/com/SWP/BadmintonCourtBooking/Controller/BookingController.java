@@ -1,8 +1,7 @@
 package com.SWP.BadmintonCourtBooking.Controller;
 
 import com.SWP.BadmintonCourtBooking.Dto.*;
-import com.SWP.BadmintonCourtBooking.Entity.Booking;
-import com.SWP.BadmintonCourtBooking.Service.BookingDetailsService;
+import com.SWP.BadmintonCourtBooking.Dto.Respone.ResponseBooking;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

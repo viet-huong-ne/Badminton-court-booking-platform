@@ -1,6 +1,7 @@
 package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 import com.SWP.BadmintonCourtBooking.Dto.*;
+import com.SWP.BadmintonCourtBooking.Dto.Respone.ResponseBooking;
 import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Repository.*;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
@@ -9,15 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -160,10 +158,10 @@ public class BookingServiceImpl implements BookingService {
         double sum = 0;
         while (!startTime.isAfter(endTime)) {
             times.add(startTime);
-            startTime = startTime.plusHours(1);
+            startTime = startTime.plusMinutes(30);
         }
         for (int i = 0; i < times.size() - 1; i++) {
-            Double tmp = priceRepository.getPriceOfSlot(courtID,times.get(i), times.get(i + 1));
+            Double tmp = priceRepository.getPriceOfSlot(courtID,times.get(i), times.get(i + 1))/2;
             sum += tmp;
         }
         return sum;

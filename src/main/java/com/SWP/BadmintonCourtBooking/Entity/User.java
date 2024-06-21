@@ -15,6 +15,7 @@ import java.util.List;
 @Entity
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "User")
 public class User {
 
     @Id
@@ -46,6 +47,10 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore
     private List<Booking> booking;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<RecurringBooking> recurringBooking;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Court> court;
