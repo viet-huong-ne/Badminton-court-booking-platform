@@ -4,6 +4,7 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.CreateNewUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateNewUserResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.UpdateUserResponse;
+import com.SWP.BadmintonCourtBooking.Dto.Response.UserResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Role;
 import com.SWP.BadmintonCourtBooking.Entity.User;
 import com.SWP.BadmintonCourtBooking.Exception.AppException;
@@ -23,6 +24,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.List;
 
 @Service
 @Data
@@ -75,6 +79,16 @@ public class AdminServiceImpl implements AdminService {
         Role role = roleRepository.findById(request.getRoleID()).orElseThrow(()->new RuntimeException("UserID Not Found"));
         user.setRole(role);
         return userMapper.toUpdateUserResponse(userRepository.save(user));
+    }
+
+    @Override
+    public UserResponse getUserById(Integer id) {
+        return userMapper.toOneUserResponse(userRepository.findById(id).orElseThrow(()->new RuntimeException("User Not Found")));
+    }
+
+    @Override
+    public List<UserResponse> getListUser() {
+        return userMapper.toListUserResponse(userRepository.findAll());
     }
 
 }
