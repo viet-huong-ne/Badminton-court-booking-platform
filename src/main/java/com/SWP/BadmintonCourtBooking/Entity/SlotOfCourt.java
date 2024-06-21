@@ -1,9 +1,11 @@
 package com.SWP.BadmintonCourtBooking.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "SlotOfCourt")
@@ -15,14 +17,15 @@ public class SlotOfCourt {
     private Integer slotID;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "CourtID", nullable = false)
     private Court court;
 
     @Column(name = "opening_time")
-    private Time openTime;
+    private LocalTime openTime;
 
     @Column(name = "close_time")
-    private Time closeTime;
+    private LocalTime closeTime;
 
     @Column(name = "activeStatus")
     private String activeStatus;

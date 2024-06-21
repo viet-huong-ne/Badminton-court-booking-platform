@@ -4,8 +4,13 @@ import com.SWP.BadmintonCourtBooking.Entity.Court;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 public interface CourtService {
     public List<Court> getAllCourt();
     public List<Court> getCourtByDistrict(String district);
+    public Optional<Court> getCourtByID(int courtID);
+    public Court createCourt(Court court);
+    public Court updateCourt(Court court);
 }

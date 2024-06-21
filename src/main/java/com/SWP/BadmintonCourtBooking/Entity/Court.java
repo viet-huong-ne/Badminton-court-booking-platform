@@ -36,9 +36,12 @@ public class Court {
     @Column(name = "slot_duration")
     private Integer  duration;
 
+    @Column(name = "Images")
+    private String images;
+    @JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubCourt> subCourt;
-    @JsonIgnore
+    //@JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> price;
 
@@ -49,4 +52,7 @@ public class Court {
 
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL)
     private List<SlotOfCourt> slotOfCourt;
+    @OneToMany(mappedBy = "court")
+    @JsonIgnore
+    private List<Booking> booking;
 }

@@ -3,9 +3,6 @@ package com.SWP.BadmintonCourtBooking.Dto;
 import com.SWP.BadmintonCourtBooking.Entity.Price;
 import com.SWP.BadmintonCourtBooking.Entity.SlotOfCourt;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
-import com.SWP.BadmintonCourtBooking.Entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,9 +24,9 @@ public class CourtDto {
 
     private Integer  duration;
 
-    private List<SubCourt> subCourt;
+    private List<SubCourtDto> subCourt;
 
     private List<Price> price;
 
-    private List<SlotOfCourt> slotOfCourt;
+    private List<SlotOfCourtDto> slotOfCourt;
 }

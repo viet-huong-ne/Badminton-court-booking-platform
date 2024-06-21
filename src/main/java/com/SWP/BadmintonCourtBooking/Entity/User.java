@@ -1,5 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,22 +27,29 @@ public class User {
     @Column(name = "Phone")
     private String phone;
 
-    @Column(name = "Username", nullable = false)
+    @Column(name = "Username")
     private String username;
 
     @Column(name = "Password", nullable = false)
     private String password;
 
-    @Column(name = "Fullname", nullable = false, columnDefinition = "nvarchar(255)")
-    private String fullName;
+    @Column(name = "FirstName")
+    private String firstName;
+
+    @Column(name = "LastName")
+    private String lastName;
+
 
     @ManyToOne
     @JoinColumn(name = "RoleID", nullable = false)
     private Role role;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Booking> booking;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Court> court;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Payment> payment;
+
+
 }

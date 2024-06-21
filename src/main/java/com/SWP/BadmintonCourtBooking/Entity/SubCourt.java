@@ -3,6 +3,7 @@ package com.SWP.BadmintonCourtBooking.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.util.List;
 @Table(name = "SubCourt")
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class SubCourt {
     @Id
     @Column(name = "SubCourtID")
@@ -22,10 +24,11 @@ public class SubCourt {
     private String SubCourtName;
 
     @Column(name = "SubCourtStatus")
-    private String SubCourtStatus;
+    private boolean SubCourtStatus;
     @JsonIgnore
     @OneToMany(mappedBy = "subCourt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookingDetails> bookingDetails;
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "courtID")
     private Court court;
