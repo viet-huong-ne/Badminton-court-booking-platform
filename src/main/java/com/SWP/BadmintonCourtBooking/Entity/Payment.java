@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "Payment")
@@ -21,7 +21,7 @@ public class Payment {
     private BigDecimal paymentAmount;
 
     @Column(name = "PaymentTime")
-    private LocalDate paymentTime;
+    private Date paymentTime;
 
     @Column(name = "PaymentStatus")
     private String paymentStatus;
@@ -33,4 +33,60 @@ public class Payment {
 
     @Column(name = "BankCode")
     private String bankCode;
+
+    @Column(name = "BookInfo")
+    private String bookInfo;
+
+    public void setPaymentAmount(BigDecimal paymentAmount) {
+        this.paymentAmount = paymentAmount;
+    }
+
+    public BigDecimal getPaymentAmount() {
+        return paymentAmount;
+    }
+
+    public void setPaymentTime(Date paymentTime) {
+        this.paymentTime = paymentTime;
+    }
+
+    public Date getPaymentTime() {
+        return paymentTime;
+    }
+
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
+    }
+
+    public String getPaymentStatus() {
+        return paymentStatus;
+    }
+
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
+    }
+
+    public String getBankCode() {
+        return bankCode;
+    }
+
+    public void setBookInfo(String bookInfo) {
+        this.bookInfo = bookInfo;
+    }
+
+    public String getBookInfo() {
+        return bookInfo;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @JsonIgnore
+    public User getUser() {
+        return user;
+    }
+
+    public Integer getUserId() {
+        return user != null ? user.getUserID() : null;
+    }
 }
