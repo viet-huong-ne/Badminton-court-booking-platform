@@ -10,5 +10,6 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class VerifyTokenResponse {
-    private boolean valid;
+    //UserResponse response;
+    boolean valid;
 }

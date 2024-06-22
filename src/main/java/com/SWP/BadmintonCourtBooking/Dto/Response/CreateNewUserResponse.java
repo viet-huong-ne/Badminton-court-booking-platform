@@ -10,8 +10,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CreateNewUserResponse {
-
-    private String id;
+    private Integer id;
 
     private String userName;
 

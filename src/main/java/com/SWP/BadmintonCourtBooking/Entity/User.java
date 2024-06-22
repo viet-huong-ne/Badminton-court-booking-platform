@@ -20,7 +20,8 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //tự tạo ra chuỗi
-    private Integer id;
+    @Column(name = "User_ID", nullable = false)
+    private Integer userID;
 
     @Column(name = "User_Name", nullable = false)
     private String userName;

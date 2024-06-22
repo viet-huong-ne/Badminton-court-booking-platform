@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class RegisterResponse {
-    private String id;
+    private Integer userID;
     private String userName;
     //private String password;
     private String firstName;

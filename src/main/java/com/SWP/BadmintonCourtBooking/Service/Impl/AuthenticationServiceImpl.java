@@ -3,9 +3,12 @@ package com.SWP.BadmintonCourtBooking.Service.Impl;
 import com.SWP.BadmintonCourtBooking.Dto.Request.AuthenticationRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.VerifyTokenRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.AuthenticationResponse;
+import com.SWP.BadmintonCourtBooking.Dto.Response.UserResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.VerifyTokenResponse;
+import com.SWP.BadmintonCourtBooking.Entity.User;
 import com.SWP.BadmintonCourtBooking.Exception.AppException;
 import com.SWP.BadmintonCourtBooking.Exception.ErrorCode;
+import com.SWP.BadmintonCourtBooking.Mapper.UserMapper;
 import com.SWP.BadmintonCourtBooking.Repository.UserRepository;
 import com.SWP.BadmintonCourtBooking.Service.AuthenticationService;
 import com.nimbusds.jose.*;
@@ -35,6 +38,7 @@ import java.util.Date;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private UserRepository userRepository;
+    private UserMapper userMapper;
 
     @NonFinal
     //protected String SECRET_KEY = "47ZuFl0dJhb54+lEvuriWkJ4XyoBwUB15YyQRsoqbily5ZMEwgcz7ajKTGCKajOh";
@@ -51,8 +55,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
         var token = generateToken(request.getUserName());
+        UserResponse userResponse = userMapper.toOneUserResponse(user);
         return AuthenticationResponse.builder()
                 .token(token)
+                .response(userResponse)
                 .isAuthenticated(true)
                 .build();
     }
