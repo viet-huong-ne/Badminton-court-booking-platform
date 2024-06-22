@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Time;
+import java.time.LocalTime;
 
 @Entity
 @Data
@@ -20,10 +21,10 @@ public class Price {
     private Court court;
 
     @Column(name = "opening_time")
-    private Time openTime;
+    private LocalTime openTime;
 
     @Column(name = "close_time")
-    private Time closeTime;
+    private LocalTime closeTime;
 
     @Column(name = "UnitPrice")
     private double unitPrice;

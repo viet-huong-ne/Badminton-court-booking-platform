@@ -11,6 +11,8 @@ import java.util.*;
 
 import com.SWP.BadmintonCourtBooking.Dto.TransactionStatusDTO;
 import com.SWP.BadmintonCourtBooking.Entity.Payment;
+import com.SWP.BadmintonCourtBooking.Entity.User;
+import com.SWP.BadmintonCourtBooking.Repository.UserRepository;
 import com.SWP.BadmintonCourtBooking.Service.ServiceOfPayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.SWP.BadmintonCourtBooking.Config.OnlinePay.Config;
@@ -21,9 +23,11 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin("*")
 public class PaymentController {
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/pay/{total}/{userId}") // /{total}/{userId}
-    public String getPay(@PathVariable("total") Double total, @PathVariable("userId") Integer userId) throws UnsupportedEncodingException{ //@PathParam("price") Long price, @PathParam("id") Integer contractId
+    public String getPay(@PathVariable("total") Double total, @PathVariable("userId") Integer userId) throws UnsupportedEncodingException { //@PathParam("price") Long price, @PathParam("id") Integer contractId
 
         String vnp_Version = "2.1.0";
         String vnp_Command = "pay";
@@ -60,7 +64,7 @@ public class PaymentController {
         vnp_Params.put("vnp_UserId", String.valueOf((userId)));
 
         vnp_Params.put("vnp_Locale", "vn");
-        vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl ); // + "?contractId=" + contractId
+        vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl); // + "?contractId=" + contractId
         vnp_Params.put("vnp_IpAddr", vnp_IpAddr);
         // vnp_Params.put("vnp_ApiUrl", Config.vnp_ApiUrl);
 
@@ -110,6 +114,7 @@ public class PaymentController {
         return paymentUrl;
     }
 
+    //@Autowired // Hường test
     private final ServiceOfPayment serviceOfPayment;
 
     @Autowired
@@ -139,6 +144,8 @@ public class PaymentController {
             payment.setPaymentStatus("Success"); // Assuming it's successful by default
             payment.setBankCode(bankCode);
             payment.setBookInfo(orderInfo);
+            //User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("UserID not found"));
+            payment.setUserId(userId);
 
             // You can set other fields as needed
 

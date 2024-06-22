@@ -26,10 +26,10 @@ public class Payment {
     @Column(name = "PaymentStatus")
     private String paymentStatus;
 
-    @ManyToOne
-    @JsonIgnore
+//    @ManyToOne
+//    @JsonIgnore
     @JoinColumn(name = "UserID")
-    private User user;
+    private int userId;
 
     @Column(name = "BankCode")
     private String bankCode;
@@ -77,16 +77,24 @@ public class Payment {
         return bookInfo;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+//    public void setUser(User user) {
+//        this.user = user;
+//    }
+
+//    @JsonIgnore
+//    public User getUser() {
+//        return user;
+//    }
+
+//    public Integer getUserId() {
+//        return user != null ? user.getId() : null;
+//    }
+
+    public int getUserId() {
+        return userId;
     }
 
-    @JsonIgnore
-    public User getUser() {
-        return user;
-    }
-
-    public Integer getUserId() {
-        return user != null ? user.getUserID() : null;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

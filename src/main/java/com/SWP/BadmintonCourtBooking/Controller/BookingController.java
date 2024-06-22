@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/booking")
@@ -26,11 +27,13 @@ public class BookingController {
         ResponseCourtDto responseCourtDto = bookingService.checkCourtAvailability(responseBooking);
         return responseCourtDto;
     }
+
     //API GET LẤY CÁC SÂN NHỎ CÓ THỂ ĐẶT
     @GetMapping("/getCourtStatus")
     public ResponseCourtDto getCourtStatus() {
         return bookingService.getLastAvailabilityCheck();
     }
+
     //API ĐẶT SÂN THEO NGÀY
     @PostMapping("/book")
     public ResponseEntity<BookingResponseDTO> createBooking(@RequestBody BookingDto bookingDto) {
@@ -39,6 +42,12 @@ public class BookingController {
 
         return new ResponseEntity<>(bookingResponse, HttpStatus.CREATED);
     }
+
+    @GetMapping("/book/ProvisionalInvoice")
+    public ResponseEntity<BookingResponseDTO> responseProvisionalInvoice() {
+        return new ResponseEntity<>(bookingService.showBill(), HttpStatus.OK);
+    }
+
     //API TRẢ VỀ THÔNG TIN BILL ĐÃ ĐẶT
     @GetMapping("/book/bill")
     public ResponseEntity<BookingResponseDTO> bookBill() {
