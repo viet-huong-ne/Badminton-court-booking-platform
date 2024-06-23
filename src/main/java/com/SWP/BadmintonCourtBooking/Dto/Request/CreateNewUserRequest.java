@@ -9,11 +9,11 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class RegisterRequest {
+public class CreateNewUserRequest {
     @Size(min = 6, message = "USERNAME_INVALID")
     private String userName;
 
-    @Size (min = 8, message = "INVALID_PASSWORD") //Phải xài key của errorMessage
+    @Size(min = 8, message = "INVALID_PASSWORD") //Phải xài key của errorMessage
     private String password;
 
     private String firstName;
@@ -24,6 +24,5 @@ public class RegisterRequest {
 
     private String phone;
 
-    //Default
-    //private Role role = USER;
+    private Integer roleId;
 }
