@@ -15,12 +15,13 @@ import java.util.List;
 @Entity
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "User")
+@Table(name = "Users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //tự tạo ra chuỗi
-    private Integer id;
+    @Column(name = "User_ID", nullable = false)
+    private Integer userID;
 
     @Column(name = "User_Name", nullable = false)
     private String userName;
@@ -48,14 +49,10 @@ public class User {
     @JsonIgnore
     private List<Booking> booking;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<RecurringBooking> recurringBooking;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Court> court;
 
-//    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Payment> payment;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Payment> payment;
 
 }
