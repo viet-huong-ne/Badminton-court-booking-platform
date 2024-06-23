@@ -25,6 +25,7 @@ public class CourtDto {
 
     private Integer  duration;
 
+    private String images;
     private List<SubCourtDto> subCourt;
 
     private List<Price> price;

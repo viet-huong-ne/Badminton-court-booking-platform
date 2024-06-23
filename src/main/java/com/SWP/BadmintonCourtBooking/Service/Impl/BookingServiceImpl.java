@@ -1,11 +1,10 @@
 package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 import com.SWP.BadmintonCourtBooking.Dto.*;
-import com.SWP.BadmintonCourtBooking.Dto.Respone.ResponseBooking;
+import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Repository.*;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
-import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,14 +40,14 @@ public class BookingServiceImpl implements BookingService {
     private static final Logger logger = LoggerFactory.getLogger(BookingServiceImpl.class);
 
     @Override
-    public ResponseCourtDto checkCourtAvailability(ResponseBooking responseBooking) {
-        List<SubCourt> subCourts = subCourtRepository.getSubCourtByCourtID(responseBooking.getCourtID());
-        LocalTime startTime = responseBooking.getStartTime();
-        LocalTime endTime = responseBooking.getEndTime();
+    public ResponseCourtDto checkCourtAvailability(BookingRequest bookingRequest) {
+        List<SubCourt> subCourts = subCourtRepository.getSubCourtByCourtID(bookingRequest.getCourtID());
+        LocalTime startTime = bookingRequest.getStartTime();
+        LocalTime endTime = bookingRequest.getEndTime();
         ResponseCourtDto responseCourtDto;
         List<BookingDetails> bookingDetails = new ArrayList<>();
-        List<Booking> booking = bookingRepository.findByBookingDate(responseBooking.getBookingDate(), responseBooking.getCourtID());
-        bookingDetails = bookingDetailsRepository.findExistingTime(responseBooking.getStartTime(), responseBooking.getEndTime(), responseBooking.getCourtID(), responseBooking.getBookingDate());
+        List<Booking> booking = bookingRepository.findByBookingDate(bookingRequest.getBookingDate(), bookingRequest.getCourtID());
+        bookingDetails = bookingDetailsRepository.findExistingTime(bookingRequest.getStartTime(), bookingRequest.getEndTime(), bookingRequest.getCourtID(), bookingRequest.getBookingDate());
 
         for (SubCourt x : subCourts) {
             for (BookingDetails y : bookingDetails) {
@@ -57,7 +56,7 @@ public class BookingServiceImpl implements BookingService {
             }
         }
 
-        responseCourtDto = new ResponseCourtDto(responseBooking.getCourtID(), subCourts, responseBooking.getBookingDate(), responseBooking.getStartTime(), responseBooking.getEndTime());
+        responseCourtDto = new ResponseCourtDto(bookingRequest.getCourtID(), subCourts, bookingRequest.getBookingDate(), bookingRequest.getStartTime(), bookingRequest.getEndTime());
         subCourts = new ArrayList<>();
         lastAvailabilityCheck = responseCourtDto;
         return responseCourtDto;

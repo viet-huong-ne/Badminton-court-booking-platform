@@ -1,4 +1,4 @@
-package com.SWP.BadmintonCourtBooking.Dto.Respone;
+package com.SWP.BadmintonCourtBooking.Dto.Request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ResponseBooking {
+public class BookingRequest {
     private int courtID;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate bookingDate;

@@ -1,7 +1,7 @@
 package com.SWP.BadmintonCourtBooking.Controller;
 
 import com.SWP.BadmintonCourtBooking.Dto.*;
-import com.SWP.BadmintonCourtBooking.Dto.Respone.ResponseBooking;
+import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +20,11 @@ public class BookingController {
 
     //API check time frame has been set
     @PostMapping("/check")
-    public ResponseCourtDto checkBooking(@RequestBody ResponseBooking responseBooking) {
-        if (responseBooking.getStartTime() == null || responseBooking.getEndTime() == null) {
+    public ResponseCourtDto checkBooking(@RequestBody BookingRequest bookingRequest) {
+        if (bookingRequest.getStartTime() == null || bookingRequest.getEndTime() == null) {
             return null;
         }
-        ResponseCourtDto responseCourtDto = bookingService.checkCourtAvailability(responseBooking);
+        ResponseCourtDto responseCourtDto = bookingService.checkCourtAvailability(bookingRequest);
         return responseCourtDto;
     }
 
