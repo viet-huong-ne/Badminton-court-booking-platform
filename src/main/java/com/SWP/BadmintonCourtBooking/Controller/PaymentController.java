@@ -1,23 +1,20 @@
 package com.SWP.BadmintonCourtBooking.Controller;
 
+import com.SWP.BadmintonCourtBooking.Config.OnlinePay.Config;
+import com.SWP.BadmintonCourtBooking.Dto.TransactionStatusDTO;
+import com.SWP.BadmintonCourtBooking.Entity.Payment;
+import com.SWP.BadmintonCourtBooking.Repository.UserRepository;
+import com.SWP.BadmintonCourtBooking.Service.ServiceOfPayment;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
-//import java.util.*;
-
-
-import com.SWP.BadmintonCourtBooking.Dto.TransactionStatusDTO;
-import com.SWP.BadmintonCourtBooking.Entity.Payment;
-import com.SWP.BadmintonCourtBooking.Entity.User;
-import com.SWP.BadmintonCourtBooking.Repository.UserRepository;
-import com.SWP.BadmintonCourtBooking.Service.ServiceOfPayment;
-import org.springframework.beans.factory.annotation.Autowired;
-import com.SWP.BadmintonCourtBooking.Config.OnlinePay.Config;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -26,7 +23,7 @@ public class PaymentController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/pay/{total}/{userId}") // /{total}/{userId}
+    @GetMapping("/payV2/{total}/{userId}")
     public String getPay(@PathVariable("total") Double total, @PathVariable("userId") Integer userId) throws UnsupportedEncodingException { //@PathParam("price") Long price, @PathParam("id") Integer contractId
 
         String vnp_Version = "2.1.0";
@@ -39,8 +36,6 @@ public class PaymentController {
         if (userId == null) {
             return "UserId is null. Please provide a valid user ID.";
         }
-        //long amount = 100000 * 100;
-        // double amount = total * 100;
         long amount = (long) (total * 100);
 
         String bankCode = "NCB";
@@ -61,7 +56,7 @@ public class PaymentController {
         vnp_Params.put("vnp_TxnRef", vnp_TxnRef);
         vnp_Params.put("vnp_OrderInfo", "Thanh toan don hang:" + vnp_TxnRef + " | Total: " + total + " | UserId: " + userId);
         vnp_Params.put("vnp_OrderType", orderType);
-        vnp_Params.put("vnp_UserId", String.valueOf((userId)));
+
 
         vnp_Params.put("vnp_Locale", "vn");
         vnp_Params.put("vnp_ReturnUrl", Config.vnp_ReturnUrl); // + "?contractId=" + contractId
@@ -122,15 +117,15 @@ public class PaymentController {
         this.serviceOfPayment = serviceOfPayment;
     }
 
-    @GetMapping("/pay_infor")
+    @GetMapping("/payInforV2")
     public ResponseEntity<?> transactionStatusDTO(
             @RequestParam(value = "vnp_Amount") String amount,
             @RequestParam(value = "vnp_BankCode") String bankCode,
             @RequestParam(value = "vnp_OrderInfo") String orderInfo,
             @RequestParam(value = "vnp_ResponseCode") String responseCode,
-            @RequestParam(value = "vnp_UserId") Integer userId
-
+            @RequestParam(value = "vnp_TxnRef") String transactinCode
     ) {
+        int userId = Config.extractUserId(orderInfo);
         TransactionStatusDTO transactionStatusDTO = new TransactionStatusDTO();
         if (responseCode.equals("00")) {
             transactionStatusDTO.setStatus("Ok");
@@ -139,11 +134,12 @@ public class PaymentController {
 
             // Create Payment entity and save it
             Payment payment = new Payment();
-            payment.setPaymentAmount(new BigDecimal(amount));
+            double amount1 = Double.parseDouble(amount)/100;
+            payment.setPaymentAmount(new BigDecimal(amount1));
             payment.setPaymentTime(new Date());
-            payment.setPaymentStatus("Success"); // Assuming it's successful by default
+            payment.setPaymentStatus("Successfully"); // Assuming it's successful by default
             payment.setBankCode(bankCode);
-            payment.setBookInfo(orderInfo);
+            payment.setTrasactionCode(transactinCode);
             //User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("UserID not found"));
             payment.setUserId(userId);
 
@@ -157,11 +153,13 @@ public class PaymentController {
 
             // Create Payment entity and save it
             Payment payment = new Payment();
-            payment.setPaymentAmount(new BigDecimal(amount));
+            double amount1 = Double.parseDouble(amount)/100;
+            payment.setPaymentAmount(new BigDecimal(amount1));
             payment.setPaymentTime(new Date());
             payment.setPaymentStatus("Failed"); // Assuming it's successful by default
             payment.setBankCode(bankCode);
-            payment.setBookInfo(orderInfo);
+            payment.setTrasactionCode(transactinCode);
+            payment.setUserId(userId);
             // You can set other fields as needed
 
             serviceOfPayment.savePayment(payment);// Save payment
@@ -170,7 +168,8 @@ public class PaymentController {
         Map<String, String> response = new HashMap<>();
         response.put("status", transactionStatusDTO.getStatus());
         response.put("message", transactionStatusDTO.getMessage());
-        response.put("data", transactionStatusDTO.getData());
+        response.put("paycode", transactinCode);
+        //response.put("data", transactionStatusDTO.getData());
 
         return ResponseEntity.ok(response);
     }

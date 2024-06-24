@@ -5,15 +5,13 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Repository.*;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,11 +31,14 @@ public class BookingServiceImpl implements BookingService {
     private CourtRepository courtRepository;
     @Autowired
     private PriceRepository priceRepository;
-    private ResponseCourtDto lastAvailabilityCheck;
 
+    private ResponseCourtDto lastAvailabilityCheck;
+    private Booking tmpBooking;
     private BookingResponseDTO responseBookingDTO;
 
     private static final Logger logger = LoggerFactory.getLogger(BookingServiceImpl.class);
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @Override
     public ResponseCourtDto checkCourtAvailability(BookingRequest bookingRequest) {
@@ -72,7 +73,7 @@ public class BookingServiceImpl implements BookingService {
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     @Override
-    public BookingResponseDTO saveBooking(BookingDto bookingDto) {
+    public BookingResponseDTO preBooking(BookingDto bookingDto) {
         //Double tmp = priceRepository.getPriceOfSlot(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusHours(1));
         Double tmp = getPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusMinutes(30), bookingDto.getBookingDate());
         User user = userRepository.findById(bookingDto.getCustomerId())
@@ -100,98 +101,99 @@ public class BookingServiceImpl implements BookingService {
         //double totalPrice = calTotalPrice(bookingDto.getCourtID(),bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime())* bookingDetails.size();
         double totalPrice = calTotalPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime(), bookingDto.getBookingDate()) * bookingDetails.size();
         booking.setTotalPrice(totalPrice);
-        Booking savedBooking = bookingRepository.save(booking);
-        return convertToResponseDTO(savedBooking);
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+//        Booking savedBooking = bookingRepository.save(booking);
+//        return convertToResponseDTO(savedBooking);
+        tmpBooking = booking;
+        return convertToResponseDTO(booking);
     }
-    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//    @Transactional
-//    public Booking saveBookingIfUserPaid(BookingDto bookingDto) {
-//        User user = userRepository.findById(bookingDto.getCustomerId()).orElseThrow(() -> new RuntimeException("User not found"));
-//        List<Payment> payment = ;
-//
-//        if (payment != null && payment.isPaid()) {
-//            LocalDateTime now = LocalDateTime.now();
-//            Duration duration = Duration.between(payment.getPaymentTime(), now);
-//            long minutesDifference = duration.toMinutes();
-//
-//            // Allow a difference of up to 5 minutes
-//            if (minutesDifference <= 5) {
-//                return bookingRepository.save(booking);
-//            } else {
-//                throw new IllegalStateException("Payment time is not close enough to the current time");
-//            }
-//        } else {
-//            throw new IllegalStateException("User has not completed payment for this booking");
-//        }
-//    }
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //PHƯƠNG THỨC CONVERT VÀ TRẢ VỀ NHỮNG THÔNG TIN CẦN THIẾT CHO CLIENTS
-    private BookingResponseDTO convertToResponseDTO(Booking booking) {
-        BookingResponseDTO responseDTO = new BookingResponseDTO();
+    @Transactional
+    public Booking saveBookingIfUserPaid(String payCode) {
+        // User user = userRepository.findById(bookingDto.getCustomerId()).orElseThrow(() -> new RuntimeException("User not found"));
+        //LocalDateTime now = LocalDateTime.now();
+        Payment payment = paymentRepository.findByUserIdAndPayCode(tmpBooking.getUser().getUserID(), payCode);
 
-        responseDTO.setCustomerName(booking.getUser().getLastName());
-        responseDTO.setPhone(booking.getUser().getPhone());
-        responseDTO.setCourtName(booking.getCourt().getCourtName());
-        responseDTO.setAddress(booking.getCourt().getCourtAddress());
-        responseDTO.setTotalPrice(booking.getTotalPrice());
-        responseDTO.setBookingDate(booking.getBooking_date());
-        List<BookingDetailResponseDTO> detailResponseDTOs = booking.getBookingDetails().stream()
-                .map(detail -> {
-                    BookingDetailResponseDTO detailResponseDTO = new BookingDetailResponseDTO();
+        if (payment != null && payment.getPaymentStatus().equals("Successfully")) {
+            //LocalDateTime now = LocalDateTime.now();
+            //Duration duration = Duration.between(payment.getPaymentTime(), now);
+            //long minutesDifference = duration.toMinutes();
 
-                    detailResponseDTO.setPrice(detail.getUnitPrice());
-                    detailResponseDTO.setStartTime(detail.getStartTime());
-                    detailResponseDTO.setEndTime(detail.getEndTime());
-                    detailResponseDTO.setQuantity(detail.getQuantity());
-                    detailResponseDTO.setSubCourtName(detail.getSubCourt().getSubCourtName());
-                    return detailResponseDTO;
-                }).collect(Collectors.toList());
+            // Allow a difference of up to 5 minutes
 
-        responseDTO.setBookingDetails(detailResponseDTOs);
-        responseBookingDTO = responseDTO;
-        return responseDTO;
-    }
-
-    @Override
-    public BookingResponseDTO showBill() {
-        return responseBookingDTO;
-    }
-
-    private double calTotalPrice(int courtID, LocalTime startTime, LocalTime endTime, LocalDate date) {
-        List<LocalTime> times = new ArrayList<>();
-        double sum = 0;
-        while (!startTime.isAfter(endTime)) {
-            times.add(startTime);
-            startTime = startTime.plusMinutes(30);
-        }
-        for (int i = 0; i < times.size() - 1; i++) {
-            //Double tmp = priceRepository.getPriceOfSlot(courtID,times.get(i), times.get(i + 1), dayOfWeek)/2;
-            double tmp = getPrice(courtID, times.get(i), times.get(i + 1), date) / 2;
-            sum += tmp;
-        }
-        return sum;
-    }
-
-    public double getPrice(int courtId, LocalTime startTime, LocalTime endTime, LocalDate date) {
-        DayOfWeek dayOfWeek = date.getDayOfWeek();
-        String activeStatus;
-
-        if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
-            activeStatus = "CT";
+            return bookingRepository.save(tmpBooking);
         } else {
-            activeStatus = "TT";
+            throw new IllegalStateException("User has not completed payment for this booking");
         }
-
-        List<Price> priceList = priceRepository.getPriceByCourtID(courtId);
-
-        for (Price pricing : priceList) {
-            if (("ALL".equals(pricing.getActiveStatus()) || pricing.getActiveStatus().equals(activeStatus))
-                    && (startTime.isAfter(pricing.getOpenTime()) || startTime.equals(pricing.getOpenTime()))
-                    && (endTime.isBefore(pricing.getCloseTime()) || endTime.equals(pricing.getCloseTime()))) {
-                return pricing.getUnitPrice();
-            }
-        }
-        throw new IllegalArgumentException("No price found for the given date and time");
     }
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//PHƯƠNG THỨC CONVERT VÀ TRẢ VỀ NHỮNG THÔNG TIN CẦN THIẾT CHO CLIENTS
+private BookingResponseDTO convertToResponseDTO(Booking booking) {
+    BookingResponseDTO responseDTO = new BookingResponseDTO();
+
+    responseDTO.setCustomerName(booking.getUser().getLastName());
+    responseDTO.setPhone(booking.getUser().getPhone());
+    responseDTO.setCourtName(booking.getCourt().getCourtName());
+    responseDTO.setAddress(booking.getCourt().getCourtAddress());
+    responseDTO.setTotalPrice(booking.getTotalPrice());
+    responseDTO.setBookingDate(booking.getBooking_date());
+    List<BookingDetailResponseDTO> detailResponseDTOs = booking.getBookingDetails().stream()
+            .map(detail -> {
+                BookingDetailResponseDTO detailResponseDTO = new BookingDetailResponseDTO();
+
+                detailResponseDTO.setPrice(detail.getUnitPrice());
+                detailResponseDTO.setStartTime(detail.getStartTime());
+                detailResponseDTO.setEndTime(detail.getEndTime());
+                detailResponseDTO.setQuantity(detail.getQuantity());
+                detailResponseDTO.setSubCourtName(detail.getSubCourt().getSubCourtName());
+                return detailResponseDTO;
+            }).collect(Collectors.toList());
+
+    responseDTO.setBookingDetails(detailResponseDTOs);
+    responseBookingDTO = responseDTO;
+    return responseDTO;
+}
+
+@Override
+public BookingResponseDTO showBill() {
+    return responseBookingDTO;
+}
+
+private double calTotalPrice(int courtID, LocalTime startTime, LocalTime endTime, LocalDate date) {
+    List<LocalTime> times = new ArrayList<>();
+    double sum = 0;
+    while (!startTime.isAfter(endTime)) {
+        times.add(startTime);
+        startTime = startTime.plusMinutes(30);
+    }
+    for (int i = 0; i < times.size() - 1; i++) {
+        //Double tmp = priceRepository.getPriceOfSlot(courtID,times.get(i), times.get(i + 1), dayOfWeek)/2;
+        double tmp = getPrice(courtID, times.get(i), times.get(i + 1), date) / 2;
+        sum += tmp;
+    }
+    return sum;
+}
+
+public double getPrice(int courtId, LocalTime startTime, LocalTime endTime, LocalDate date) {
+    DayOfWeek dayOfWeek = date.getDayOfWeek();
+    String activeStatus;
+
+    if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+        activeStatus = "CT";
+    } else {
+        activeStatus = "TT";
+    }
+
+    List<Price> priceList = priceRepository.getPriceByCourtID(courtId);
+
+    for (Price pricing : priceList) {
+        if (("ALL".equals(pricing.getActiveStatus()) || pricing.getActiveStatus().equals(activeStatus))
+                && (startTime.isAfter(pricing.getOpenTime()) || startTime.equals(pricing.getOpenTime()))
+                && (endTime.isBefore(pricing.getCloseTime()) || endTime.equals(pricing.getCloseTime()))) {
+            return pricing.getUnitPrice();
+        }
+    }
+    throw new IllegalArgumentException("No price found for the given date and time");
+}
 }

@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Controller;
 
 import com.SWP.BadmintonCourtBooking.Dto.*;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
+import com.SWP.BadmintonCourtBooking.Entity.Booking;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,13 +37,20 @@ public class BookingController {
 
     //API ĐẶT SÂN THEO NGÀY
     @PostMapping("/book")
-    public ResponseEntity<BookingResponseDTO> createBooking(@RequestBody BookingDto bookingDto) {
+    public ResponseEntity<BookingResponseDTO> createPreBooking(@RequestBody BookingDto bookingDto) {
         //log.info("BookingDto: {}", bookingDto);
-        BookingResponseDTO bookingResponse = bookingService.saveBooking(bookingDto);
+        BookingResponseDTO bookingResponse = bookingService.preBooking(bookingDto);
 
-        return new ResponseEntity<>(bookingResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(bookingResponse, HttpStatus.OK);
     }
 
+    @GetMapping("/book/saveBooking/{payCode}")
+    public ResponseEntity<Booking> saveBooking(@RequestParam String payCode) {
+        //log.info("BookingDto: {}", bookingDto);
+        Booking booking = bookingService.saveBookingIfUserPaid(payCode);
+
+        return new ResponseEntity<>(booking, HttpStatus.CREATED);
+    }
     @GetMapping("/book/ProvisionalInvoice")
     public ResponseEntity<BookingResponseDTO> responseProvisionalInvoice() {
         return new ResponseEntity<>(bookingService.showBill(), HttpStatus.OK);

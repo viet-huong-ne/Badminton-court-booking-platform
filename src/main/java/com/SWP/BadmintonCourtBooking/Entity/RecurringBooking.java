@@ -21,6 +21,9 @@ public class RecurringBooking {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "total_price")
+    private Double totalPrice;
+
     @ManyToMany
     @JoinTable(name = "recurring_booking_sub_courts",
             joinColumns = @JoinColumn(name = "recurring_booking_id"),
