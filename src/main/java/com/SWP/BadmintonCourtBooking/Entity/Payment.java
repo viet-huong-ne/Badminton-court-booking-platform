@@ -13,28 +13,28 @@ import java.util.Date;
 @Data
 public class Payment {
     @Id
-    @Column(name = "PaymentID")
+    @Column(name = "payment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer paymentId;
 
-    @Column(name = "PaymentAmount")
+    @Column(name = "payment_amount")
     private BigDecimal paymentAmount;
 
-    @Column(name = "PaymentTime")
+    @Column(name = "payment_time")
     private Date paymentTime;
 
-    @Column(name = "PaymentStatus")
+    @Column(name = "payment_status")
     private String paymentStatus;
 
 //    @ManyToOne
 //    @JsonIgnore
-    @JoinColumn(name = "UserID")
+    @JoinColumn(name = "user_id")
     private int userId;
 
-    @Column(name = "BankCode")
+    @Column(name = "bank_code")
     private String bankCode;
 
-    @Column(name = "TrasactionCode")
+    @Column(name = "trasaction_code")
     private String trasactionCode;
 
 }

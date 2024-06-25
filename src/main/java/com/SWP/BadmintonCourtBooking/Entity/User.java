@@ -20,29 +20,29 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //tự tạo ra chuỗi
-    @Column(name = "User_ID", nullable = false)
+    @Column(name = "user_id", nullable = false)
     private Integer userID;
 
-    @Column(name = "User_Name", nullable = false)
+    @Column(name = "user_name", nullable = false)
     private String userName;
 
-    @Column(name = "Password", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "First_Name")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "Last_Name" )
+    @Column(name = "last_name" )
     private String lastName;
 
-    @Column(name = "Email", nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "Phone", nullable = false)
+    @Column(name = "phone", nullable = false)
     private String phone;
 
     @ManyToOne
-    @JoinColumn(name = "Role_ID", nullable = false)
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

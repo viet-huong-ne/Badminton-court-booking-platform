@@ -19,11 +19,11 @@ import java.util.List;
 @Table(name = "Roles")
 public class Role {
     @Id
-    @Column(name = "Role_ID", nullable = false)
+    @Column(name = "role_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer roleID;
 
-    @Column(name = "Role_Name")
+    @Column(name = "role_name")
     private String roleName;
 
     @JsonIgnore

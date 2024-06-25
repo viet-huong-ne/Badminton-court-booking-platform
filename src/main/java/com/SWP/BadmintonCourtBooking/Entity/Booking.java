@@ -15,20 +15,20 @@ import java.util.List;
 @Table(name = "Booking")
 public class Booking {
     @Id
-    @Column(name = "BookingID")
+    @Column(name = "booking_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer BookingID;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CourtID", nullable = false)
+    @JoinColumn(name = "court_id", nullable = false)
     private Court court;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserID", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name = "booking_date")
     private LocalDate booking_date;
-    @Column(name = "totalPrice")
+    @Column(name = "total_price")
     private Double totalPrice;
     @Column(name = "booking_type", columnDefinition = "nvarchar(255)")
     private String booking_type;

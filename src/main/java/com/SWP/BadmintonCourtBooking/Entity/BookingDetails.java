@@ -22,27 +22,27 @@ public class BookingDetails {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "BookingID")
+    @JoinColumn(name = "booking_id")
     private Booking booking;
 
     @ManyToOne
-    @JoinColumn(name = "SubCourtID")
+    @JoinColumn(name = "sub_court_id")
     private SubCourt subCourt;
 
-    @Column(name = "Quantity")
+    @Column(name = "quantity")
     private int Quantity;
 
-    @Column(name = "UnitPrice")
+    @Column(name = "unit_price")
     private Double UnitPrice;
 
 //    @Column(name = "ServiceID")
 //    private String ServiceID;
 
-    @Column(name = "StartTime")
+    @Column(name = "start_time")
     private LocalTime StartTime;
     //private Time StartTime;
 
-    @Column(name = "EndTime")
+    @Column(name = "end_time")
     private LocalTime EndTime;
     //private Time EndTime;
 }

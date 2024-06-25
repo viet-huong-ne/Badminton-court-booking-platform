@@ -61,14 +61,14 @@ public class Court {
 
      */
     @Id
-    @Column(name = "CourtID")
+    @Column(name = "court_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer  courtID;
 
-    @Column(name = "CourtName", columnDefinition = "nvarchar(200)")
+    @Column(name = "court_name", columnDefinition = "nvarchar(200)")
     private String courtName;
 
-    @Column(name = "District", columnDefinition = "nvarchar(30)")
+    @Column(name = "district", columnDefinition = "nvarchar(30)")
     private String District;
 
     @Column(name = "court_address", nullable = false, columnDefinition = "nvarchar(255)")
@@ -86,7 +86,7 @@ public class Court {
     @Column(name = "slot_duration")
     private Integer  duration;
 
-    @Column(name = "Images")
+    @Column(name = "images")
     private String images;
     @JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -96,7 +96,7 @@ public class Court {
     private List<Price> price;
 
     @ManyToOne
-    @JoinColumn(name = "UserID", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
 

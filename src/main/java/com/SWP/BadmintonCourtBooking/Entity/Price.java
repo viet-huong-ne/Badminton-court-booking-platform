@@ -13,11 +13,11 @@ import java.time.LocalTime;
 public class Price {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "priceID")
+    @Column(name = "price_id")
     private int priceID;
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "courtID", nullable = false)
+    @JoinColumn(name = "court_id", nullable = false)
     private Court court;
 
     @Column(name = "opening_time")
@@ -26,9 +26,9 @@ public class Price {
     @Column(name = "close_time")
     private LocalTime closeTime;
 
-    @Column(name = "UnitPrice")
+    @Column(name = "unit_price")
     private double unitPrice;
 
-    @Column(name = "activeStatus")
+    @Column(name = "active_status")
     private String activeStatus;
 }
