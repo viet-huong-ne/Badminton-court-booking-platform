@@ -1,12 +1,13 @@
 package com.SWP.BadmintonCourtBooking.Entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-
+@Data
 @Entity
 public class RecurringBooking {
     @Id

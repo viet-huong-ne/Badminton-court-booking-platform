@@ -53,9 +53,9 @@ public class BookingController {
     }
     //API pre booking khi người duùng bấm chuyển hướng qua trang nhập ttin thanh toán
     @PostMapping("/provisionalInvoice")
-    public ResponseEntity<BookingResponseDTO> responseProvisionalInvoice(@RequestBody BookingDto bookingDto) {
-        BookingResponseDTO bookingResponse = bookingService.preBooking(bookingDto);
-        return new ResponseEntity<>(bookingResponse, HttpStatus.OK);
+    public ResponseEntity<Double> responseProvisionalInvoice(@RequestBody BookingDto bookingDto) {
+
+        return new ResponseEntity<>(bookingService.preBooking(bookingDto), HttpStatus.OK);
     }
 
     //API TRẢ VỀ THÔNG TIN BILL ĐÃ ĐẶT

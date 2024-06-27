@@ -40,6 +40,8 @@ public class BookingServiceImpl implements BookingService {
     private static final Logger logger = LoggerFactory.getLogger(BookingServiceImpl.class);
     @Autowired
     private PaymentRepository paymentRepository;
+    @Autowired
+    private RecurringBookingRepository recurringBookingRepository;
 
     @Override
     public ResponseCourtDto checkCourtAvailability(BookingRequest bookingRequest) {
@@ -67,8 +69,14 @@ public class BookingServiceImpl implements BookingService {
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     public ResponseCourtDto checkRecurring(BookingRequest bookingRequest) {
         DayOfWeek day = bookingRequest.getBookingDate().getDayOfWeek();
+        boolean status = false;
         List<SubCourt> subCourts = subCourtRepository.getSubCourtByCourtID(bookingRequest.getCourtID());
-        //List<RecurringBooking> booking = bookingDetailsRepository.findByBookingDate(bookingRequest.getBookingDate(), bookingRequest.getCourtID());
+        List<RecurringBooking> booking = recurringBookingRepository.findRecuByCourtID(bookingRequest.getCourtID(), bookingRequest.getStartTime(), bookingRequest.getEndTime() );
+        for (RecurringBooking x : booking) {
+            for (DayOfWeek y : x.getDaysOfWeek()){
+
+            }
+        }
         return null;
     }
 
@@ -82,39 +90,13 @@ public class BookingServiceImpl implements BookingService {
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     @Override
-    public BookingResponseDTO preBooking(BookingDto bookingDto) {
-        //Double tmp = priceRepository.getPriceOfSlot(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusHours(1));
-        Double tmp = getPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusMinutes(30), bookingDto.getBookingDate());
-        User user = userRepository.findById(bookingDto.getCustomerId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
-        Court court = courtRepository.findById(bookingDto.getCourtID())
-                .orElseThrow(() -> new RuntimeException("Court not found"));
-        Booking booking = new Booking();
-        booking.setUser(user);
-        booking.setCourt(court);
-        booking.setBooking_type("theo ngay");
-        booking.setBooking_date(bookingDto.getBookingDate());
-        List<BookingDetails> bookingDetails = bookingDto.getBookingDetails().stream()
-                .map(detailDTO -> {
-                    BookingDetails detail = new BookingDetails();
-                    detail.setSubCourt(subCourtRepository.findById(detailDTO.getSubCourtID()).orElseThrow(() -> new RuntimeException("Sub court not found")));
-                    detail.setUnitPrice(tmp);
-                    detail.setStartTime(detailDTO.getStartTime());
-                    detail.setEndTime(detailDTO.getEndTime());
-                    Duration duration = Duration.between(detailDTO.getStartTime(), detailDTO.getEndTime());
-                    detail.setQuantity((int) duration.toHours());
-                    detail.setBooking(booking);
-                    return detail;
-                }).collect(Collectors.toList());
-        booking.setBookingDetails(bookingDetails);
-        //double totalPrice = calTotalPrice(bookingDto.getCourtID(),bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime())* bookingDetails.size();
-        double totalPrice = calTotalPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime(), bookingDto.getBookingDate()) * bookingDetails.size();
-        booking.setTotalPrice(totalPrice);
+    public double preBooking(BookingDto bookingDto) {
+
+        double totalPrice = calTotalPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime(), bookingDto.getBookingDate()) * bookingDto.getBookingDetails().size();
+
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
-//        Booking savedBooking = bookingRepository.save(booking);
-//        return convertToResponseDTO(savedBooking);
-        tmpBooking = booking;
-        return convertToResponseDTO(booking);
+
+        return totalPrice;
     }
 
     @Override
