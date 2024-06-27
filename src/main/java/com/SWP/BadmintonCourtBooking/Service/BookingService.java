@@ -13,6 +13,7 @@ public interface BookingService {
     ResponseCourtDto checkCourtAvailability(BookingRequest bookingRequest);
     ResponseCourtDto getLastAvailabilityCheck();
     BookingResponseDTO preBooking(BookingDto bookingDTO);
+    BookingResponseDTO saveBooking(BookingDto bookingDTO);
     Booking saveBookingIfUserPaid(String payCode);
     BookingResponseDTO showBill();
 

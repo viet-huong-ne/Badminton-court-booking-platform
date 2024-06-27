@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 import com.SWP.BadmintonCourtBooking.Dto.*;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
 import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Repository.*;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
@@ -62,8 +63,16 @@ public class BookingServiceImpl implements BookingService {
         lastAvailabilityCheck = responseCourtDto;
         return responseCourtDto;
     }
-    //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+    //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    public ResponseCourtDto checkRecurring(BookingRequest bookingRequest) {
+        DayOfWeek day = bookingRequest.getBookingDate().getDayOfWeek();
+        List<SubCourt> subCourts = subCourtRepository.getSubCourtByCourtID(bookingRequest.getCourtID());
+        //List<RecurringBooking> booking = bookingDetailsRepository.findByBookingDate(bookingRequest.getBookingDate(), bookingRequest.getCourtID());
+        return null;
+    }
+
+    //------------------------------------------------------------------------------------------------
     @Override
     public ResponseCourtDto getLastAvailabilityCheck() {
         return lastAvailabilityCheck;
@@ -108,6 +117,40 @@ public class BookingServiceImpl implements BookingService {
         return convertToResponseDTO(booking);
     }
 
+    @Override
+    public BookingResponseDTO saveBooking(BookingDto bookingDto) {
+        //Double tmp = priceRepository.getPriceOfSlot(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusHours(1));
+        Double tmp = getPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusMinutes(30), bookingDto.getBookingDate());
+        User user = userRepository.findById(bookingDto.getCustomerId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        Court court = courtRepository.findById(bookingDto.getCourtID())
+                .orElseThrow(() -> new RuntimeException("Court not found"));
+        Booking booking = new Booking();
+        booking.setUser(user);
+        booking.setCourt(court);
+        booking.setBooking_type("theo ngay");
+        booking.setBooking_date(bookingDto.getBookingDate());
+        List<BookingDetails> bookingDetails = bookingDto.getBookingDetails().stream()
+                .map(detailDTO -> {
+                    BookingDetails detail = new BookingDetails();
+                    detail.setSubCourt(subCourtRepository.findById(detailDTO.getSubCourtID()).orElseThrow(() -> new RuntimeException("Sub court not found")));
+                    detail.setUnitPrice(tmp);
+                    detail.setStartTime(detailDTO.getStartTime());
+                    detail.setEndTime(detailDTO.getEndTime());
+                    Duration duration = Duration.between(detailDTO.getStartTime(), detailDTO.getEndTime());
+                    detail.setQuantity((int) duration.toHours());
+                    detail.setBooking(booking);
+                    return detail;
+                }).collect(Collectors.toList());
+        booking.setBookingDetails(bookingDetails);
+        //double totalPrice = calTotalPrice(bookingDto.getCourtID(),bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime())* bookingDetails.size();
+        double totalPrice = calTotalPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime(), bookingDto.getBookingDate()) * bookingDetails.size();
+        booking.setTotalPrice(totalPrice);
+        //----------------------------------------------------------------------------------------------------------------------------------------------------------
+        Booking savedBooking = bookingRepository.save(booking);
+        return convertToResponseDTO(savedBooking);
+    }
+
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     @Transactional
     public Booking saveBookingIfUserPaid(String payCode) {
@@ -126,74 +169,76 @@ public class BookingServiceImpl implements BookingService {
         } else {
             throw new IllegalStateException("User has not completed payment for this booking");
         }
+
     }
-//-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 //PHƯƠNG THỨC CONVERT VÀ TRẢ VỀ NHỮNG THÔNG TIN CẦN THIẾT CHO CLIENTS
-private BookingResponseDTO convertToResponseDTO(Booking booking) {
-    BookingResponseDTO responseDTO = new BookingResponseDTO();
+    private BookingResponseDTO convertToResponseDTO(Booking booking) {
+        BookingResponseDTO responseDTO = new BookingResponseDTO();
 
-    responseDTO.setCustomerName(booking.getUser().getLastName());
-    responseDTO.setPhone(booking.getUser().getPhone());
-    responseDTO.setCourtName(booking.getCourt().getCourtName());
-    responseDTO.setAddress(booking.getCourt().getCourtAddress());
-    responseDTO.setTotalPrice(booking.getTotalPrice());
-    responseDTO.setBookingDate(booking.getBooking_date());
-    List<BookingDetailResponseDTO> detailResponseDTOs = booking.getBookingDetails().stream()
-            .map(detail -> {
-                BookingDetailResponseDTO detailResponseDTO = new BookingDetailResponseDTO();
+        responseDTO.setCustomerName(booking.getUser().getLastName());
+        responseDTO.setPhone(booking.getUser().getPhone());
+        responseDTO.setCourtName(booking.getCourt().getCourtName());
+        responseDTO.setAddress(booking.getCourt().getCourtAddress());
+        responseDTO.setTotalPrice(booking.getTotalPrice());
+        responseDTO.setBookingDate(booking.getBooking_date());
+        List<BookingDetailResponseDTO> detailResponseDTOs = booking.getBookingDetails().stream()
+                .map(detail -> {
+                    BookingDetailResponseDTO detailResponseDTO = new BookingDetailResponseDTO();
 
-                detailResponseDTO.setPrice(detail.getUnitPrice());
-                detailResponseDTO.setStartTime(detail.getStartTime());
-                detailResponseDTO.setEndTime(detail.getEndTime());
-                detailResponseDTO.setQuantity(detail.getQuantity());
-                detailResponseDTO.setSubCourtName(detail.getSubCourt().getSubCourtName());
-                return detailResponseDTO;
-            }).collect(Collectors.toList());
+                    detailResponseDTO.setPrice(detail.getUnitPrice());
+                    detailResponseDTO.setStartTime(detail.getStartTime());
+                    detailResponseDTO.setEndTime(detail.getEndTime());
+                    detailResponseDTO.setQuantity(detail.getQuantity());
+                    detailResponseDTO.setSubCourtName(detail.getSubCourt().getSubCourtName());
+                    return detailResponseDTO;
+                }).collect(Collectors.toList());
 
-    responseDTO.setBookingDetails(detailResponseDTOs);
-    responseBookingDTO = responseDTO;
-    return responseDTO;
-}
-
-@Override
-public BookingResponseDTO showBill() {
-    return responseBookingDTO;
-}
-
-private double calTotalPrice(int courtID, LocalTime startTime, LocalTime endTime, LocalDate date) {
-    List<LocalTime> times = new ArrayList<>();
-    double sum = 0;
-    while (!startTime.isAfter(endTime)) {
-        times.add(startTime);
-        startTime = startTime.plusMinutes(30);
-    }
-    for (int i = 0; i < times.size() - 1; i++) {
-        //Double tmp = priceRepository.getPriceOfSlot(courtID,times.get(i), times.get(i + 1), dayOfWeek)/2;
-        double tmp = getPrice(courtID, times.get(i), times.get(i + 1), date) / 2;
-        sum += tmp;
-    }
-    return sum;
-}
-
-public double getPrice(int courtId, LocalTime startTime, LocalTime endTime, LocalDate date) {
-    DayOfWeek dayOfWeek = date.getDayOfWeek();
-    String activeStatus;
-
-    if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
-        activeStatus = "CT";
-    } else {
-        activeStatus = "TT";
+        responseDTO.setBookingDetails(detailResponseDTOs);
+        responseBookingDTO = responseDTO;
+        return responseDTO;
     }
 
-    List<Price> priceList = priceRepository.getPriceByCourtID(courtId);
+    @Override
+    public BookingResponseDTO showBill() {
+        return responseBookingDTO;
+    }
 
-    for (Price pricing : priceList) {
-        if (("ALL".equals(pricing.getActiveStatus()) || pricing.getActiveStatus().equals(activeStatus))
-                && (startTime.isAfter(pricing.getOpenTime()) || startTime.equals(pricing.getOpenTime()))
-                && (endTime.isBefore(pricing.getCloseTime()) || endTime.equals(pricing.getCloseTime()))) {
-            return pricing.getUnitPrice();
+    private double calTotalPrice(int courtID, LocalTime startTime, LocalTime endTime, LocalDate date) {
+        List<LocalTime> times = new ArrayList<>();
+        double sum = 0;
+        while (!startTime.isAfter(endTime)) {
+            times.add(startTime);
+            startTime = startTime.plusMinutes(30);
         }
+        for (int i = 0; i < times.size() - 1; i++) {
+            //Double tmp = priceRepository.getPriceOfSlot(courtID,times.get(i), times.get(i + 1), dayOfWeek)/2;
+            double tmp = getPrice(courtID, times.get(i), times.get(i + 1), date) / 2;
+            sum += tmp;
+        }
+        return sum;
     }
-    throw new IllegalArgumentException("No price found for the given date and time");
-}
+
+    public double getPrice(int courtId, LocalTime startTime, LocalTime endTime, LocalDate date) {
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        String activeStatus;
+
+        if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+            activeStatus = "CT";
+        } else {
+            activeStatus = "TT";
+        }
+
+        List<Price> priceList = priceRepository.getPriceByCourtID(courtId);
+
+        for (Price pricing : priceList) {
+            if (("ALL".equals(pricing.getActiveStatus()) || pricing.getActiveStatus().equals(activeStatus))
+                    && (startTime.isAfter(pricing.getOpenTime()) || startTime.equals(pricing.getOpenTime()))
+                    && (endTime.isBefore(pricing.getCloseTime()) || endTime.equals(pricing.getCloseTime()))) {
+                return pricing.getUnitPrice();
+            }
+        }
+        throw new IllegalArgumentException("No price found for the given date and time");
+    }
 }

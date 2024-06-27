@@ -39,11 +39,11 @@ public class BookingController {
     @PostMapping("/book")
     public ResponseEntity<BookingResponseDTO> createPreBooking(@RequestBody BookingDto bookingDto) {
         //log.info("BookingDto: {}", bookingDto);
-        BookingResponseDTO bookingResponse = bookingService.preBooking(bookingDto);
+        BookingResponseDTO booking = bookingService.saveBooking(bookingDto);
 
-        return new ResponseEntity<>(bookingResponse, HttpStatus.OK);
+        return new ResponseEntity<>(booking, HttpStatus.CREATED);
     }
-
+    //API lưu booking khi đã thanh toán thành công
     @GetMapping("/book/saveBooking/{payCode}")
     public ResponseEntity<Booking> saveBooking(@RequestParam String payCode) {
         //log.info("BookingDto: {}", bookingDto);
@@ -51,9 +51,11 @@ public class BookingController {
 
         return new ResponseEntity<>(booking, HttpStatus.CREATED);
     }
-    @GetMapping("/book/ProvisionalInvoice")
-    public ResponseEntity<BookingResponseDTO> responseProvisionalInvoice() {
-        return new ResponseEntity<>(bookingService.showBill(), HttpStatus.OK);
+    //API pre booking khi người duùng bấm chuyển hướng qua trang nhập ttin thanh toán
+    @PostMapping("/provisionalInvoice")
+    public ResponseEntity<BookingResponseDTO> responseProvisionalInvoice(@RequestBody BookingDto bookingDto) {
+        BookingResponseDTO bookingResponse = bookingService.preBooking(bookingDto);
+        return new ResponseEntity<>(bookingResponse, HttpStatus.OK);
     }
 
     //API TRẢ VỀ THÔNG TIN BILL ĐÃ ĐẶT
