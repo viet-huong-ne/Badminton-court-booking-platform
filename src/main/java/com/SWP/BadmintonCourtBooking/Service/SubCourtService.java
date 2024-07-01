@@ -8,4 +8,6 @@ import java.util.List;
 @Service
 public interface SubCourtService {
     List<SubCourt> getSubCourtByCourtId(int courtId);
+
+
 }

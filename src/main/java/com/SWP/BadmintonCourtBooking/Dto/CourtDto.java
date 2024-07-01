@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class CourtDto {
-    private Integer  courtID;
+    private Integer courtID;
 
     private String courtName;
 

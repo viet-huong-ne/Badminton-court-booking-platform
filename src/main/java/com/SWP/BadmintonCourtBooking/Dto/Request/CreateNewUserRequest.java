@@ -24,5 +24,5 @@ public class CreateNewUserRequest {
 
     private String phone;
 
-    private Integer roleId;
+    private Integer roleID;
 }

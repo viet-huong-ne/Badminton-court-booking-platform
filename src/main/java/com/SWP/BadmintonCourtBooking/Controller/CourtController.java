@@ -1,6 +1,7 @@
 package com.SWP.BadmintonCourtBooking.Controller;
 
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
+import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.SlotOfCourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.SubCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
@@ -35,16 +36,19 @@ public class CourtController {
     private SlotOfCourtService slotOfCourtService;
     @Autowired
     private SubCourtService subCourtService;
+
     //API DÙNG ĐỂ TÌM TẤT CẢ CÁC SÂN
     @GetMapping("/getAllCourt")
     public List<Court> getAllCourt() {
         return courtService.getAllCourt();
     }
+
 //     API de tim kiem cac san theo quan
 //    @GetMapping("/{district}")
 //    public List<Court> getCourtByDistrict(@PathVariable String district){
 //        return courtService.getCourtByDistrict(district);
 //    }
+
     //API DÙNG ĐỂ TÌM SÂN THEO QUẬN
     @GetMapping("/{district}")
     public List<CourtDto> getCourtByDistrict(@PathVariable String district) {
@@ -76,6 +80,7 @@ public class CourtController {
         }
         return courtDtoList;
     }
+
     //TODO GET COURT BY ID TO BOOKING
     @GetMapping("/id/{courtID}")
     public CourtDto getCourtByID(@PathVariable Integer courtID) {
@@ -97,5 +102,12 @@ public class CourtController {
             return new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(),court.get().getImages(), subCourtDtoList, price, court.get().getOpenTime(), court.get().getCloseTime());
         } else throw new IllegalArgumentException("Court not found for ID: " + courtID);
 
+    }
+
+    //TODO: CREATE NEW COURT
+    @PostMapping("/createcourt")
+    public Court createNewCourt(@RequestBody CreateCourtRequest createCourtRequest){
+        var court = courtService.createNewCourt(createCourtRequest);
+        return court;
     }
 }

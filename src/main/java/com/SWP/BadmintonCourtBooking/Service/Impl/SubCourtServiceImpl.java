@@ -12,9 +12,12 @@ import java.util.List;
 public class SubCourtServiceImpl implements SubCourtService {
     @Autowired
     private SubCourtRepository subCourtRepository;
+
     @Override
     public List<SubCourt> getSubCourtByCourtId(int courtID) {
         return subCourtRepository.getSubCourtByCourtID(courtID);
     }
+
+
 
 }

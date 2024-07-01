@@ -61,7 +61,7 @@ public class AdminServiceImpl implements AdminService {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());
         //Role role = roleRepository.findByName("User");
-        Role role = roleRepository.findById(request.getRoleId()).orElseThrow(() -> new RuntimeException("Role not found"));
+        Role role = roleRepository.findById(request.getRoleID()).orElseThrow(() -> new RuntimeException("Role not found"));
         user.setRole(role);
         return userMapper.toCreateNewUserResponse(userRepository.save(user));
     }

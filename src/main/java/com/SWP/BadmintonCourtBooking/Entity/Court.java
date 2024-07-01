@@ -88,9 +88,11 @@ public class Court {
 
     @Column(name = "images")
     private String images;
+
     @JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubCourt> subCourt;
+
     //@JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> price;
