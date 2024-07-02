@@ -30,11 +30,11 @@ public class CreateCourtRequest {
 
     private Integer duration;
 
-    private String images;
+    private List<String> images;
 
     private Integer userID;
 
-    //private List<SubCourt> listSubCourt;
+    private Integer statusCourt;
 
     //private List<Price> listPrice;
 }

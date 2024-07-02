@@ -12,20 +12,16 @@ import java.util.Optional;
 @Service
 public interface CourtService {
 
+    //TODO:
     public List<Court> getAllCourt();
 
-
+    //TODO:
     public List<Court> getCourtByDistrict(String district);
 
-
+    //TODO:
     public Optional<Court> getCourtByID(int courtID);
 
 
-//    public Court createCourt(Court court);
-//
-//
-//    public Court updateCourt(Court court);
-
     //TODO: CREATE NEW COURT
-    public Court createNewCourt(CreateCourtRequest createCourtRequest);
+    public CreateCourtResponse createNewCourt(CreateCourtRequest createCourtRequest);
 }

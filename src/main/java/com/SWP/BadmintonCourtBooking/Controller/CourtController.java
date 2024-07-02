@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Controller;
 
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Dto.SlotOfCourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.SubCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
@@ -106,7 +107,7 @@ public class CourtController {
 
     //TODO: CREATE NEW COURT
     @PostMapping("/createcourt")
-    public Court createNewCourt(@RequestBody CreateCourtRequest createCourtRequest){
+    public CreateCourtResponse createNewCourt(@RequestBody CreateCourtRequest createCourtRequest){
         var court = courtService.createNewCourt(createCourtRequest);
         return court;
     }

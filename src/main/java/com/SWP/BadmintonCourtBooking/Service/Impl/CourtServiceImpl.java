@@ -3,6 +3,7 @@ package com.SWP.BadmintonCourtBooking.Service.Impl;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
+import com.SWP.BadmintonCourtBooking.Entity.Images;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import com.SWP.BadmintonCourtBooking.Mapper.CourtMapper;
 import com.SWP.BadmintonCourtBooking.Repository.CourtRepository;
@@ -20,7 +21,6 @@ public class CourtServiceImpl implements CourtService {
     @Autowired
     private CourtRepository courtRepository;
 
-    private CourtMapper courtMapper;
     @Autowired
     private UserRepository userRepository;
 
@@ -41,27 +41,8 @@ public class CourtServiceImpl implements CourtService {
     }
 
 
-//    @Override
-//    public Court updateCourt(Court courtDetails) {
-//        Court court = courtRepository.findById(courtDetails.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
-//        court.setCourtName(courtDetails.getCourtName());
-//        court.setCourtAddress(courtDetails.getCourtAddress());
-//        court.setCourtQuantity(courtDetails.getCourtQuantity());
-//        court.setDuration(courtDetails.getDuration());
-//        court.setPrice(courtDetails.getPrice());
-//
-//        return null;
-//    }
-//
-//
-//    @Override
-//    public Court createCourt(Court court) {
-//        return null;
-//    }
-
-
     @Override
-    public Court createNewCourt(CreateCourtRequest createCourtRequest) {
+    public CreateCourtResponse createNewCourt(CreateCourtRequest createCourtRequest) {
         Court court = new Court();
         court.setCourtName(createCourtRequest.getCourtName());
         court.setCourtAddress(createCourtRequest.getCourtAddress());
@@ -70,8 +51,9 @@ public class CourtServiceImpl implements CourtService {
         court.setOpenTime(createCourtRequest.getOpenTime());
         court.setCloseTime(createCourtRequest.getCloseTime());
         court.setCourtQuantity(createCourtRequest.getCourtQuantity());
-        //court.setPrice(createCourtRequest.getListPrice());
+        court.setStatusCourt(createCourtRequest.getStatusCourt());
         court.setUser(userRepository.findById(createCourtRequest.getUserID()).orElseThrow(() -> new RuntimeException("User not found")));
+
         List<SubCourt> list = new ArrayList<>();
         for (int i = 0; i < createCourtRequest.getCourtQuantity(); i++) {
             SubCourt subCourt = new SubCourt();
@@ -81,7 +63,18 @@ public class CourtServiceImpl implements CourtService {
             list.add(subCourt);
         };
         court.setSubCourt(list);
-        //return courtMapper.toCreateCourtResponse(courtRepository.save(court));\
-        return  courtRepository.save(court);
+
+        List<Images> listImages = new ArrayList<>();
+        for (int j = 0; j < createCourtRequest.getImages().size(); j++){
+            Images image = new Images();
+
+            image.setCourt(court);
+            image.setImage(createCourtRequest.getImages().get(j));
+            listImages.add(image);
+        }
+        court.setImages(listImages);
+
+        courtRepository.save(court);
+        return CreateCourtResponse.builder().court(court).build();
     }
 }
