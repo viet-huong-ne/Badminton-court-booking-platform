@@ -7,7 +7,13 @@ import org.springframework.stereotype.Service;
 @Service
 public interface UserService {
 
+    //API: AUTHENTICATION
     //TODO: REGISTER
     RegisterResponse registerUser(RegisterRequest request);
+
+    //TODO: LOGIN
+
+    //API: PROFILE USER
+    //TODO: UPDATE PROFILE
 
 }

@@ -1,5 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Dto;
 
+import com.SWP.BadmintonCourtBooking.Entity.Images;
 import com.SWP.BadmintonCourtBooking.Entity.Price;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 public class CourtDto {
-    private Integer  courtID;
+    private Integer courtID;
 
     private String courtName;
 
@@ -23,7 +24,8 @@ public class CourtDto {
 
     private Integer  duration;
 
-    private String images;
+    private List<Images> images;
+
     private List<SubCourtDto> subCourt;
 
     private List<Price> price;

@@ -56,8 +56,9 @@ public class UserServiceImpl implements UserService {
         user.setPhone(request.getPhone());
         Role role = roleRepository.findByName("Customer");
         user.setRole(role);
-
-
         return userMapper.toUserResponse(userRepository.save(user));
     }
+
+    //TODO: GET LIST BOOKING
+
 }

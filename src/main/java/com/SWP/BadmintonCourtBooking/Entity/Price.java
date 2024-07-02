@@ -15,6 +15,7 @@ public class Price {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "price_id")
     private int priceID;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "court_id", nullable = false)

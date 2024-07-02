@@ -7,59 +7,14 @@ import lombok.*;
 import java.time.LocalTime;
 import java.util.List;
 
-//@Getter
-//@Setter
-@Data
+@Getter
+@Setter
+//@Data
 @Entity
 @Table(name = "Court")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Court {
-    /*
-    @Id
-    @Column(name = "CourtID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer courtID;
-
-    @Column(name = "CourtName", columnDefinition = "nvarchar(200)")
-    private String courtName;
-
-    @Column(name = "District", columnDefinition = "nvarchar(30)")
-    private String District;
-
-    @Column(name = "court_address", nullable = false, columnDefinition = "nvarchar(255)")
-    private String courtAddress;
-
-    @Column(name = "court_address")
-    private Integer courtQuantity;
-
-    @Column(name = "Slot_Duration")
-    private Integer duration;
-
-    @Column(name = "Images")
-    private String images;
-
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SubCourt> subCourt;
-
-    //@JsonIgnore
-    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Price> price;
-
-    @ManyToOne
-    @JoinColumn(name = "Id", nullable = false)
-    @JsonIgnore
-    private User user;
-
-    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL)
-    private List<SlotOfCourt> slotOfCourt;
-    @OneToMany(mappedBy = "court")
-    @JsonIgnore
-    private List<Booking> booking;
-
-     */
     @Id
     @Column(name = "court_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -86,11 +41,17 @@ public class Court {
     @Column(name = "slot_duration")
     private Integer  duration;
 
-    @Column(name = "images")
-    private String images;
-    @JsonIgnore
+    @Column(name = "status_court")
+    private Integer statusCourt;
+
+    //@JsonIgnore
+    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Images> images;
+
+    //@JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubCourt> subCourt;
+
     //@JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> price;
@@ -100,8 +61,6 @@ public class Court {
     @JsonIgnore
     private User user;
 
-    //    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL)
-//    private List<SlotOfCourt> slotOfCourt;
     @OneToMany(mappedBy = "court")
     @JsonIgnore
     private List<Booking> booking;
