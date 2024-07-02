@@ -13,12 +13,5 @@ import java.util.List;
 @Service
 public class RecurringBookingServiceImpl implements RecurringBookingService {
 
-    @Autowired
-    private SubCourtRepository subCourtRepository;
-    @Override
-    public ResponseCourtDto checkCourtAvailability(RecurringBookingRequest recurringBookingRequest) {
-        List<SubCourt> subCourtList = new ArrayList<>();
 
-        return null;
-    }
 }

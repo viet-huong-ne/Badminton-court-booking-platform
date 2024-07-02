@@ -117,13 +117,13 @@ public class PaymentController {
         this.serviceOfPayment = serviceOfPayment;
     }
 
-    @GetMapping("/payInforV2")
+    @GetMapping("/payInforV2/{vnp_Amount}/{vnp_BankCode}/{vnp_OrderInfo}/{vnp_ResponseCode}/{vnp_TxnRef}")
     public ResponseEntity<?> transactionStatusDTO(
-            @RequestParam(value = "vnp_Amount") String amount,
-            @RequestParam(value = "vnp_BankCode") String bankCode,
-            @RequestParam(value = "vnp_OrderInfo") String orderInfo,
-            @RequestParam(value = "vnp_ResponseCode") String responseCode,
-            @RequestParam(value = "vnp_TxnRef") String transactinCode
+            @PathVariable(value = "vnp_Amount") String amount,
+            @PathVariable(value = "vnp_BankCode") String bankCode,
+            @PathVariable(value = "vnp_OrderInfo") String orderInfo,
+            @PathVariable(value = "vnp_ResponseCode") String responseCode,
+            @PathVariable(value = "vnp_TxnRef") String transactinCode
     ) {
         int userId = Config.extractUserId(orderInfo);
         TransactionStatusDTO transactionStatusDTO = new TransactionStatusDTO();
@@ -141,7 +141,7 @@ public class PaymentController {
             payment.setBankCode(bankCode);
             payment.setTrasactionCode(transactinCode);
             //User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("UserID not found"));
-            payment.setUserId(userId);
+            //còn thiếu set booking
 
             // You can set other fields as needed
 
@@ -159,7 +159,7 @@ public class PaymentController {
             payment.setPaymentStatus("Failed"); // Assuming it's successful by default
             payment.setBankCode(bankCode);
             payment.setTrasactionCode(transactinCode);
-            payment.setUserId(userId);
+            //còn thiếu set booking
             // You can set other fields as needed
 
             serviceOfPayment.savePayment(payment);// Save payment

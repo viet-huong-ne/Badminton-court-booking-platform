@@ -1,8 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Dto;
 
 import com.SWP.BadmintonCourtBooking.Entity.Price;
-import com.SWP.BadmintonCourtBooking.Entity.SlotOfCourt;
-import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -10,6 +10,6 @@ import java.util.List;
 
 @Repository
 public interface CourtRepository extends JpaRepository<Court, Integer> {
-    @Query("SELECT c FROM Court c WHERE c.District = :district")
+    @Query("SELECT c FROM Court c WHERE c.district = :district")
     List<Court> getCourtByDistrict(@Param("district") String district);
 }

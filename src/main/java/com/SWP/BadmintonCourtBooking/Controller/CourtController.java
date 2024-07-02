@@ -5,18 +5,13 @@ import com.SWP.BadmintonCourtBooking.Dto.SlotOfCourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.SubCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
 import com.SWP.BadmintonCourtBooking.Entity.Price;
-import com.SWP.BadmintonCourtBooking.Entity.SlotOfCourt;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
-//import com.SWP.BadmintonCourtBooking.Repository.SlotOfCourtRepository;
 import com.SWP.BadmintonCourtBooking.Service.CourtService;
 import com.SWP.BadmintonCourtBooking.Service.PriceService;
-import com.SWP.BadmintonCourtBooking.Service.SlotOfCourtService;
 import com.SWP.BadmintonCourtBooking.Service.SubCourtService;
-import lombok.Getter;
-import lombok.extern.flogger.Flogger;
-import org.apache.logging.log4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -31,8 +26,7 @@ public class CourtController {
     private CourtService courtService;
     @Autowired
     private PriceService priceService;
-    @Autowired
-    private SlotOfCourtService slotOfCourtService;
+
     @Autowired
     private SubCourtService subCourtService;
     //API DÙNG ĐỂ TÌM TẤT CẢ CÁC SÂN
@@ -47,7 +41,7 @@ public class CourtController {
 //    }
     //API DÙNG ĐỂ TÌM SÂN THEO QUẬN
     @GetMapping("/{district}")
-    public List<CourtDto> getCourtByDistrict(@PathVariable String district) {
+    public ResponseEntity<List<CourtDto>> getCourtByDistrict(@PathVariable String district) {
         List<Court> court = courtService.getCourtByDistrict(district);
         List<CourtDto> courtDtoList = new ArrayList<>();
        // List<SlotOfCourtDto> slotOfCourtDtoList = new ArrayList<>();
@@ -74,11 +68,11 @@ public class CourtController {
             subCourtDtoList = new ArrayList<>();
 
         }
-        return courtDtoList;
+        return new ResponseEntity<>(courtDtoList, HttpStatus.OK);
     }
     //TODO GET COURT BY ID TO BOOKING
     @GetMapping("/id/{courtID}")
-    public CourtDto getCourtByID(@PathVariable Integer courtID) {
+    public ResponseEntity<CourtDto> getCourtByID(@PathVariable Integer courtID) {
         Optional<Court> court = courtService.getCourtByID(courtID);
         if (court.isPresent()) {
             List<Price> price = priceService.getPriceOfCourt(courtID);
@@ -94,7 +88,7 @@ public class CourtController {
                 subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.isSubCourtStatus()));
             }
 
-            return new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(),court.get().getImages(), subCourtDtoList, price, court.get().getOpenTime(), court.get().getCloseTime());
+            return new ResponseEntity<>(new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(),court.get().getImages(), subCourtDtoList, price, court.get().getOpenTime(), court.get().getCloseTime()),HttpStatus.OK);
         } else throw new IllegalArgumentException("Court not found for ID: " + courtID);
 
     }

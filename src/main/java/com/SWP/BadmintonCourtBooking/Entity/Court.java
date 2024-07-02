@@ -69,7 +69,7 @@ public class Court {
     private String courtName;
 
     @Column(name = "district", columnDefinition = "nvarchar(30)")
-    private String District;
+    private String district;
 
     @Column(name = "court_address", nullable = false, columnDefinition = "nvarchar(255)")
     private String courtAddress;

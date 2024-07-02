@@ -7,5 +7,4 @@ import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 
 public interface RecurringBookingService {
 
-    ResponseCourtDto checkCourtAvailability(RecurringBookingRequest recurringBookingRequest);
 }

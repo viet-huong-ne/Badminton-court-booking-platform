@@ -28,8 +28,13 @@ public class Payment {
 
 //    @ManyToOne
 //    @JsonIgnore
-    @JoinColumn(name = "user_id")
-    private int userId;
+    //@JoinColumn(name = "user_id")
+    //private int userId;
+
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
 
     @Column(name = "bank_code")
     private String bankCode;
