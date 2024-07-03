@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+
 import java.util.Date;
 
 @Entity
@@ -13,8 +13,8 @@ import java.util.Date;
 @Data
 public class Payment {
     @Id
-    @Column(name = "PaymentID")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "PaymentID")
     private Integer paymentId;
 
     @Column(name = "PaymentAmount")
@@ -26,16 +26,20 @@ public class Payment {
     @Column(name = "PaymentStatus")
     private String paymentStatus;
 
+    @Column(name = "BankCode")
+    private String bankCode;
+
+    @Column(name = "OrderInfo")
+    private String OrderInfo;
+
 //    @ManyToOne
 //    @JsonIgnore
     @JoinColumn(name = "UserID")
     private int userId;
 
-    @Column(name = "BankCode")
-    private String bankCode;
 
-    @Column(name = "BookInfo")
-    private String bookInfo;
+
+
 
     public void setPaymentAmount(BigDecimal paymentAmount) {
         this.paymentAmount = paymentAmount;
@@ -69,26 +73,15 @@ public class Payment {
         return bankCode;
     }
 
-    public void setBookInfo(String bookInfo) {
-        this.bookInfo = bookInfo;
+    public void setOrderInfo(String orderInfo) {
+        this.OrderInfo = orderInfo;
     }
 
-    public String getBookInfo() {
-        return bookInfo;
+    public String getOrderInfo() {
+        return OrderInfo;
     }
 
-//    public void setUser(User user) {
-//        this.user = user;
-//    }
 
-//    @JsonIgnore
-//    public User getUser() {
-//        return user;
-//    }
-
-//    public Integer getUserId() {
-//        return user != null ? user.getId() : null;
-//    }
 
     public int getUserId() {
         return userId;

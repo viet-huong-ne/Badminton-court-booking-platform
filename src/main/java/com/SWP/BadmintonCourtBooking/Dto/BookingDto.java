@@ -20,3 +20,6 @@ public class BookingDto {
     private List<BookingDetailsDto> bookingDetails;
 
 }
+
+
+
