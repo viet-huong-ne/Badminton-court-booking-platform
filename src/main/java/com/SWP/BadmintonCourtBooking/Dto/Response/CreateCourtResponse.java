@@ -16,8 +16,11 @@ import java.util.List;
 @Builder
 public class CreateCourtResponse {
 
-    private Court court;
     /*
+    private Court court;
+    */
+
+
     private String courtName;
 
     private String district;
@@ -32,7 +35,11 @@ public class CreateCourtResponse {
 
     private List<Images> images;
 
-    private Integer courtQuantity;
-    */
-    //private List<SubCourt> subCourts;
+    //private Integer courtQuantity;
+
+    private Integer userID;
+
+    private String phone;
+
+    private List<SubCourt> subCourts;
 }

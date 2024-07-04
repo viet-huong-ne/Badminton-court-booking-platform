@@ -16,4 +16,8 @@ public interface UserService {
     //API: PROFILE USER
     //TODO: UPDATE PROFILE
 
+    //TODO: CHANGE PASSWORD
+
+    //TODO: FORGOT PASSWORD
+
 }

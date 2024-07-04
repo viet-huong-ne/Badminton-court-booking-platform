@@ -11,11 +11,13 @@ import lombok.experimental.FieldDefaults;
 import java.awt.*;
 import java.util.List;
 
-@Entity
+
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+
+@Entity
 @Table(name = "Roles")
 public class Role {
     @Id

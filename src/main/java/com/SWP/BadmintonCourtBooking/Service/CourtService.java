@@ -1,5 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Service;
 
+import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
@@ -21,6 +22,8 @@ public interface CourtService {
     //TODO:
     public Optional<Court> getCourtByID(int courtID);
 
+    //TODO: GET ALL COURT
+    public List<CourtDto> getAllCourtV1();
 
     //TODO: CREATE NEW COURT
     public CreateCourtResponse createNewCourt(CreateCourtRequest createCourtRequest);

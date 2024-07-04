@@ -11,10 +11,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
-@Entity
-@Table(name = "BookingDetails")
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
+@Table(name = "BookingDetails")
 public class BookingDetails {
 
     @Id

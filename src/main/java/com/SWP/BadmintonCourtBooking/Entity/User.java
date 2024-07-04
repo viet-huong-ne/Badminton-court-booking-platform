@@ -10,11 +10,12 @@ import java.util.List;
 
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Entity
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+
+@Entity
 @Table(name = "Users")
 public class User {
 
