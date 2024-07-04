@@ -3,7 +3,6 @@ package com.SWP.BadmintonCourtBooking.Controller;
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
-import com.SWP.BadmintonCourtBooking.Dto.SlotOfCourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.SubCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
 import com.SWP.BadmintonCourtBooking.Entity.Price;
@@ -68,7 +67,7 @@ public class CourtController {
             }
 
             courtDtoList.add(new CourtDto(
-                    i.getCourtID(), i.getCourtName(), i.getDistrict(), i.getCourtAddress(), i.getCourtQuantity(), i.getDuration(),i.getImages(), subCourtDtoList, price, i.getOpenTime(), i.getCloseTime()));
+                    i.getCourtID(), i.getCourtName(), i.getDistrict(), i.getCourtAddress(), i.getCourtQuantity(), i.getDuration(),i.getImages(), subCourtDtoList, price, i.getOpenTime(), i.getCloseTime(), i.getUser().getUserID()));
            // slotOfCourtDtoList = new ArrayList<>();
             subCourtDtoList = new ArrayList<>();
 
@@ -84,7 +83,6 @@ public class CourtController {
             List<Price> price = priceService.getPriceOfCourt(courtID);
            // List<SlotOfCourt> slotOfCourtList = slotOfCourtService.getSlotByID(courtID);
             List<SubCourt> subCourtList = subCourtService.getSubCourtByCourtId(courtID);
-            List<SlotOfCourtDto> slotOfCourtDtoList = new ArrayList<>();
             List<SubCourtDto> subCourtDtoList = new ArrayList<>();
 //            for (SlotOfCourt s : slotOfCourtList) {
 //                slotOfCourtDtoList.add(new SlotOfCourtDto(s.getOpenTime(), s.getCloseTime(), s.getActiveStatus()));
@@ -94,7 +92,7 @@ public class CourtController {
                 subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.isSubCourtStatus()));
             }
 
-            return new ResponseEntity<>(new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(),court.get().getImages(), subCourtDtoList, price, court.get().getOpenTime(), court.get().getCloseTime()),HttpStatus.OK);
+            return new ResponseEntity<>(new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(),court.get().getImages(), subCourtDtoList, price, court.get().getOpenTime(), court.get().getCloseTime(),court.get().getUser().getUserID()),HttpStatus.OK);
         } else throw new IllegalArgumentException("Court not found for ID: " + courtID);
 
     }

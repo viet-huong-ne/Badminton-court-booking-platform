@@ -34,5 +34,6 @@ public class CourtDto {
 
     private LocalTime endTime;
 
+    private Integer userID;
    // private List<SlotOfCourtDto> slotOfCourt;
 }

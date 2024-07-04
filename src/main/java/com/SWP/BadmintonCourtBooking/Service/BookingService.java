@@ -22,5 +22,5 @@ public interface BookingService {
     Booking saveBookingIfUserPaid(BookingPaymentRequest bookingPaymentRequest);
     BookingResponseDTO showBill();
     List<Booking> getBooking(Integer userID);
-
+    List<Booking> getBookingOfCourt(Integer courtID);
 }

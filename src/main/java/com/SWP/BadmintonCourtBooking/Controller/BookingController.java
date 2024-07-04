@@ -48,6 +48,7 @@ public class BookingController {
 
         return new ResponseEntity<>(booking, HttpStatus.CREATED);
     }
+
     //API lưu booking khi đã thanh toán thành công
 //    @GetMapping("/book/saveBooking/{payCode}")
 //    public ResponseEntity<Booking> saveBooking(@RequestParam String payCode) {
@@ -60,11 +61,12 @@ public class BookingController {
     //TODO: CREATE Booking
     @PostMapping("/book/saveBookingV2")
     public ResponseEntity<Booking> saveBookingV2(@RequestBody BookingPaymentRequest bookingPaymentRequest) {
-        //log.info("BookingDto: {}", bookingDto);
-        Booking booking = bookingService.saveBookingIfUserPaid(bookingPaymentRequest);
-
-        return new ResponseEntity<>(booking, HttpStatus.CREATED);
+        if (bookingPaymentRequest.getPaymentDto().getResponseCode().equals("00")) {
+            Booking booking = bookingService.saveBookingIfUserPaid(bookingPaymentRequest);
+            return new ResponseEntity<>(booking, HttpStatus.CREATED);
+        } else return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
     //API trả về số totalPrice
     @PostMapping("/provisionalInvoice")
     public ResponseEntity<Double> responseProvisionalInvoice(@RequestBody BookingDto bookingDto) {
@@ -77,15 +79,23 @@ public class BookingController {
     public ResponseEntity<BookingResponseDTO> bookBill() {
         return new ResponseEntity<>(bookingService.showBill(), HttpStatus.OK);
     }
+
     //API XEM LỊCH SỬ ĐẶT LỊCH CỦA USER
     @GetMapping("/booked/{userID}")
-    public List<Booking> bookingOfUser(@PathVariable Integer userID) {
+    public ResponseEntity<?> getBookingOfUser(@PathVariable Integer userID) {
         List<Booking> bookingList = bookingService.getBooking(userID);
         if (bookingList == null) {
             throw new RuntimeException("No booking found for userID: " + userID);
         }
-        return bookingList;
+        return new ResponseEntity<>(bookingList, HttpStatus.OK);
     }
 
-
+    @GetMapping("/AllBookingsOfCourt/{courtID}")
+    public ResponseEntity<?> GetBookingOfCourt(@PathVariable Integer courtID) {
+        List<Booking> bookingList = bookingService.getBookingOfCourt(courtID);
+        if (bookingList == null) {
+            throw new RuntimeException("No booking found for this court: " + courtID);
+        }
+        return new ResponseEntity<>(bookingList, HttpStatus.OK);
+    }
 }

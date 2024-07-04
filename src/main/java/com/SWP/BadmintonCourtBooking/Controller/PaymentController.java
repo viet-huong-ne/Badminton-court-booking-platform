@@ -6,6 +6,7 @@ import com.SWP.BadmintonCourtBooking.Entity.Payment;
 import com.SWP.BadmintonCourtBooking.Repository.UserRepository;
 import com.SWP.BadmintonCourtBooking.Service.ServiceOfPayment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -139,7 +140,7 @@ public class PaymentController {
             payment.setPaymentTime(new Date());
             payment.setPaymentStatus("Successfully"); // Assuming it's successful by default
             payment.setBankCode(bankCode);
-            payment.setTrasactionCode(transactinCode);
+            payment.setTransactionCode(transactinCode);
             //User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("UserID not found"));
             //còn thiếu set booking
 
@@ -158,7 +159,7 @@ public class PaymentController {
             payment.setPaymentTime(new Date());
             payment.setPaymentStatus("Failed"); // Assuming it's successful by default
             payment.setBankCode(bankCode);
-            payment.setTrasactionCode(transactinCode);
+            payment.setTransactionCode(transactinCode);
             //còn thiếu set booking
             // You can set other fields as needed
 
@@ -172,6 +173,15 @@ public class PaymentController {
         //response.put("data", transactionStatusDTO.getData());
 
         return ResponseEntity.ok(response);
+    }
+    @GetMapping("/allPayment")
+    public ResponseEntity<?> AllPayment() {
+        return new ResponseEntity<>(serviceOfPayment.getAllPayments(), HttpStatus.OK);
+    }
+    @GetMapping("/paymentOfCourt/{courID}")
+    public ResponseEntity<?> paymentOfCourt(@PathVariable(value = "courID") int courID) {
+        List<?> payments = serviceOfPayment.getPaymentsByCourtID(courID);
+        return new ResponseEntity<>(payments, HttpStatus.OK);
     }
 }
 

@@ -39,7 +39,7 @@ public class Payment {
     @Column(name = "bank_code")
     private String bankCode;
 
-    @Column(name = "trasaction_code")
-    private String trasactionCode;
+    @Column(name = "transaction_code")
+    private String transactionCode;
 
 }

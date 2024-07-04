@@ -156,6 +156,11 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepository.findByUserID(userID);
     }
 
+    @Override
+    public List<Booking> getBookingOfCourt(Integer courtID) {
+        return bookingRepository.findByCourtID(courtID);
+    }
+
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     //@Transactional
     //public Booking saveBookingIfUserPaid(BookingPaymentRequest BookingPaymentRequest) {
@@ -217,7 +222,7 @@ public class BookingServiceImpl implements BookingService {
         payment.setPaymentTime(new Date());
         payment.setPaymentStatus("Successfully"); // Assuming it's successful by default
         payment.setBankCode(paymentDto.getBankCode());
-        payment.setTrasactionCode(paymentDto.getTransactinCode());
+        payment.setTransactionCode(paymentDto.getTransactinCode());
         return payment;
     }
 

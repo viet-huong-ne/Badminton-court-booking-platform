@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface BookingRepository extends JpaRepository<Booking, Integer> {
     @Query("SELECT b FROM Booking b WHERE b.user.userID = :userid")
     List<Booking> findByUserID(@Param("userid") Integer userID);
+    @Query("SELECT b FROM Booking b WHERE b.court.courtID = :courtID")
+    List<Booking> findByCourtID(@Param("courtID") Integer courtID);
 }
