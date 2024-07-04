@@ -10,12 +10,13 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.List;
 
-@Entity
-@Table(name = "SubCourt")
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
+
+@Entity
+@Table(name = "SubCourt")
 public class SubCourt {
     @Id
     @Column(name = "sub_court_id")

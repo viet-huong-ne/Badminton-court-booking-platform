@@ -7,18 +7,19 @@ import lombok.*;
 import java.time.LocalTime;
 import java.util.List;
 
+//@Data
 @Getter
 @Setter
-//@Data
-@Entity
-@Table(name = "Court")
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
+@Table(name = "Court")
 public class Court {
     @Id
     @Column(name = "court_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer  courtID;
+    private Integer courtID;
 
     @Column(name = "court_name", columnDefinition = "nvarchar(200)")
     private String courtName;
@@ -36,13 +37,13 @@ public class Court {
     private LocalTime closeTime;
 
     @Column(name = "court_quantity")
-    private Integer  courtQuantity;
+    private Integer courtQuantity;
 
     @Column(name = "slot_duration")
-    private Integer  duration;
+    private Integer duration;
 
-    @Column(name = "status_court")
-    private Integer statusCourt;
+        @Column(name = "status_court")
+        private Integer statusCourt;
 
     //@JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -64,4 +65,16 @@ public class Court {
     @OneToMany(mappedBy = "court")
     @JsonIgnore
     private List<Booking> booking;
+
+    /*
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "service_court",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> courses = new HashSet<>();
+     */
+
+
 }

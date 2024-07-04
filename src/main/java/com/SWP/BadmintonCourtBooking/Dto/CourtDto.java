@@ -5,6 +5,7 @@ import com.SWP.BadmintonCourtBooking.Entity.Price;
 import com.SWP.BadmintonCourtBooking.Entity.SlotOfCourt;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class CourtDto {
     private Integer courtID;
 
@@ -22,19 +24,21 @@ public class CourtDto {
 
     private String courtAddress;
 
-    private Integer  courtQuantity;
+    private LocalTime openTime;
 
-    private Integer  duration;
+    private LocalTime closeTime;
+
+    private Integer courtQuantity;
+
+    private Integer duration;
 
     private List<Images> images;
 
-    private List<SubCourtDto> subCourt;
+    private List<SubCourt> subCourts;
 
     private List<Price> price;
 
-    private LocalTime startTime;
+    private Integer userID;
 
-    private LocalTime endTime;
-
-   // private List<SlotOfCourtDto> slotOfCourt;
+    private String phone;
 }

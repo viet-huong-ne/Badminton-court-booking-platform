@@ -32,6 +32,8 @@ public class CreateCourtRequest {
 
     private List<String> images;
 
+    private List<Price> prices;
+
     private Integer userID;
 
     private Integer statusCourt;

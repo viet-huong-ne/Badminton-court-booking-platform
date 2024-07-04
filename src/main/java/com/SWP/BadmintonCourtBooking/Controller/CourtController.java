@@ -74,7 +74,7 @@ public class CourtController {
             }
 
             courtDtoList.add(new CourtDto(
-                    i.getCourtID(), i.getCourtName(), i.getDistrict(), i.getCourtAddress(), i.getCourtQuantity(), i.getDuration(),i.getImages(), subCourtDtoList, price, i.getOpenTime(), i.getCloseTime()));
+                    i.getCourtID(), i.getCourtName(), i.getDistrict(), i.getCourtAddress(), i.getCourtQuantity(), i.getDuration(),i.getImages(), subCourtDtoList, price, i.getOpenTime(), i.getCloseTime(), i.getUser().getUserID(), i.getUser().getPhone()));
            // slotOfCourtDtoList = new ArrayList<>();
             subCourtDtoList = new ArrayList<>();
 
@@ -82,6 +82,8 @@ public class CourtController {
         return courtDtoList;
     }
 
+
+    //FIX CHỖ NÀY
     //TODO GET COURT BY ID TO BOOKING
     @GetMapping("/id/{courtID}")
     public CourtDto getCourtByID(@PathVariable Integer courtID) {
@@ -100,7 +102,23 @@ public class CourtController {
                 subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.isSubCourtStatus()));
             }
 
-            return new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(),court.get().getImages(), subCourtDtoList, price, court.get().getOpenTime(), court.get().getCloseTime());
+            /*
+            return new CourtDto(court.get().getCourtID(),
+                    court.get().getCourtName(),
+                    court.get().getDistrict(),
+                    court.get().getCourtAddress(),
+                    court.get().getCourtQuantity(),
+                    court.get().getDuration(),
+                    court.get().getImages(),
+                    subCourtDtoList,
+                    price,
+                    court.get().getOpenTime(),
+                    court.get().getCloseTime(),
+                    court.get().getUser().getUserID(),
+                    court.get().getUser().getPhone());
+
+             */
+            return CourtDto.builder().build();
         } else throw new IllegalArgumentException("Court not found for ID: " + courtID);
 
     }
@@ -111,4 +129,7 @@ public class CourtController {
         var court = courtService.createNewCourt(createCourtRequest);
         return court;
     }
+
+    //TODO:
+
 }

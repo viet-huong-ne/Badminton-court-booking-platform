@@ -29,16 +29,16 @@ import org.springframework.stereotype.Service;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserServiceImpl implements UserService {
-
-    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private UserMapper userMapper;
+
     @Autowired
     private RoleRepository roleRepository;
 
-
+    //API AUTHENTICATION
     //TODO: REGISTER
     @Override
     public RegisterResponse registerUser(RegisterRequest request){
@@ -59,6 +59,15 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    //TODO: GET LIST BOOKING
+    //TODO: LOGIN
+
+
+    //API: PROFILE USER
+    //TODO: UPDATE PROFILE
+
+    //TODO: CHANGE PASSWORD
+
+
+    //TODO: FORGOT PASSWORD
 
 }

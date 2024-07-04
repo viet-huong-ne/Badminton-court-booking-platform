@@ -1,5 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Service.Impl;
 
+import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
@@ -41,6 +42,51 @@ public class CourtServiceImpl implements CourtService {
     }
 
 
+
+    @Override
+    public List<CourtDto> getAllCourtV1() {
+        List<CourtDto> listCourtDTO = new ArrayList<>();
+        List<Court> listCourts = courtRepository.findAll();
+        for (Court court : listCourts) {
+            listCourtDTO.add(convertToDto(court));
+        }
+        return listCourtDTO;
+    }
+
+    public CourtDto convertToDto(Court court) {
+        /*
+        CourtDto courtDtoList;
+        List<SubCourtDto> subCourtDtoList = new ArrayList<>();
+        List<Price> price = priceRepository.getPriceByCourtID(court.getCourtID());
+        List<SubCourt> subCourtList = subCourtRepository.getSubCourtByCourtID(court.getCourtID());
+
+        for (SubCourt s : subCourtList) {
+
+            subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(), s.getSubCourtName(), s.isSubCourtStatus()));
+        }
+
+        return new CourtDto(
+                court.getCourtID(), court.getCourtName(), court.getDistrict(), court.getCourtAddress(), court.getCourtQuantity(), court.getDuration(),
+                court.getImages(), subCourtDtoList, price, court.getOpenTime(), court.getCloseTime(), court.getUser().getUserID());
+
+         */
+        return CourtDto.builder()
+                .courtName(court.getCourtName())
+                .courtName(court.getCourtName())
+                .courtAddress(court.getCourtAddress())
+                .District(court.getDistrict())
+                .duration(court.getDuration())
+                .openTime(court.getOpenTime())
+                .closeTime(court.getCloseTime())
+                .subCourts(court.getSubCourt())
+                .images(court.getImages())
+                .userID(court.getUser().getUserID())
+                .phone(court.getUser().getPhone())
+                .build();
+
+    }
+
+
     @Override
     public CreateCourtResponse createNewCourt(CreateCourtRequest createCourtRequest) {
         Court court = new Court();
@@ -75,6 +121,17 @@ public class CourtServiceImpl implements CourtService {
         court.setImages(listImages);
 
         courtRepository.save(court);
-        return CreateCourtResponse.builder().court(court).build();
+        return CreateCourtResponse.builder()
+                .courtName(court.getCourtName())
+                .courtAddress(court.getCourtAddress())
+                .district(court.getDistrict())
+                .duration(court.getDuration())
+                .openTime(court.getOpenTime())
+                .closeTime(court.getCloseTime())
+                .subCourts(court.getSubCourt())
+                .images(court.getImages())
+                .userID(court.getUser().getUserID())
+                .phone(court.getUser().getPhone())
+                .build();
     }
 }
