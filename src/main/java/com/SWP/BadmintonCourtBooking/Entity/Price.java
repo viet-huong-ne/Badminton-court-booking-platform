@@ -30,8 +30,8 @@ public class Price {
     @Column(name = "unit_price")
     private double unitPrice;
 
-    @Column(name = "active_status")
-    private String activeStatus;
+//    @Column(name = "active_status")
+//    private String activeStatus;
 
     @ManyToOne
     @JsonIgnore

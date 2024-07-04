@@ -4,6 +4,7 @@ import com.SWP.BadmintonCourtBooking.Dto.BookingDto;
 import com.SWP.BadmintonCourtBooking.Dto.BookingResponseDTO;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Booking;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,6 @@ public interface BookingService {
     BookingResponseDTO saveBooking(BookingDto bookingDTO);
     Booking saveBookingIfUserPaid(BookingPaymentRequest bookingPaymentRequest);
     BookingResponseDTO showBill();
-    List<Booking> getBooking(Integer userID);
-    List<Booking> getBookingOfCourt(Integer courtID);
+    List<BookingResponse> getBooking(Integer userID);
+    List<BookingResponse> getBookingOfCourt(Integer courtID);
 }

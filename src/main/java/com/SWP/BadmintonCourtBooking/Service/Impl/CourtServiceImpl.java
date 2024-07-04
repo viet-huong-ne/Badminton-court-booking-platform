@@ -33,8 +33,25 @@ public class CourtServiceImpl implements CourtService {
     private SubCourtRepository subCourtRepository;
 
     @Override
-    public List<Court> getAllCourt() {
-        return courtRepository.findAll();
+    public List<CourtDto> getAllCourt() {
+        List<Court> courts = courtRepository.findAll();
+        List<CourtDto> courtDtos = new ArrayList<>();
+        for (Court court : courts) {
+            courtDtos.add(convertToDto(court));
+
+        }
+        return courtDtos;
+    }
+
+    @Override
+    public List<CourtDto> getCourtByUserID(int userID) {
+        List<Court> courts = courtRepository.getCourtByUserID(userID);
+        List<CourtDto> courtDtos = new ArrayList<>();
+        for (Court court : courts) {
+            CourtDto courtDto = convertToDto(court);
+            courtDtos.add(courtDto);
+        }
+        return courtDtos;
     }
 
     @Override
@@ -48,30 +65,6 @@ public class CourtServiceImpl implements CourtService {
         return courtRepository.findById(courtID);
     }
 
-    public CourtDto convertToDto(Court court) {
-        CourtDto courtDtoList;
-        // List<SlotOfCourtDto> slotOfCourtDtoList = new ArrayList<>();
-        List<SubCourtDto> subCourtDtoList = new ArrayList<>();
-
-
-        List<Price> price = priceRepository.getPriceByCourtID(court.getCourtID());
-        // List<SlotOfCourt> slotOfCourtList = slotOfCourtService.getSlotByID(i.getCourtID());
-        List<SubCourt> subCourtList = subCourtRepository.getSubCourtByCourtID(court.getCourtID());
-
-
-        for (SubCourt s : subCourtList) {
-
-            subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(), s.getSubCourtName(), s.isSubCourtStatus()));
-        }
-
-        return new CourtDto(
-                court.getCourtID(), court.getCourtName(), court.getDistrict(), court.getCourtAddress(), court.getCourtQuantity(), court.getDuration(),
-                court.getImages(), subCourtDtoList, price, court.getOpenTime(), court.getCloseTime(), court.getUser().getUserID());
-
-
-    }
-
-
     @Override
     public List<CourtDto> getAllCourtV1() {
         List<CourtDto> listCourtDTO = new ArrayList<>();
@@ -83,32 +76,18 @@ public class CourtServiceImpl implements CourtService {
     }
 
     public CourtDto convertToDto(Court court) {
-        /*
-        CourtDto courtDtoList;
-        List<SubCourtDto> subCourtDtoList = new ArrayList<>();
-        List<Price> price = priceRepository.getPriceByCourtID(court.getCourtID());
-        List<SubCourt> subCourtList = subCourtRepository.getSubCourtByCourtID(court.getCourtID());
-
-        for (SubCourt s : subCourtList) {
-
-            subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(), s.getSubCourtName(), s.isSubCourtStatus()));
-        }
-
-        return new CourtDto(
-                court.getCourtID(), court.getCourtName(), court.getDistrict(), court.getCourtAddress(), court.getCourtQuantity(), court.getDuration(),
-                court.getImages(), subCourtDtoList, price, court.getOpenTime(), court.getCloseTime(), court.getUser().getUserID());
-
-         */
         return CourtDto.builder()
-                .courtName(court.getCourtName())
+                .courtID(court.getCourtID())
                 .courtName(court.getCourtName())
                 .courtAddress(court.getCourtAddress())
                 .District(court.getDistrict())
                 .duration(court.getDuration())
                 .openTime(court.getOpenTime())
                 .closeTime(court.getCloseTime())
-                .subCourts(court.getSubCourt())
+                .courtQuantity(court.getCourtQuantity())
                 .images(court.getImages())
+                .subCourts(court.getSubCourt())
+                .price(court.getPrice())
                 .userID(court.getUser().getUserID())
                 .phone(court.getUser().getPhone())
                 .build();

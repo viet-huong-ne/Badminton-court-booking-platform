@@ -3,6 +3,7 @@ package com.SWP.BadmintonCourtBooking.Controller;
 import com.SWP.BadmintonCourtBooking.Dto.*;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Booking;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import org.slf4j.Logger;
@@ -49,14 +50,6 @@ public class BookingController {
         return new ResponseEntity<>(booking, HttpStatus.CREATED);
     }
 
-    //API lưu booking khi đã thanh toán thành công
-//    @GetMapping("/book/saveBooking/{payCode}")
-//    public ResponseEntity<Booking> saveBooking(@RequestParam String payCode) {
-//        //log.info("BookingDto: {}", bookingDto);
-//        Booking booking = bookingService.saveBookingIfUserPaid(payCode);
-//
-//        return new ResponseEntity<>(booking, HttpStatus.CREATED);
-//    }
     //API lưu booking khi đã thanh toán thành công v2
     //TODO: CREATE Booking
     @PostMapping("/book/saveBookingV2")
@@ -81,18 +74,19 @@ public class BookingController {
     }
 
     //API XEM LỊCH SỬ ĐẶT LỊCH CỦA USER
+    //TODO API XEM LỊCH SỬ ĐẶT SÂN CỦA USER
     @GetMapping("/booked/{userID}")
     public ResponseEntity<?> getBookingOfUser(@PathVariable Integer userID) {
-        List<Booking> bookingList = bookingService.getBooking(userID);
+        List<BookingResponse> bookingList = bookingService.getBooking(userID);
         if (bookingList == null) {
             throw new RuntimeException("No booking found for userID: " + userID);
         }
         return new ResponseEntity<>(bookingList, HttpStatus.OK);
     }
-
+    //TODO API lay tat ca order của san
     @GetMapping("/AllBookingsOfCourt/{courtID}")
     public ResponseEntity<?> GetBookingOfCourt(@PathVariable Integer courtID) {
-        List<Booking> bookingList = bookingService.getBookingOfCourt(courtID);
+        List<BookingResponse> bookingList = bookingService.getBookingOfCourt(courtID);
         if (bookingList == null) {
             throw new RuntimeException("No booking found for this court: " + courtID);
         }

@@ -38,7 +38,7 @@ public class Booking {
     private User user;
 
     @Column(name = "booking_date")
-    private LocalDate booking_date;
+    private LocalDate bookingDate;
     @Column(name = "total_price")
     private Double totalPrice;
     @Column(name = "booking_type", columnDefinition = "nvarchar(255)")

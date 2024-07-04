@@ -14,8 +14,9 @@ import java.util.Optional;
 public interface CourtService {
 
     //TODO:
-    public List<Court> getAllCourt();
-
+    public List<CourtDto> getAllCourt();
+    //TODO: GET COURT BY USERID
+    public List<CourtDto> getCourtByUserID(int userID);
     //TODO:
     public List<Court> getCourtByDistrict(String district);
 

@@ -4,6 +4,7 @@ import com.SWP.BadmintonCourtBooking.Dto.*;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 
+import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Repository.*;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
@@ -35,7 +36,6 @@ public class BookingServiceImpl implements BookingService {
     private PriceRepository priceRepository;
 
     private ResponseCourtDto lastAvailabilityCheck;
-    private Booking tmpBooking;
     private BookingResponseDTO responseBookingDTO;
 
     @Autowired
@@ -128,7 +128,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setUser(user);
         booking.setCourt(court);
         booking.setBooking_type("theo ngay");
-        booking.setBooking_date(bookingDto.getBookingDate());
+        booking.setBookingDate(bookingDto.getBookingDate());
         List<BookingDetails> bookingDetails = bookingDto.getBookingDetails().stream()
                 .map(detailDTO -> {
                     BookingDetails detail = new BookingDetails();
@@ -152,35 +152,58 @@ public class BookingServiceImpl implements BookingService {
 
 
     @Override
-    public List<Booking> getBooking(Integer userID) {
-        return bookingRepository.findByUserID(userID);
+    public List<BookingResponse> getBooking(Integer userID) {
+        List<Booking> bookingList =  bookingRepository.findByUserID(userID);
+        List<BookingResponse> bookingResponseList = new ArrayList<>();
+        for (Booking booking : bookingList) {
+            BookingResponse bookingResponse = convertToBookingResponse(booking);
+            bookingResponseList.add(bookingResponse);
+        }
+        return bookingResponseList;
     }
+    public BookingResponse convertToBookingResponse(Booking booking) {
 
+        List<BookingDetailResponseDTO> detailResponseDTOs = booking.getBookingDetails().stream()
+                .map(detail -> {
+                    BookingDetailResponseDTO detailResponseDTO = new BookingDetailResponseDTO();
+
+                    detailResponseDTO.setPrice(detail.getUnitPrice());
+                    detailResponseDTO.setStartTime(detail.getStartTime());
+                    detailResponseDTO.setEndTime(detail.getEndTime());
+                    detailResponseDTO.setQuantity(detail.getQuantity());
+                    detailResponseDTO.setSubCourtName(detail.getSubCourt().getSubCourtName());
+                    return detailResponseDTO;
+                }).collect(Collectors.toList());
+        PaymentResDTO paymentResDto = new PaymentResDTO();
+        paymentResDto.setBankCode(booking.getPayment().getBankCode());
+        paymentResDto.setPaymentAmount(booking.getPayment().getPaymentAmount());
+        paymentResDto.setPaymentDate(booking.getPayment().getPaymentTime());
+        paymentResDto.setTransactionCode(booking.getPayment().getTransactionCode());
+
+        return BookingResponse.builder()
+                .courtName(booking.getCourt().getCourtName())
+                .address(booking.getCourt().getCourtAddress())
+                .courtPhoneNumber(booking.getCourt().getUser().getPhone())
+                .customerName(booking.getLastName())
+                .customerPhone(booking.getPhone())
+                .totalPrice(booking.getTotalPrice())
+                .bookingDate(booking.getBookingDate())
+                .bookingDetails(detailResponseDTOs)
+                .paymentResDTO(paymentResDto).build();
+    }
     @Override
-    public List<Booking> getBookingOfCourt(Integer courtID) {
-        return bookingRepository.findByCourtID(courtID);
+    public List<BookingResponse> getBookingOfCourt(Integer courtID) {
+        List<Booking> bookingList = bookingRepository.findByCourtID(courtID);
+        List<BookingResponse> bookingResponseList = new ArrayList<>();
+        for (Booking booking : bookingList) {
+            BookingResponse bookingResponse = convertToBookingResponse(booking);
+            bookingResponseList.add(bookingResponse);
+        }
+        return bookingResponseList;
     }
 
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //@Transactional
-    //public Booking saveBookingIfUserPaid(BookingPaymentRequest BookingPaymentRequest) {
-    // User user = userRepository.findById(bookingDto.getCustomerId()).orElseThrow(() -> new RuntimeException("User not found"));
-    //LocalDateTime now = LocalDateTime.now();
-    //Payment payment = paymentRepository.findByUserIdAndPayCode(tmpBooking.getUser().getUserID(), payCode);
 
-    //if (payment != null && payment.getPaymentStatus().equals("Successfully")) {
-    //LocalDateTime now = LocalDateTime.now();
-    //Duration duration = Duration.between(payment.getPaymentTime(), now);
-    //long minutesDifference = duration.toMinutes();
-
-    // Allow a difference of up to 5 minutes
-
-    // return bookingRepository.save(tmpBooking);
-    // } else {
-    //throw new IllegalStateException("User has not completed payment for this booking");
-    //}
-
-    // }
     public Booking createBooking(BookingDto bookingDto) {
         Double tmp = getPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusMinutes(30), bookingDto.getBookingDate());
         User user = userRepository.findById(bookingDto.getCustomerId())
@@ -195,7 +218,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setLastName(bookingDto.getLastName());
         booking.setEmail(bookingDto.getEmail());
         booking.setPhone(bookingDto.getPhone());
-        booking.setBooking_date(bookingDto.getBookingDate());
+        booking.setBookingDate(bookingDto.getBookingDate());
         List<BookingDetails> bookingDetails = bookingDto.getBookingDetails().stream()
                 .map(detailDTO -> {
                     BookingDetails detail = new BookingDetails();
@@ -222,7 +245,7 @@ public class BookingServiceImpl implements BookingService {
         payment.setPaymentTime(new Date());
         payment.setPaymentStatus("Successfully"); // Assuming it's successful by default
         payment.setBankCode(paymentDto.getBankCode());
-        payment.setTransactionCode(paymentDto.getTransactinCode());
+        payment.setTransactionCode(paymentDto.getTransactionCode());
         return payment;
     }
 
@@ -252,7 +275,7 @@ public class BookingServiceImpl implements BookingService {
         responseDTO.setCourtName(booking.getCourt().getCourtName());
         responseDTO.setAddress(booking.getCourt().getCourtAddress());
         responseDTO.setTotalPrice(booking.getTotalPrice());
-        responseDTO.setBookingDate(booking.getBooking_date());
+        responseDTO.setBookingDate(booking.getBookingDate());
         List<BookingDetailResponseDTO> detailResponseDTOs = booking.getBookingDetails().stream()
                 .map(detail -> {
                     BookingDetailResponseDTO detailResponseDTO = new BookingDetailResponseDTO();

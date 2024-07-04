@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 @CrossOrigin("*")
 @RestController
 @RequestMapping("/court")
@@ -33,7 +34,7 @@ public class CourtController {
 
     //API DÙNG ĐỂ TÌM TẤT CẢ CÁC SÂN
     @GetMapping("/getAllCourt")
-    public List<Court> getAllCourt() {
+    public List<CourtDto> getAllCourt() {
         return courtService.getAllCourt();
     }
 
@@ -48,58 +49,76 @@ public class CourtController {
     public ResponseEntity<List<CourtDto>> getCourtByDistrict(@PathVariable String district) {
         List<Court> court = courtService.getCourtByDistrict(district);
         List<CourtDto> courtDtoList = new ArrayList<>();
-       // List<SlotOfCourtDto> slotOfCourtDtoList = new ArrayList<>();
+        // List<SlotOfCourtDto> slotOfCourtDtoList = new ArrayList<>();
         List<SubCourtDto> subCourtDtoList = new ArrayList<>();
         for (Court i : court) {
 
             List<Price> price = priceService.getPriceOfCourt(i.getCourtID());
-           // List<SlotOfCourt> slotOfCourtList = slotOfCourtService.getSlotByID(i.getCourtID());
+            // List<SlotOfCourt> slotOfCourtList = slotOfCourtService.getSlotByID(i.getCourtID());
             List<SubCourt> subCourtList = subCourtService.getSubCourtByCourtId(i.getCourtID());
-
-//            for (SlotOfCourt s : slotOfCourtList) {
-//
-//                slotOfCourtDtoList.add(new SlotOfCourtDto(s.getOpenTime(), s.getCloseTime(), s.getActiveStatus()));
-//            }
-
             for (SubCourt s : subCourtList) {
-
-                subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.isSubCourtStatus()));
+                subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(), s.getSubCourtName(), s.isSubCourtStatus()));
             }
+            CourtDto courtDto = CourtDto.builder()
+                    .courtID(i.getCourtID())
+                    .courtName(i.getCourtName())
+                    .District(i.getDistrict())
+                    .duration(i.getDuration())
+                    .courtAddress(i.getCourtAddress())
+                    .courtQuantity(i.getCourtQuantity())
+                    .subCourts(subCourtList)
+                    .price(i.getPrice())
+                    .openTime(i.getOpenTime())
+                    .closeTime(i.getCloseTime())
+                    .images(i.getImages())
+                    .phone(i.getUser().getPhone())
+                    .userID(i.getUser().getUserID()).build();
 
-            courtDtoList.add(new CourtDto(
-                    i.getCourtID(), i.getCourtName(), i.getDistrict(), i.getCourtAddress(), i.getCourtQuantity(), i.getDuration(),i.getImages(), subCourtDtoList, price, i.getOpenTime(), i.getCloseTime(), i.getUser().getUserID()));
-           // slotOfCourtDtoList = new ArrayList<>();
+            courtDtoList.add(courtDto);
+            // slotOfCourtDtoList = new ArrayList<>();
             subCourtDtoList = new ArrayList<>();
 
         }
         return new ResponseEntity<>(courtDtoList, HttpStatus.OK);
     }
-
+    //TODO LAY SAN THEO ID CHU SAN
+    @GetMapping("/userid/{userID}")
+    public ResponseEntity<List<CourtDto>> getCourtByUserID(@PathVariable int userID) {
+        return new ResponseEntity<>(courtService.getCourtByUserID(userID),HttpStatus.OK);
+    }
     //TODO GET COURT BY ID TO BOOKING
     @GetMapping("/id/{courtID}")
     public ResponseEntity<CourtDto> getCourtByID(@PathVariable Integer courtID) {
         Optional<Court> court = courtService.getCourtByID(courtID);
         if (court.isPresent()) {
             List<Price> price = priceService.getPriceOfCourt(courtID);
-           // List<SlotOfCourt> slotOfCourtList = slotOfCourtService.getSlotByID(courtID);
+            // List<SlotOfCourt> slotOfCourtList = slotOfCourtService.getSlotByID(courtID);
             List<SubCourt> subCourtList = subCourtService.getSubCourtByCourtId(courtID);
             List<SubCourtDto> subCourtDtoList = new ArrayList<>();
-//            for (SlotOfCourt s : slotOfCourtList) {
-//                slotOfCourtDtoList.add(new SlotOfCourtDto(s.getOpenTime(), s.getCloseTime(), s.getActiveStatus()));
-//            }
-
             for (SubCourt s : subCourtList) {
-                subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(),s.getSubCourtName(), s.isSubCourtStatus()));
+                subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(), s.getSubCourtName(), s.isSubCourtStatus()));
             }
-
-            return new ResponseEntity<>(new CourtDto(court.get().getCourtID(), court.get().getCourtName(), court.get().getDistrict(), court.get().getCourtAddress(), court.get().getCourtQuantity(), court.get().getDuration(),court.get().getImages(), subCourtDtoList, price, court.get().getOpenTime(), court.get().getCloseTime(),court.get().getUser().getUserID()),HttpStatus.OK);
+            CourtDto courtDto = CourtDto.builder().courtID(court.get().getCourtID())
+                    .duration(court.get().getDuration())
+                    .courtName(court.get().getCourtName())
+                    .District(court.get().getDistrict())
+                    .courtAddress(court.get().getCourtAddress())
+                    .courtQuantity(court.get().getCourtQuantity())
+                    .subCourts(subCourtList)
+                    .price(court.get().getPrice())
+                    .openTime(court.get().getOpenTime())
+                    .closeTime(court.get().getCloseTime())
+                    .images(court.get().getImages())
+                    .phone(court.get().getUser().getPhone())
+                    .userID(court.get().getUser().getUserID()).build();
+            return new ResponseEntity<>(courtDto, HttpStatus.OK);
         } else throw new IllegalArgumentException("Court not found for ID: " + courtID);
 
     }
 
     //TODO: CREATE NEW COURT
     @PostMapping("/createcourt")
-    public CreateCourtResponse createNewCourt(@RequestBody CreateCourtRequest createCourtRequest){
+    public CreateCourtResponse createNewCourt(@RequestBody CreateCourtRequest createCourtRequest) {
         var court = courtService.createNewCourt(createCourtRequest);
         return court;
     }
