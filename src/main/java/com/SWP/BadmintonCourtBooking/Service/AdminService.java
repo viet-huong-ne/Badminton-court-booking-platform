@@ -24,4 +24,7 @@ public interface AdminService {
     //TODO: GET LIST USER
     public List<UserResponse> getListUser();
 
+    //TODO: DELETE USER
+
+
 }

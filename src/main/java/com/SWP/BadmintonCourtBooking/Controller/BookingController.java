@@ -83,6 +83,7 @@ public class BookingController {
         }
         return new ResponseEntity<>(bookingList, HttpStatus.OK);
     }
+
     //TODO API lay tat ca order của san
     @GetMapping("/AllBookingsOfCourt/{courtID}")
     public ResponseEntity<?> GetBookingOfCourt(@PathVariable Integer courtID) {

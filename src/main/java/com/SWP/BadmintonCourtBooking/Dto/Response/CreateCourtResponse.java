@@ -18,6 +18,8 @@ public class CreateCourtResponse {
     /*
     private Court court;
     */
+//    private Integer courtID;
+
     private String courtName;
 
     private String district;
@@ -44,7 +46,9 @@ public class CreateCourtResponse {
 
     private List<ServiceCourt> serviceCourt;
 
-    private List<Price> prices;
+    private List<Price> price;
 
     //private Set<ServiceCourt> serviceCourt;
+
+
 }

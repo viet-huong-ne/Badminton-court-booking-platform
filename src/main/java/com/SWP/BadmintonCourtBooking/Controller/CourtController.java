@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Controller;
 
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateStatusCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Dto.SubCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
@@ -62,7 +63,7 @@ public class CourtController {
             CourtDto courtDto = CourtDto.builder()
                     .courtID(i.getCourtID())
                     .courtName(i.getCourtName())
-                    .District(i.getDistrict())
+                    .district(i.getDistrict())
                     .duration(i.getDuration())
                     .courtAddress(i.getCourtAddress())
                     .courtQuantity(i.getCourtQuantity())
@@ -104,7 +105,7 @@ public class CourtController {
                     .courtID(court.get().getCourtID())
                     .duration(court.get().getDuration())
                     .courtName(court.get().getCourtName())
-                    .District(court.get().getDistrict())
+                    .district(court.get().getDistrict())
                     .courtAddress(court.get().getCourtAddress())
                     .courtQuantity(court.get().getCourtQuantity())
                     .subCourts(subCourtList)
@@ -123,8 +124,48 @@ public class CourtController {
 
     //TODO: CREATE NEW COURT
     @PostMapping("/createcourt")
-    public CreateCourtResponse createNewCourt(@RequestBody CreateCourtRequest createCourtRequest) {
+    public ResponseEntity<CreateCourtResponse> createNewCourt(@RequestBody CreateCourtRequest createCourtRequest) {
         var court = courtService.createNewCourt(createCourtRequest);
-        return court;
+        CreateCourtResponse courtDto = CreateCourtResponse.builder()
+//                .courtID(court.getCourtID())
+                .courtName(court.getCourtName())
+                .courtAddress(court.getCourtAddress())
+                .district(court.getDistrict())
+                .duration(court.getDuration())
+                .startTime(court.getStartTime())
+                .endTime(court.getEndTime())
+                .subCourts(court.getSubCourts())
+                .images(court.getImages())
+                .userID(court.getUserID())
+                .phone(court.getPhone())
+                .statusCourt(court.getStatusCourt())
+                .serviceCourt(court.getServiceCourt())
+                .price(court.getPrice())
+                .build();
+        return new ResponseEntity<>(courtDto, HttpStatus.OK);
+    }
+
+    //TODO: UPDATE STATUS COURT
+    @PutMapping("/updatestatuscourt")
+    public ResponseEntity<CourtDto> updateStatusCourt(@RequestBody UpdateStatusCourtRequest updateStatusCourtRequest) {
+        var court = courtService.updateStatusCourt(updateStatusCourtRequest);
+        CourtDto courtDto = CourtDto.builder()
+//                .courtID(court.getCourtID())
+                .courtName(court.getCourtName())
+                .courtAddress(court.getCourtAddress())
+                .district(court.getDistrict())
+                .duration(court.getDuration())
+                .startTime(court.getStartTime())
+                .endTime(court.getEndTime())
+                .subCourts(court.getSubCourts())
+                .images(court.getImages())
+                .userID(court.getUserID())
+                .phone(court.getPhone())
+                .statusCourt(court.getStatusCourt())
+                .serviceCourt(court.getServiceCourt())
+                .price(court.getPrice())
+                .build();
+        return new ResponseEntity<>(courtDto, HttpStatus.OK);
+
     }
 }
