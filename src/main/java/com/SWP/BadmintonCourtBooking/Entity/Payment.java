@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
-
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -13,81 +13,33 @@ import java.util.Date;
 @Data
 public class Payment {
     @Id
+    @Column(name = "payment_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "PaymentID")
     private Integer paymentId;
 
-    @Column(name = "PaymentAmount")
+    @Column(name = "payment_amount")
     private BigDecimal paymentAmount;
 
-    @Column(name = "PaymentTime")
+    @Column(name = "payment_time")
     private Date paymentTime;
 
-    @Column(name = "PaymentStatus")
+    @Column(name = "payment_status")
     private String paymentStatus;
-
-    @Column(name = "BankCode")
-    private String bankCode;
-
-    @Column(name = "OrderInfo")
-    private String OrderInfo;
 
 //    @ManyToOne
 //    @JsonIgnore
-    @JoinColumn(name = "UserID")
-    private int userId;
+    //@JoinColumn(name = "user_id")
+    //private int userId;
 
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
 
+    @Column(name = "bank_code")
+    private String bankCode;
 
+    @Column(name = "transaction_code")
+    private String transactionCode;
 
-
-    public void setPaymentAmount(BigDecimal paymentAmount) {
-        this.paymentAmount = paymentAmount;
-    }
-
-    public BigDecimal getPaymentAmount() {
-        return paymentAmount;
-    }
-
-    public void setPaymentTime(Date paymentTime) {
-        this.paymentTime = paymentTime;
-    }
-
-    public Date getPaymentTime() {
-        return paymentTime;
-    }
-
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public String getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
-    }
-
-    public String getBankCode() {
-        return bankCode;
-    }
-
-    public void setOrderInfo(String orderInfo) {
-        this.OrderInfo = orderInfo;
-    }
-
-    public String getOrderInfo() {
-        return OrderInfo;
-    }
-
-
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
 }

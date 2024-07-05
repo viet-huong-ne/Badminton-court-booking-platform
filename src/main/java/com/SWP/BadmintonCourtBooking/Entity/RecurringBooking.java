@@ -1,12 +1,13 @@
 package com.SWP.BadmintonCourtBooking.Entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-
+@Data
 @Entity
 public class RecurringBooking {
     @Id
@@ -20,6 +21,9 @@ public class RecurringBooking {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Column(name = "total_price")
+    private Double totalPrice;
 
     @ManyToMany
     @JoinTable(name = "recurring_booking_sub_courts",

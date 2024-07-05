@@ -18,6 +18,10 @@ public class BookingDto {
     private LocalDate bookingDate;
     private String bookingType;
     private List<BookingDetailsDto> bookingDetails;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
 
 }
 

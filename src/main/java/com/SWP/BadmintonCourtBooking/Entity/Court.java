@@ -1,33 +1,31 @@
 package com.SWP.BadmintonCourtBooking.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.google.api.client.util.DateTime;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Date;
-import java.sql.Time;
 import java.time.LocalTime;
 import java.util.List;
 
-//@Getter
-//@Setter
-@Data
-@Entity
-@Table(name = "Court")
+//@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
+@Table(name = "Court")
 public class Court {
     @Id
-    @Column(name = "CourtID")
+    @Column(name = "court_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer  courtID;
+    private Integer courtID;
 
-    @Column(name = "CourtName", columnDefinition = "nvarchar(200)")
+    @Column(name = "court_name", columnDefinition = "nvarchar(200)")
     private String courtName;
 
-    @Column(name = "District", columnDefinition = "nvarchar(30)")
-    private String District;
+    @Column(name = "district", columnDefinition = "nvarchar(30)")
+    private String district;
 
     @Column(name = "court_address", nullable = false, columnDefinition = "nvarchar(255)")
     private String courtAddress;
@@ -39,28 +37,44 @@ public class Court {
     private LocalTime closeTime;
 
     @Column(name = "court_quantity")
-    private Integer  courtQuantity;
+    private Integer courtQuantity;
 
     @Column(name = "slot_duration")
-    private Integer  duration;
+    private Integer duration;
 
-    @Column(name = "Images")
-    private String images;
-    @JsonIgnore
+        @Column(name = "status_court")
+        private Integer statusCourt;
+
+    //@JsonIgnore
+    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Images> images;
+
+    //@JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubCourt> subCourt;
+
     //@JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Price> price;
 
     @ManyToOne
-    @JoinColumn(name = "UserID", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     @JsonIgnore
     private User user;
 
-//    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL)
-//    private List<SlotOfCourt> slotOfCourt;
     @OneToMany(mappedBy = "court")
     @JsonIgnore
     private List<Booking> booking;
+
+    /*
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "service_court",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> courses = new HashSet<>();
+     */
+
+
 }

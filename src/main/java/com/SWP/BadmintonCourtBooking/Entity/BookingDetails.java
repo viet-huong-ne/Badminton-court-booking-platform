@@ -1,5 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,10 +11,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
-@Entity
-@Table(name = "BookingDetails")
 @NoArgsConstructor
 @AllArgsConstructor
+
+@Entity
+@Table(name = "BookingDetails")
 public class BookingDetails {
 
     @Id
@@ -22,27 +24,28 @@ public class BookingDetails {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "BookingID")
+    @JsonIgnore
+    @JoinColumn(name = "booking_id")
     private Booking booking;
 
     @ManyToOne
-    @JoinColumn(name = "SubCourtID")
+    @JoinColumn(name = "sub_court_id")
     private SubCourt subCourt;
 
-    @Column(name = "Quantity")
+    @Column(name = "quantity")
     private int Quantity;
 
-    @Column(name = "UnitPrice")
+    @Column(name = "unit_price")
     private Double UnitPrice;
 
 //    @Column(name = "ServiceID")
 //    private String ServiceID;
 
-    @Column(name = "StartTime")
+    @Column(name = "start_time")
     private LocalTime StartTime;
     //private Time StartTime;
 
-    @Column(name = "EndTime")
+    @Column(name = "end_time")
     private LocalTime EndTime;
     //private Time EndTime;
 }

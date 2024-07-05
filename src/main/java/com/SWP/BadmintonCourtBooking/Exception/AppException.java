@@ -12,7 +12,12 @@ public class AppException extends RuntimeException{
         super(errorCode.getMessage());
         this.errorCode = errorCode;
     }
-
     //Getter && Setter
+    public ErrorCode getErrorCode() {
+        return errorCode;
+    }
 
+    public void setErrorCode(ErrorCode errorCode) {
+        this.errorCode = errorCode;
+    }
 }

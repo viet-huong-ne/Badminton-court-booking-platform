@@ -2,23 +2,24 @@ package com.SWP.BadmintonCourtBooking.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.sql.Time;
 import java.time.LocalTime;
 
+//@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+
 @Entity
-@Data
-@Table(name = "Price")
+@Table(name = "Prices")
 public class Price {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "priceID")
+    @Column(name = "price_id")
     private int priceID;
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "courtID", nullable = false)
-    private Court court;
 
     @Column(name = "opening_time")
     private LocalTime openTime;
@@ -26,9 +27,14 @@ public class Price {
     @Column(name = "close_time")
     private LocalTime closeTime;
 
-    @Column(name = "UnitPrice")
+    @Column(name = "unit_price")
     private double unitPrice;
 
-    @Column(name = "activeStatus")
-    private String activeStatus;
+//    @Column(name = "active_status")
+//    private String activeStatus;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "court_id", nullable = false)
+    private Court court;
 }

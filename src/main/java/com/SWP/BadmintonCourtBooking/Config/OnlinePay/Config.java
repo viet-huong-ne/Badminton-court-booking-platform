@@ -10,6 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -17,10 +19,15 @@ import javax.crypto.spec.SecretKeySpec;
 import jakarta.servlet.http.HttpServletRequest;
 
 public class Config {
+//    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+//    public static String vnp_ReturnUrl = "http://localhost:8080/pay_infor"; //http://localhost:8080/vnpay_jsp/vnpay_return.jsp, // /paymentvnpay_jsp/vnpay_return.jsp
+//    public static String vnp_TmnCode = "64ZRN0TF";
+//    public static String secretKey = "QKKWKPCCJIIUTUUQCTVMJAIMEIMPZIOZ";
+//    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static final String vnp_ReturnUrl = "http://localhost:8080/pay_infor"; //http://localhost:8080/vnpay_jsp/vnpay_return.jsp, // /paymentvnpay_jsp/vnpay_return.jsp
-    public static String vnp_TmnCode = "64ZRN0TF";
-    public static String secretKey = "QKKWKPCCJIIUTUUQCTVMJAIMEIMPZIOZ";
+    public static String vnp_ReturnUrl = "http://localhost:8080/payInforV2"; //http://localhost:8080/vnpay_jsp/vnpay_return.jsp, // /paymentvnpay_jsp/vnpay_return.jsp
+    public static String vnp_TmnCode = "W1FP8Q14";
+    public static String secretKey = "J1MJQN7S088M9P74OL8D0PN6IA0O3NRF";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
 
     public static String md5(String message) {
@@ -124,5 +131,13 @@ public class Config {
             sb.append(chars.charAt(rnd.nextInt(chars.length())));
         }
         return sb.toString();
+    }
+    public static int extractUserId(String orderInfo) {
+        Pattern pattern = Pattern.compile("UserId:\\s*(\\d+)");
+        Matcher matcher = pattern.matcher(orderInfo);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group(1));
+        }
+        return -1;
     }
 }

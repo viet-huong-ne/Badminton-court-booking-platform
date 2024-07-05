@@ -9,10 +9,7 @@ import java.util.List;
 
 public class RecurringBookingRequest {
 
-    private int userId;
-
-    private List<Integer> subCourts;
-
+    private int courtID;
     private List<DayOfWeek> daysOfWeek;
 
     private LocalTime startTime;
