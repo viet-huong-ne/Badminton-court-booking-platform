@@ -1,12 +1,12 @@
 package com.SWP.BadmintonCourtBooking.Dto.Response;
 
-import com.SWP.BadmintonCourtBooking.Entity.Court;
 import com.SWP.BadmintonCourtBooking.Entity.Images;
+import com.SWP.BadmintonCourtBooking.Entity.Price;
+import com.SWP.BadmintonCourtBooking.Entity.ServiceCourt;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import lombok.*;
 
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -15,21 +15,18 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class CreateCourtResponse {
-
     /*
     private Court court;
     */
-
-
     private String courtName;
 
     private String district;
 
     private String courtAddress;
 
-    private LocalTime openTime;
+    private LocalTime startTime;
 
-    private LocalTime closeTime;
+    private LocalTime endTime;
 
     private Integer duration;
 
@@ -41,5 +38,13 @@ public class CreateCourtResponse {
 
     private String phone;
 
+    private Integer statusCourt;
+
     private List<SubCourt> subCourts;
+
+    private List<ServiceCourt> serviceCourt;
+
+    private List<Price> prices;
+
+    //private Set<ServiceCourt> serviceCourt;
 }

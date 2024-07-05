@@ -17,20 +17,10 @@ import java.time.LocalTime;
 @Entity
 @Table(name = "BookingDetails")
 public class BookingDetails {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private Integer id;
-
-    @ManyToOne
-    @JsonIgnore
-    @JoinColumn(name = "booking_id")
-    private Booking booking;
-
-    @ManyToOne
-    @JoinColumn(name = "sub_court_id")
-    private SubCourt subCourt;
 
     @Column(name = "quantity")
     private int Quantity;
@@ -48,4 +38,14 @@ public class BookingDetails {
     @Column(name = "end_time")
     private LocalTime EndTime;
     //private Time EndTime;
+
+
+    @ManyToOne
+    @JoinColumn(name = "sub_court_id")
+    private SubCourt subCourt;
+
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
 }

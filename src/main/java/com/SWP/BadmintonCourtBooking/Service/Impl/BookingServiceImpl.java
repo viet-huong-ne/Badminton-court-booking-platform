@@ -99,7 +99,6 @@ public class BookingServiceImpl implements BookingService {
                 }
             }
         }
-        // ResponseCourtDto responseCourtDto = new ResponseCourtDto(bookingRequest.getCourtID(), subCourts, bookingRequest.getBookingDate(), bookingRequest.getStartTime(), bookingRequest.getEndTime());
         return subCourts;
     }
 
@@ -182,6 +181,7 @@ public class BookingServiceImpl implements BookingService {
         paymentResDto.setTransactionCode(booking.getPayment().getTransactionCode());
 
         return BookingResponse.builder()
+                .bookingId(booking.getBookingID())
                 .courtName(booking.getCourt().getCourtName())
                 .address(booking.getCourt().getCourtAddress())
                 .courtPhoneNumber(booking.getCourt().getUser().getPhone())
@@ -395,8 +395,8 @@ public class BookingServiceImpl implements BookingService {
         //("ALL".equals(pricing.getActiveStatus()) || pricing.getActiveStatus().equals(activeStatus)) &&
 
         for (Price pricing : priceList) {
-            if ((startTime.isAfter(pricing.getOpenTime()) || startTime.equals(pricing.getOpenTime()))
-                    && (endTime.isBefore(pricing.getCloseTime()) || endTime.equals(pricing.getCloseTime()))) {
+            if ((startTime.isAfter(pricing.getStartTime()) || startTime.equals(pricing.getStartTime()))
+                    && (endTime.isBefore(pricing.getEndTime()) || endTime.equals(pricing.getEndTime()))) {
                 return pricing.getUnitPrice();
             }
         }

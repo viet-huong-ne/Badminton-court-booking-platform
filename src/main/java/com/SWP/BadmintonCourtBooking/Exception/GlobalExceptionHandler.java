@@ -10,12 +10,13 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice //annotation define exception
 public class GlobalExceptionHandler {
 
+    /*
     @ExceptionHandler(value = Exception.class) //Catch 1 exception cần 1 para
     ResponseEntity<APIResponse> handlingRuntimeException(RuntimeException e) {
         APIResponse apiRespone = new APIResponse();
         apiRespone.setMessage(ErrorCode.UNCATEGORIZED_EXCEPTION.getMessage());
         return ResponseEntity.badRequest().body(apiRespone);
-    }
+    }*/
 
     @ExceptionHandler(value = AppException.class) //Catch 1 exception cần 1 para
     ResponseEntity<APIResponse> handlingAppException(AppException e) {

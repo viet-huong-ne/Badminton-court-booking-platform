@@ -2,8 +2,10 @@ package com.SWP.BadmintonCourtBooking.Dto;
 
 import com.SWP.BadmintonCourtBooking.Entity.Images;
 import com.SWP.BadmintonCourtBooking.Entity.Price;
+import com.SWP.BadmintonCourtBooking.Entity.ServiceCourt;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import lombok.AllArgsConstructor;
+
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,9 +25,9 @@ public class CourtDto {
 
     private String courtAddress;
 
-    private LocalTime openTime;
+    private LocalTime startTime;
 
-    private LocalTime closeTime;
+    private LocalTime endTime;
 
     private Integer courtQuantity;
 
@@ -40,4 +42,8 @@ public class CourtDto {
     private Integer userID;
 
     private String phone;
+
+    private Integer statusCourt;
+
+    private List<ServiceCourt> serviceCourt;
 }
