@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 //@Data
@@ -66,15 +67,15 @@ public class Court {
     @JsonIgnore
     private List<Booking> booking;
 
-    /*
+
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "service_court",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
+            name = "court_service",
+            joinColumns = @JoinColumn(name = "court_id"),
+            inverseJoinColumns = @JoinColumn(name = "service_id")
     )
-    private Set<Course> courses = new HashSet<>();
-     */
+    //private Set<ServiceCourt> serviceCourtSet  = new HashSet<>();
+    private List<ServiceCourt> serviceCourt = new ArrayList<>();
 
 
 }

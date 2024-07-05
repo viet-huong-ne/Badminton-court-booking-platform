@@ -7,7 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -20,13 +22,14 @@ public class ServiceCourt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "service_id")
-    private int serviceID;
+    private Integer serviceID;
 
-    @Column(name = "service")
-    private String service;
+    @Column(name = "service_name")
+    private String serviceName;
 
-    @ManyToOne
+    //@ManyToMany(mappedBy = "serviceCourtSet")
+    //private Set<Court> court = new HashSet<>();
     @JsonIgnore
-    @JoinColumn(name = "court_id", nullable = false)
-    private Court court;
+    @ManyToMany(mappedBy = "serviceCourt")
+    private List<Court> courts = new ArrayList<>();
 }

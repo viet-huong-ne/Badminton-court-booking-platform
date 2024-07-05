@@ -19,10 +19,7 @@ public class Booking {
     @Column(name = "booking_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer BookingID;
-    @ManyToOne
-    //@JsonIgnore
-    @JoinColumn(name = "court_id", nullable = false)
-    private Court court;
+
     @Column(name = "first_name")
     private String firstName;
 
@@ -35,17 +32,25 @@ public class Booking {
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "booking_date")
+    private LocalDate bookingDate;
+
+    @Column(name = "total_price")
+    private Double totalPrice;
+
+    @Column(name = "booking_type", columnDefinition = "nvarchar(255)")
+    private String booking_type;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(name = "booking_date")
-    private LocalDate bookingDate;
-    @Column(name = "total_price")
-    private Double totalPrice;
-    @Column(name = "booking_type", columnDefinition = "nvarchar(255)")
-    private String booking_type;
+    @ManyToOne
+    //@JsonIgnore
+    @JoinColumn(name = "court_id", nullable = false)
+    private Court court;
+
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     //@JsonIgnore
     private List<BookingDetails> bookingDetails;
