@@ -2,7 +2,9 @@ package com.SWP.BadmintonCourtBooking.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,6 +13,8 @@ import java.util.Date;
 @Entity
 @Table(name = "Payment")
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Payment {
     @Id
     @Column(name = "payment_id")

@@ -15,6 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingResponse {
+    private int bookingId;
     private String courtName;
     private String address;
     private String courtPhoneNumber;

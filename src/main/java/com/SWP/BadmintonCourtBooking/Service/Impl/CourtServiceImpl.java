@@ -65,15 +65,15 @@ public class CourtServiceImpl implements CourtService {
         return courtRepository.findById(courtID);
     }
 
-    @Override
-    public List<CourtDto> getAllCourtV1() {
-        List<CourtDto> listCourtDTO = new ArrayList<>();
-        List<Court> listCourts = courtRepository.findAll();
-        for (Court court : listCourts) {
-            listCourtDTO.add(convertToDto(court));
-        }
-        return listCourtDTO;
-    }
+//    @Override
+//    public List<CourtDto> getAllCourtV1() {
+//        List<CourtDto> listCourtDTO = new ArrayList<>();
+//        List<Court> listCourts = courtRepository.findAll();
+//        for (Court court : listCourts) {
+//            listCourtDTO.add(convertToDto(court));
+//        }
+//        return listCourtDTO;
+//    }
 
     public CourtDto convertToDto(Court court) {
         return CourtDto.builder()
@@ -82,14 +82,15 @@ public class CourtServiceImpl implements CourtService {
                 .courtAddress(court.getCourtAddress())
                 .District(court.getDistrict())
                 .duration(court.getDuration())
-                .openTime(court.getOpenTime())
-                .closeTime(court.getCloseTime())
+                .startTime(court.getStartTime())
+                .endTime(court.getEndTime())
                 .courtQuantity(court.getCourtQuantity())
                 .images(court.getImages())
                 .subCourts(court.getSubCourt())
                 .price(court.getPrice())
                 .userID(court.getUser().getUserID())
                 .phone(court.getUser().getPhone())
+                .statusCourt(court.getStatusCourt())
                 .build();
 
     }
@@ -102,8 +103,8 @@ public class CourtServiceImpl implements CourtService {
         court.setCourtAddress(createCourtRequest.getCourtAddress());
         court.setDistrict(createCourtRequest.getDistrict());
         court.setDuration(createCourtRequest.getDuration());
-        court.setOpenTime(createCourtRequest.getOpenTime());
-        court.setCloseTime(createCourtRequest.getCloseTime());
+        court.setEndTime(createCourtRequest.getOpenTime());
+        court.setEndTime(createCourtRequest.getCloseTime());
         court.setCourtQuantity(createCourtRequest.getCourtQuantity());
         court.setStatusCourt(createCourtRequest.getStatusCourt());
         court.setUser(userRepository.findById(createCourtRequest.getUserID()).orElseThrow(() -> new RuntimeException("User not found")));
@@ -134,8 +135,8 @@ public class CourtServiceImpl implements CourtService {
                 .courtAddress(court.getCourtAddress())
                 .district(court.getDistrict())
                 .duration(court.getDuration())
-                .openTime(court.getOpenTime())
-                .closeTime(court.getCloseTime())
+                .openTime(court.getStartTime())
+                .closeTime(court.getEndTime())
                 .subCourts(court.getSubCourt())
                 .images(court.getImages())
                 .userID(court.getUser().getUserID())

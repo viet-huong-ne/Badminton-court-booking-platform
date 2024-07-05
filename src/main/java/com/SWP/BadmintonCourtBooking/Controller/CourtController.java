@@ -68,11 +68,13 @@ public class CourtController {
                     .courtQuantity(i.getCourtQuantity())
                     .subCourts(subCourtList)
                     .price(i.getPrice())
-                    .openTime(i.getOpenTime())
-                    .closeTime(i.getCloseTime())
+                    .startTime(i.getStartTime())
+                    .endTime(i.getEndTime())
                     .images(i.getImages())
                     .phone(i.getUser().getPhone())
-                    .userID(i.getUser().getUserID()).build();
+                    .userID(i.getUser().getUserID())
+                    .statusCourt(i.getStatusCourt())
+                    .build();
 
             courtDtoList.add(courtDto);
             // slotOfCourtDtoList = new ArrayList<>();
@@ -98,7 +100,8 @@ public class CourtController {
             for (SubCourt s : subCourtList) {
                 subCourtDtoList.add(new SubCourtDto(s.getSubCourtID(), s.getSubCourtName(), s.isSubCourtStatus()));
             }
-            CourtDto courtDto = CourtDto.builder().courtID(court.get().getCourtID())
+            CourtDto courtDto = CourtDto.builder()
+                    .courtID(court.get().getCourtID())
                     .duration(court.get().getDuration())
                     .courtName(court.get().getCourtName())
                     .District(court.get().getDistrict())
@@ -106,11 +109,13 @@ public class CourtController {
                     .courtQuantity(court.get().getCourtQuantity())
                     .subCourts(subCourtList)
                     .price(court.get().getPrice())
-                    .openTime(court.get().getOpenTime())
-                    .closeTime(court.get().getCloseTime())
+                    .startTime(court.get().getStartTime())
+                    .endTime(court.get().getEndTime())
                     .images(court.get().getImages())
                     .phone(court.get().getUser().getPhone())
-                    .userID(court.get().getUser().getUserID()).build();
+                    .userID(court.get().getUser().getUserID())
+                    .statusCourt(court.get().getStatusCourt())
+                    .build();
             return new ResponseEntity<>(courtDto, HttpStatus.OK);
         } else throw new IllegalArgumentException("Court not found for ID: " + courtID);
 

@@ -30,11 +30,11 @@ public class Court {
     @Column(name = "court_address", nullable = false, columnDefinition = "nvarchar(255)")
     private String courtAddress;
 
-    @Column(name = "open_time")
-    private LocalTime openTime;
+    @Column(name = "start_time")
+    private LocalTime startTime;
 
-    @Column(name = "close_time")
-    private LocalTime closeTime;
+    @Column(name = "end_time")
+    private LocalTime endTime;
 
     @Column(name = "court_quantity")
     private Integer courtQuantity;
@@ -42,8 +42,8 @@ public class Court {
     @Column(name = "slot_duration")
     private Integer duration;
 
-        @Column(name = "status_court")
-        private Integer statusCourt;
+    @Column(name = "status_court")
+    private Integer statusCourt;
 
     //@JsonIgnore
     @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)

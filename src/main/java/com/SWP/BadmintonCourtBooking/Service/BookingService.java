@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Service;
 
 import com.SWP.BadmintonCourtBooking.Dto.BookingDto;
 import com.SWP.BadmintonCourtBooking.Dto.BookingResponseDTO;
+//import com.SWP.BadmintonCourtBooking.Dto.RecureBooDTO;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
@@ -9,6 +10,8 @@ import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Booking;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,4 +27,6 @@ public interface BookingService {
     BookingResponseDTO showBill();
     List<BookingResponse> getBooking(Integer userID);
     List<BookingResponse> getBookingOfCourt(Integer courtID);
+    //double saveRecureBooking(RecureBooDTO dto);
+    //ResponseCourtDto getListAvailableSubCourt(int courId, LocalDate startDate, LocalDate endDate, String dayOfWeek,LocalTime startTime , LocalTime endTime);
 }

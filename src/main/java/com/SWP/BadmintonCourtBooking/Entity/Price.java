@@ -14,18 +14,18 @@ import java.time.LocalTime;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "Prices")
+@Table(name = "Price")
 public class Price {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "price_id")
     private int priceID;
 
-    @Column(name = "opening_time")
-    private LocalTime openTime;
+    @Column(name = "start_time")
+    private LocalTime startTime;
 
-    @Column(name = "close_time")
-    private LocalTime closeTime;
+    @Column(name = "end_time")
+    private LocalTime endTime;
 
     @Column(name = "unit_price")
     private double unitPrice;
