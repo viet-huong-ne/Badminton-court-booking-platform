@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Dto;
 
 import com.SWP.BadmintonCourtBooking.Entity.Images;
 import com.SWP.BadmintonCourtBooking.Entity.Price;
+import com.SWP.BadmintonCourtBooking.Entity.ServiceCourt;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import lombok.AllArgsConstructor;
 
@@ -43,4 +44,6 @@ public class CourtDto {
     private String phone;
 
     private Integer statusCourt;
+
+    private List<ServiceCourt> serviceCourt;
 }

@@ -87,6 +87,7 @@ public class CourtServiceImpl implements CourtService {
                 .userID(court.getUser().getUserID())
                 .phone(court.getUser().getPhone())
                 .statusCourt(court.getStatusCourt())
+                .serviceCourt(court.getServiceCourt())
                 .build();
 
     }

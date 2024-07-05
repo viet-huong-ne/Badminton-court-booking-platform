@@ -74,6 +74,7 @@ public class CourtController {
                     .phone(i.getUser().getPhone())
                     .userID(i.getUser().getUserID())
                     .statusCourt(i.getStatusCourt())
+                    .serviceCourt(i.getServiceCourt())
                     .build();
 
             courtDtoList.add(courtDto);
@@ -115,6 +116,7 @@ public class CourtController {
                     .phone(court.get().getUser().getPhone())
                     .userID(court.get().getUser().getUserID())
                     .statusCourt(court.get().getStatusCourt())
+                    .serviceCourt(court.get().getServiceCourt())
                     .build();
             return new ResponseEntity<>(courtDto, HttpStatus.OK);
         } else throw new IllegalArgumentException("Court not found for ID: " + courtID);
