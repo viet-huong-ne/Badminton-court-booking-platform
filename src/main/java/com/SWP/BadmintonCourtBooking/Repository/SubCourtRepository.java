@@ -14,6 +14,10 @@ import java.util.List;
 public interface SubCourtRepository extends JpaRepository<SubCourt, Integer> {
 //    @Query("SELECT su.SubCourtName, su.SubCourtStatus FROM SubCourt su WHERE su.court.courtID = :courtID ")
 //    List<SubCourtDto> getSubCourtByCourtID(@Param("courtID") int courtID);
-    @Query("SELECT su FROM SubCourt su WHERE su.court.courtID = :courtID ")
+
+    @Query("SELECT su FROM SubCourt su WHERE su.court.courtID = :courtID")
     List<SubCourt> getSubCourtByCourtID(@Param("courtID") int courtID);
+
+    @Query("SELECT su FROM SubCourt su WHERE su.SubCourtID = :subCourtID")
+    SubCourt getSubCourtBySubCourtId(@Param("subCourtID")int subCourtID);
 }

@@ -7,7 +7,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 @Service
 public interface SubCourtService {
+
+
     List<SubCourt> getSubCourtByCourtId(int courtId);
 
+    //TODO: GET SUBCOURT BY ID
+    SubCourt getSubCourtById(int subCourtID);
 
 }
