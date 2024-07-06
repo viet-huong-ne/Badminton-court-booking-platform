@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.UpdatePriceCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateStatusCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Entity.*;
@@ -183,11 +184,6 @@ public class CourtServiceImpl implements CourtService {
     public CourtDto updateStatusCourt(UpdateStatusCourtRequest updateStatusCourtRequest) {
         //tìm ra cái sân
         Court court = courtRepository.findById(updateStatusCourtRequest.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
-        /*
-        List<ServiceCourt> listServiceCourts = new ArrayList<>();
-        Optional<ServiceCourt> id = serviceRepository.findById(court.getCourtID());
-        System.out.println("id: " + id);
-        */
         System.out.println("id: " + court);
         int status = updateStatusCourtRequest.getStatusCourt();
         if (status > 1 || status < -1) {
@@ -199,4 +195,18 @@ public class CourtServiceImpl implements CourtService {
         System.out.println("CourtDto after update: " + courtDto.toString());
         return courtDto;
     }
+
+
+
+    @Override
+    public CourtDto updatePriceCourt(UpdatePriceCourtRequest updatePriceCourtRequest) {
+        //tìm ra cái sân
+        Court court = courtRepository.findById(updatePriceCourtRequest.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
+        //if(court.s)
+        return null;
+    }
+
+
+
+
 }

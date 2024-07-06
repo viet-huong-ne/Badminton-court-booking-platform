@@ -18,6 +18,10 @@ public class SubCourtServiceImpl implements SubCourtService {
         return subCourtRepository.getSubCourtByCourtID(courtID);
     }
 
+    @Override
+    public SubCourt getSubCourtById(int subCourtID) {
+        return subCourtRepository.getSubCourtBySubCourtId(subCourtID);
+    }
 
 
 }
