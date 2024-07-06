@@ -2,7 +2,7 @@ package com.SWP.BadmintonCourtBooking.Service;
 
 import com.SWP.BadmintonCourtBooking.Dto.BookingDto;
 import com.SWP.BadmintonCourtBooking.Dto.BookingResponseDTO;
-//import com.SWP.BadmintonCourtBooking.Dto.RecureBooDTO;
+import com.SWP.BadmintonCourtBooking.Dto.RecureBooDTO;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
@@ -27,6 +27,6 @@ public interface BookingService {
     BookingResponseDTO showBill();
     List<BookingResponse> getBooking(Integer userID);
     List<BookingResponse> getBookingOfCourt(Integer courtID);
-    //double saveRecureBooking(RecureBooDTO dto);
-    //ResponseCourtDto getListAvailableSubCourt(int courId, LocalDate startDate, LocalDate endDate, String dayOfWeek,LocalTime startTime , LocalTime endTime);
+    ResponseCourtDto getListAvailableSubCourt(int courId, LocalDate startDate, LocalDate endDate, String dayOfWeek, LocalTime startTime , LocalTime endTime);
+    public double saveRecureBooking(RecureBooDTO dto);
 }

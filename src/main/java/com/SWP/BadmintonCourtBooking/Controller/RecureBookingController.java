@@ -3,7 +3,7 @@ package com.SWP.BadmintonCourtBooking.Controller;
 import com.SWP.BadmintonCourtBooking.Dto.BookingDay;
 import com.SWP.BadmintonCourtBooking.Dto.BookingResponseDTO;
 import com.SWP.BadmintonCourtBooking.Dto.RecureBooDTO;
-import com.SWP.BadmintonCourtBooking.Dto.Respone.ResponseBooking;
+import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
@@ -33,9 +33,9 @@ public class RecureBookingController {
                 ||requestDto.getListDayOfWeek() == null || requestDto.getListSubCourt() == null  ) {
             return ResponseEntity.badRequest().build();
         }
-        List<ResponseBooking> listDetailboooking = new ArrayList<>();
+        List<BookingRequest> listDetailboooking = new ArrayList<>();
         for (BookingDay b : requestDto.getListDayOfWeek()){
-            ResponseBooking detail = new ResponseBooking();
+            BookingRequest detail = new BookingRequest();
             detail.setBookingDate(b.getDayTime());
             detail.setStartTime(requestDto.getStartTime());
                     detail.setEndTime(requestDto.getEndTime());
