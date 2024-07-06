@@ -11,6 +11,7 @@ import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.time.*;
@@ -298,6 +299,73 @@ public class BookingServiceImpl implements BookingService {
         return responseBookingDTO;
     }
 
+    @Override
+    public double saveRecureBooking(RecureBooDTO dto) {
+        double totalPrice = 0;
+        bookingDetailsRepository.insertRecurringBooking(
+                dto.getEndDate(),
+                dto.getEndTime(),
+                dto.getStartDate(),
+                dto.getStartTime(),
+                dto.getCourtId(),
+                dto.getUserId()
+        );
+        int recurringBookingId = bookingDetailsRepository.getLastInsertId();
+        for (int subCourtId : dto.getListSubCourt()) {
+            bookingDetailsRepository.insertRecurringBookingSubCourt(recurringBookingId, subCourtId);
+        }
+        for (BookingDay bookingDay : dto.getListDayOfWeek()) {
+            bookingDetailsRepository.insertRecurringBookingDay(recurringBookingId, bookingDay.getDayName());
+            totalPrice += calTotalPrice(dto.getCourtId(), dto.getStartTime(), dto.getEndTime(), bookingDay.getDayTime());
+        }
+        return totalPrice;
+    }
+
+    @Override
+    public ResponseCourtDto getListAvailableSubCourt(int courId, LocalDate startDate, LocalDate endDate, String dayOfWeek,
+                                                     LocalTime startTime , LocalTime endTime) {
+        DayOfWeek targetDayOfWeek = DayOfWeek.valueOf(dayOfWeek.toUpperCase());
+
+        List<LocalDate> dates = getDatesForDayOfWeekInRange(startDate, endDate, targetDayOfWeek);
+        List<SubCourt> subCourts = subCourtRepository.getSubCourtByCourtID(courId);
+        ResponseCourtDto responseCourtDto;
+        for (LocalDate bokDate : dates){
+            List<BookingDetails> bookingDetails = new ArrayList<>();
+            List<Booking> booking = bookingRepository.findByBookingDate(bokDate, courId);
+            bookingDetails = bookingDetailsRepository.findExistingTime(startTime, endTime, courId, bokDate);
+
+            for (SubCourt x : subCourts) {
+                for (BookingDetails y : bookingDetails) {
+                    if (x.getSubCourtID() == y.getSubCourt().getSubCourtID()){
+                        x.setSubCourtStatus(false);
+                    }
+                }
+            }
+        }
+        List<Integer> listexistSubCourt = bookingDetailsRepository.findSubCourtIds(courId,startDate,endDate,dayOfWeek,startTime,endTime);
+        for (Integer subCourtId : listexistSubCourt){
+            for (SubCourt y : subCourts) {
+                if (subCourtId == y.getSubCourtID()){
+                    y.setSubCourtStatus(false);
+                }
+            }
+        }
+        responseCourtDto = new ResponseCourtDto(courId, subCourts, startDate, startTime, endTime);
+        subCourts = new ArrayList<>();
+        return responseCourtDto;
+    }
+    public static List<LocalDate> getDatesForDayOfWeekInRange(LocalDate startDate, LocalDate endDate, DayOfWeek targetDayOfWeek) {
+        List<LocalDate> dates = new ArrayList<>();
+        LocalDate current = startDate;
+        while (current.getDayOfWeek() != targetDayOfWeek) {
+            current = current.plusDays(1);
+        }
+        while (!current.isAfter(endDate)) {
+            dates.add(current);
+            current = current.plusWeeks(1);
+        }
+        return dates;
+    }
     private double calTotalPrice(int courtID, LocalTime startTime, LocalTime endTime, LocalDate date) {
         List<LocalTime> times = new ArrayList<>();
         double sum = 0;
