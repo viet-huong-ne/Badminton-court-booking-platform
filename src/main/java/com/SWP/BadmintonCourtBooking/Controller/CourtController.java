@@ -151,23 +151,7 @@ public class CourtController {
     @PutMapping("/updatestatuscourt")
     public ResponseEntity<CourtDto> updateStatusCourt(@RequestBody UpdateStatusCourtRequest updateStatusCourtRequest) {
         var court = courtService.updateStatusCourt(updateStatusCourtRequest);
-        CourtDto courtDto = CourtDto.builder()
-//                .courtID(court.getCourtID())
-                .courtName(court.getCourtName())
-                .courtAddress(court.getCourtAddress())
-                .district(court.getDistrict())
-                .duration(court.getDuration())
-                .startTime(court.getStartTime())
-                .endTime(court.getEndTime())
-                .subCourts(court.getSubCourts())
-                .images(court.getImages())
-                .userID(court.getUserID())
-                .phone(court.getPhone())
-                .statusCourt(court.getStatusCourt())
-                .serviceCourt(court.getServiceCourt())
-                .price(court.getPrice())
-                .build();
-        return new ResponseEntity<>(courtDto, HttpStatus.OK);
+        return new ResponseEntity<>(court, HttpStatus.OK);
 
     }
 }

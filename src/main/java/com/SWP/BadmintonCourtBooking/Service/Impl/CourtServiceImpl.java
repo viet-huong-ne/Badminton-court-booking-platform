@@ -112,7 +112,7 @@ public class CourtServiceImpl implements CourtService {
         List<SubCourt> list = new ArrayList<>();
         for (int i = 0; i < createCourtRequest.getCourtQuantity(); i++) {
             SubCourt subCourt = new SubCourt();
-            subCourt.setSubCourtName("Sân " + i + 1);
+            subCourt.setSubCourtName("Sân " + (i + 1));
             subCourt.setCourt(court);
             subCourt.setSubCourtStatus(true);
             list.add(subCourt);
