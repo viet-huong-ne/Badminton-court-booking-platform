@@ -14,6 +14,9 @@ public interface ServiceRepository extends JpaRepository<ServiceCourt, Integer> 
     @Query("SELECT s FROM ServiceCourt s WHERE s.serviceName = :serviceName")
     ServiceCourt findByServiceName(@Param("serviceName") String serviceName);
 
-
+    /*
+    @Query("SELECT s FROM ServiceCourt WHERE s = :serviceName")
     List<ServiceCourt> findAll();
+
+     */
 }

@@ -21,7 +21,7 @@ public class CourtDto {
 
     private String courtName;
 
-    private String District;
+    private String district;
 
     private String courtAddress;
 
@@ -33,17 +33,17 @@ public class CourtDto {
 
     private Integer duration;
 
-    private List<Images> images;
-
-    private List<SubCourt> subCourts;
-
-    private List<Price> price;
-
     private Integer userID;
 
     private String phone;
 
     private Integer statusCourt;
+
+    private List<Images> images;
+
+    private List<SubCourt> subCourts;
+
+    private List<Price> price;
 
     private List<ServiceCourt> serviceCourt;
 }

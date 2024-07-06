@@ -2,7 +2,9 @@ package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 
 import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.RegisterResponse;
+import com.SWP.BadmintonCourtBooking.Dto.Response.UpdateUserResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Role;
 import com.SWP.BadmintonCourtBooking.Entity.User;
 import com.SWP.BadmintonCourtBooking.Exception.AppException;
@@ -59,11 +61,26 @@ public class UserServiceImpl implements UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
+    @Override
+    public UpdateUserResponse updateInforUser(UpdateUserRequest request) {
+        //tìm user đó
+        if(!userRepository.existsByUserName(request.getUserName())){
+            throw new AppException(ErrorCode.USER_NOT_EXISTED);
+        }
+        User user = new User();
+
+
+        //update thông tin user
+
+        return null;
+    }
+
     //TODO: LOGIN
 
 
     //API: PROFILE USER
     //TODO: UPDATE PROFILE
+
 
     //TODO: CHANGE PASSWORD
 

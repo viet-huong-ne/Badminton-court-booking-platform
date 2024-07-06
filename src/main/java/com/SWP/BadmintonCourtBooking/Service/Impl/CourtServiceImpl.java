@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateStatusCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Repository.*;
@@ -76,7 +77,7 @@ public class CourtServiceImpl implements CourtService {
                 .courtID(court.getCourtID())
                 .courtName(court.getCourtName())
                 .courtAddress(court.getCourtAddress())
-                .District(court.getDistrict())
+                .district(court.getDistrict())
                 .duration(court.getDuration())
                 .startTime(court.getStartTime())
                 .endTime(court.getEndTime())
@@ -174,7 +175,28 @@ public class CourtServiceImpl implements CourtService {
                 .phone(court.getUser().getPhone())
                 .statusCourt(court.getStatusCourt())
                 .serviceCourt(court.getServiceCourt())
-                .prices(court.getPrice())
+                .price(court.getPrice())
                 .build();
+    }
+
+    @Override
+    public CourtDto updateStatusCourt(UpdateStatusCourtRequest updateStatusCourtRequest) {
+        //tìm ra cái sân
+        Court court = courtRepository.findById(updateStatusCourtRequest.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
+        /*
+        List<ServiceCourt> listServiceCourts = new ArrayList<>();
+        Optional<ServiceCourt> id = serviceRepository.findById(court.getCourtID());
+        System.out.println("id: " + id);
+        */
+        System.out.println("id: " + court);
+        int status = updateStatusCourtRequest.getStatusCourt();
+        if (status > 1 || status < -1) {
+            throw new RuntimeException("Status court not found");
+        }
+        court.setStatusCourt(status);
+        courtRepository.save(court);
+        CourtDto courtDto = convertToDto(court);
+        System.out.println("CourtDto after update: " + courtDto.toString());
+        return courtDto;
     }
 }
