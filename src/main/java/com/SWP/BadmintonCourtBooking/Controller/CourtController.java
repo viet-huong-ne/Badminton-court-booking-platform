@@ -143,7 +143,7 @@ public class CourtController {
                 .phone(court.getPhone())
                 .statusCourt(court.getStatusCourt())
                 .serviceCourt(court.getServiceCourt())
-                .price(court.getPrice())
+                .prices(court.getPrices())
                 .build();
         return new ResponseEntity<>(courtDto, HttpStatus.OK);
     }

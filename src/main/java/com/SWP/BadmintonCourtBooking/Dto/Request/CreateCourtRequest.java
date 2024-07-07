@@ -30,7 +30,7 @@ public class CreateCourtRequest {
 
     private List<String> images;
 
-    private List<Price> price;
+    private List<Price> prices;
 
     private Integer userID;
 
