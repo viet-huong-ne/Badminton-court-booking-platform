@@ -37,6 +37,9 @@ public class RecurringBooking {
     @Enumerated(EnumType.STRING)
     private List<DayOfWeek> daysOfWeek;
 
+    @OneToOne(mappedBy = "recurringBooking", cascade = CascadeType.ALL)
+    private Payment payment;
+
     private LocalTime startTime;
     private LocalTime endTime;
     private LocalDateTime startDate;

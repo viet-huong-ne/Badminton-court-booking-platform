@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Time;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
@@ -25,15 +26,25 @@ public interface BookingDetailsRepository extends JpaRepository<BookingDetails, 
     List<BookingDetails> findExistingTime(@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime, @Param("courtID") int courtID, @Param("bookingDate") LocalDate bookingDate);
 
     @Modifying
-    @Query(value = "INSERT INTO `badmintoncourtbookingdb`.`recurring_booking` (`end_date`, `end_time`, `start_date`, `start_time`, `court_id`, `user_id`) VALUES (:endDate, :endTime, :startDate, :startTime, :courtId, :userId)", nativeQuery = true)
+    @Query(value = "INSERT INTO `badmintoncourtbookingdb`.`recurring_booking` (`end_date`, `end_time`, `start_date`, `start_time`, `court_id`, `user_id`, `total_price`) VALUES (:endDate, :endTime, :startDate, :startTime, :courtId, :userId, :totalPrice)", nativeQuery = true)
     @Transactional
     void insertRecurringBooking(@Param("endDate") LocalDate endDate,
                                 @Param("endTime") LocalTime endTime,
                                 @Param("startDate") LocalDate startDate,
                                 @Param("startTime") LocalTime startTime,
                                 @Param("courtId") int courtId,
-                                @Param("userId") int userId);
-
+                                @Param("userId") int userId,
+                                @Param("totalPrice") double totalPrice);
+    @Modifying
+    @Query(value = "INSERT INTO `badmintoncourtbookingdb`.`payment` (`bank_code`, `payment_amount`, `payment_status `, `payment_time`, `transaction_code`, `recurring_booking_id`,) VALUES " +
+            "(:bankCode, :amount, :paymentStatus, :paymentTime, :transactionCode, :recurringBookingId)", nativeQuery = true)
+    @Transactional
+    void insertPayment(@Param("bankCode") String bankCode,
+                                @Param("amount") double amount,
+                                @Param("paymentStatus") String paymentStatus,
+                                @Param("paymentTime") Date paymentTime,
+                                @Param("transactionCode") String transactionCode,
+                                @Param("recurringBookingId") int recurringBookingId);
     @Query(nativeQuery = true, value = "SELECT LAST_INSERT_ID()")
     int getLastInsertId();
 
@@ -45,8 +56,8 @@ public interface BookingDetailsRepository extends JpaRepository<BookingDetails, 
     @Modifying
     @Query(value = "INSERT INTO `badmintoncourtbookingdb`.`recurring_booking_days` (`recurring_booking_id`, `day_of_week`) VALUES (:recurringBookingId, :dayOfWeek)", nativeQuery = true)
     @Transactional
+//    void insertRecurringBookingDay(@Param("recurringBookingId") int recurringBookingId, @Param("dayOfWeek") DayOfWeek dayOfWeek);
     void insertRecurringBookingDay(@Param("recurringBookingId") int recurringBookingId, @Param("dayOfWeek") String dayOfWeek);
-
     @Query(value = "SELECT rbs.sub_court_id " +
             "FROM recurring_booking_sub_courts rbs " +
             "JOIN recurring_booking rb ON rbs.recurring_booking_id = rb.id " +

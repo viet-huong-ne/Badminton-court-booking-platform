@@ -29,4 +29,5 @@ public interface BookingService {
     List<BookingResponse> getBookingOfCourt(Integer courtID);
     ResponseCourtDto getListAvailableSubCourt(int courId, LocalDate startDate, LocalDate endDate, String dayOfWeek, LocalTime startTime , LocalTime endTime);
     public double saveRecureBooking(RecureBooDTO dto);
+    public double getTotalPriceOfRecureBooking(RecureBooDTO dto);
 }

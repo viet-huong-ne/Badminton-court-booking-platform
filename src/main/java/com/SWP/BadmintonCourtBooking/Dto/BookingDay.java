@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class  BookingDay{
-    String DayName;
-    LocalDate DayTime;
+    String dayName;
+    LocalDate dayTime;
 
 }

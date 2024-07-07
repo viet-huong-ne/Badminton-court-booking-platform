@@ -46,4 +46,8 @@ public class Payment {
     @Column(name = "transaction_code")
     private String transactionCode;
 
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "recurring_booking_id")
+    private RecurringBooking recurringBooking;
 }

@@ -28,50 +28,63 @@ public class RecureBookingController {
 
     @PostMapping("/add-booking")
     public ResponseEntity<String> addBooking(@RequestBody RecureBooDTO requestDto) {
-        if (requestDto.getStartTime() == null || requestDto.getEndTime() == null
-        ||requestDto.getEndDate() == null || requestDto.getStartDate() == null
-                ||requestDto.getListDayOfWeek() == null || requestDto.getListSubCourt() == null  ) {
-            return ResponseEntity.badRequest().build();
-        }
-        List<BookingRequest> listDetailboooking = new ArrayList<>();
-        for (BookingDay b : requestDto.getListDayOfWeek()){
-            BookingRequest detail = new BookingRequest();
-            detail.setBookingDate(b.getDayTime());
-            detail.setStartTime(requestDto.getStartTime());
-                    detail.setEndTime(requestDto.getEndTime());
-                    detail.setCourtID(requestDto.getCourtId());
-            ResponseCourtDto dto =    bookingService.checkCourtAvailability(detail);
-            String submess = "";
-
-            for (Integer id : requestDto.getListSubCourt()){
-                for (SubCourt c : dto.getSubCourt() ){
-                    System.out.println(id);
-                    System.out.println(c.getSubCourtID() + " ---" + c.isSubCourtStatus());
-                    if (c.getSubCourtID() == id){
-                           if (c.isSubCourtStatus()==false){
-                                submess =  "Sub-Court "+c.getSubCourtName()+" slot not available!";
-
-                           }
-                    }
-                }
-            }
-            System.out.println(submess);
-            String mess = "{ \"mess\": '"+submess+"'}";
-            System.out.println(mess);
-            if (submess!=""){
-                return ResponseEntity.badRequest().body(mess);
-            }
-        }
-        double totalPrice =   bookingService.saveRecureBooking(requestDto);
-        String resp = "{ \"totalPrice\": '"+totalPrice+"'}";
+//        if (requestDto.getStartTime() == null || requestDto.getEndTime() == null
+//                || requestDto.getEndDate() == null || requestDto.getStartDate() == null
+//                || requestDto.getListDayOfWeek() == null || requestDto.getListSubCourt() == null) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//        List<BookingRequest> listDetailboooking = new ArrayList<>();
+//        for (BookingDay b : requestDto.getListDayOfWeek()) {
+//            BookingRequest detail = new BookingRequest();
+//            detail.setBookingDate(b.getDayTime());
+//            detail.setStartTime(requestDto.getStartTime());
+//            detail.setEndTime(requestDto.getEndTime());
+//            detail.setCourtID(requestDto.getCourtId());
+//            ResponseCourtDto dto = bookingService.checkCourtAvailability(detail);
+//            String submess = "";
+//
+//            for (Integer id : requestDto.getListSubCourt()) {
+//                for (SubCourt c : dto.getSubCourt()) {
+//                    System.out.println(id);
+//                    System.out.println(c.getSubCourtID() + " ---" + c.isSubCourtStatus());
+//                    if (c.getSubCourtID() == id) {
+//                        if (c.isSubCourtStatus() == false) {
+//                            submess = "Sub-Court " + c.getSubCourtName() + " slot not available!";
+//
+//                        }
+//                    }
+//                }
+//            }
+//            System.out.println(submess);
+//            String mess = "{ \"mess\": '" + submess + "'}";
+//            System.out.println(mess);
+//            if (submess != "") {
+//                return ResponseEntity.badRequest().body(mess);
+//            }
+//        }
+        double totalPrice = bookingService.saveRecureBooking(requestDto);
+        String resp = "{ \"totalPrice\": '" + totalPrice + "'}";
         return ResponseEntity.ok().body(resp);
     }
+//    @PostMapping("/total-price")
+//    public ResponseEntity<String> getTotalPrice(@RequestBody RecureBooDTO requestDto) {
+//        double totalPrice = bookingService.saveRecureBooking(requestDto);
+//        String resp = "{ \"totalPrice\": '" + totalPrice + "'}";
+//        return ResponseEntity.ok().body(resp);
+//    }
+
     @GetMapping("GetAvailableSubCourt")
     public ResponseEntity<ResponseCourtDto> GetAvailableSubCourt(@RequestParam("court_id") int courtId, @RequestParam("startDate") LocalDate startDate,
-                                                       @RequestParam("endDate") LocalDate endDate, @RequestParam("dayOfWeek") String dayOfWeek,
-                                                                 @RequestParam("startTime")    LocalTime startTime ,@RequestParam("endTime") LocalTime endTime){
+                                                                 @RequestParam("endDate") LocalDate endDate, @RequestParam("dayOfWeek") String dayOfWeek,
+                                                                 @RequestParam("startTime") LocalTime startTime, @RequestParam("endTime") LocalTime endTime) {
 
-        ResponseCourtDto responseCourtDto = bookingService.getListAvailableSubCourt(courtId,startDate,endDate,dayOfWeek.toUpperCase(), startTime, endTime);
-        return  ResponseEntity.ok(responseCourtDto);
+        ResponseCourtDto responseCourtDto = bookingService.getListAvailableSubCourt(courtId, startDate, endDate, dayOfWeek.toUpperCase(), startTime, endTime);
+        return ResponseEntity.ok(responseCourtDto);
+    }
+    @PostMapping("/totalPrice")
+    public ResponseEntity<String> getTotalPrice(@RequestBody RecureBooDTO requestDto) {
+        double totalPrice = bookingService.getTotalPriceOfRecureBooking(requestDto);
+        String resp = "{ \"totalPrice\": '" + totalPrice + "'}";
+        return ResponseEntity.ok().body(resp);
     }
 }

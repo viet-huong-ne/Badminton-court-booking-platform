@@ -9,6 +9,7 @@ import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Repository.*;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import jakarta.transaction.Transactional;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -113,13 +114,13 @@ public class BookingServiceImpl implements BookingService {
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
     @Override
     public double preBooking(BookingDto bookingDto) {
-        return calTotalPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime(), bookingDto.getBookingDate()) * bookingDto.getBookingDetails().size();
+        return calTotalPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime()) * bookingDto.getBookingDetails().size();
     }
 
     @Override
     public BookingResponseDTO saveBooking(BookingDto bookingDto) {
         //Double tmp = priceRepository.getPriceOfSlot(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusHours(1));
-        Double tmp = getPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusMinutes(30), bookingDto.getBookingDate());
+        Double tmp = getPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusMinutes(30));
         User user = userRepository.findById(bookingDto.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Court court = courtRepository.findById(bookingDto.getCourtID())
@@ -143,7 +144,7 @@ public class BookingServiceImpl implements BookingService {
                 }).collect(Collectors.toList());
         booking.setBookingDetails(bookingDetails);
         //double totalPrice = calTotalPrice(bookingDto.getCourtID(),bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime())* bookingDetails.size();
-        double totalPrice = calTotalPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime(), bookingDto.getBookingDate()) * bookingDetails.size();
+        double totalPrice = calTotalPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime()) * bookingDetails.size();
         booking.setTotalPrice(totalPrice);
         //----------------------------------------------------------------------------------------------------------------------------------------------------------
         Booking savedBooking = bookingRepository.save(booking);
@@ -153,7 +154,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingResponse> getBooking(Integer userID) {
-        List<Booking> bookingList =  bookingRepository.findByUserID(userID);
+        List<Booking> bookingList = bookingRepository.findByUserID(userID);
         List<BookingResponse> bookingResponseList = new ArrayList<>();
         for (Booking booking : bookingList) {
             BookingResponse bookingResponse = convertToBookingResponse(booking);
@@ -161,6 +162,7 @@ public class BookingServiceImpl implements BookingService {
         }
         return bookingResponseList;
     }
+
     public BookingResponse convertToBookingResponse(Booking booking) {
 
         List<BookingDetailResponseDTO> detailResponseDTOs = booking.getBookingDetails().stream()
@@ -192,6 +194,7 @@ public class BookingServiceImpl implements BookingService {
                 .bookingDetails(detailResponseDTOs)
                 .paymentResDTO(paymentResDto).build();
     }
+
     @Override
     public List<BookingResponse> getBookingOfCourt(Integer courtID) {
         List<Booking> bookingList = bookingRepository.findByCourtID(courtID);
@@ -206,7 +209,7 @@ public class BookingServiceImpl implements BookingService {
     //-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
     public Booking createBooking(BookingDto bookingDto) {
-        Double tmp = getPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusMinutes(30), bookingDto.getBookingDate());
+        Double tmp = getPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getStartTime().plusMinutes(30));
         User user = userRepository.findById(bookingDto.getCustomerId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
         Court court = courtRepository.findById(bookingDto.getCourtID())
@@ -234,7 +237,7 @@ public class BookingServiceImpl implements BookingService {
                 }).collect(Collectors.toList());
         booking.setBookingDetails(bookingDetails);
         //double totalPrice = calTotalPrice(bookingDto.getCourtID(),bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime())* bookingDetails.size();
-        double totalPrice = calTotalPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime(), bookingDto.getBookingDate()) * bookingDetails.size();
+        double totalPrice = calTotalPrice(bookingDto.getCourtID(), bookingDto.getBookingDetails().get(0).getStartTime(), bookingDto.getBookingDetails().get(0).getEndTime()) * bookingDetails.size();
         booking.setTotalPrice(totalPrice);
         return booking;
     }
@@ -302,50 +305,64 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public double saveRecureBooking(RecureBooDTO dto) {
         double totalPrice = 0;
+        double totalSessions = dto.calculateTotalSessions();
+        totalPrice = calTotalPrice(dto.getCourtId(), dto.getStartTime(), dto.getEndTime()) * totalSessions * dto.getListSubCourt().size();
         bookingDetailsRepository.insertRecurringBooking(
                 dto.getEndDate(),
                 dto.getEndTime(),
                 dto.getStartDate(),
                 dto.getStartTime(),
                 dto.getCourtId(),
-                dto.getUserId()
+                dto.getUserId(),
+                totalPrice
         );
+        //bookingDetailsRepository.insertPayment(totalPrice);
         int recurringBookingId = bookingDetailsRepository.getLastInsertId();
         for (int subCourtId : dto.getListSubCourt()) {
             bookingDetailsRepository.insertRecurringBookingSubCourt(recurringBookingId, subCourtId);
         }
-        for (BookingDay bookingDay : dto.getListDayOfWeek()) {
-            bookingDetailsRepository.insertRecurringBookingDay(recurringBookingId, bookingDay.getDayName());
-            totalPrice += calTotalPrice(dto.getCourtId(), dto.getStartTime(), dto.getEndTime(), bookingDay.getDayTime());
+        for (DayOfWeek bookingDay : dto.getListDayOfWeek()) {
+            //DayOfWeek dayOfWeek = DayOfWeek.valueOf(bookingDay.getDayName().toUpperCase());
+            bookingDetailsRepository.insertRecurringBookingDay(recurringBookingId, bookingDay.toString());
+//            bookingDetailsRepository.insertRecurringBookingDay(recurringBookingId, bookingDay.getDayName());
+//            totalPrice += calTotalPrice(dto.getCourtId(), dto.getStartTime(), dto.getEndTime());
         }
+
         return totalPrice;
     }
 
     @Override
+    public double getTotalPriceOfRecureBooking(RecureBooDTO dto) {
+        double totalSessions = dto.calculateTotalSessions();
+        return calTotalPrice(dto.getCourtId(), dto.getStartTime(), dto.getEndTime()) * totalSessions * dto.getListSubCourt().size();
+
+    }
+
+    @Override
     public ResponseCourtDto getListAvailableSubCourt(int courId, LocalDate startDate, LocalDate endDate, String dayOfWeek,
-                                                     LocalTime startTime , LocalTime endTime) {
+                                                     LocalTime startTime, LocalTime endTime) {
         DayOfWeek targetDayOfWeek = DayOfWeek.valueOf(dayOfWeek.toUpperCase());
 
         List<LocalDate> dates = getDatesForDayOfWeekInRange(startDate, endDate, targetDayOfWeek);
         List<SubCourt> subCourts = subCourtRepository.getSubCourtByCourtID(courId);
         ResponseCourtDto responseCourtDto;
-        for (LocalDate bokDate : dates){
+        for (LocalDate bokDate : dates) {
             List<BookingDetails> bookingDetails = new ArrayList<>();
             List<Booking> booking = bookingRepository.findByBookingDate(bokDate, courId);
             bookingDetails = bookingDetailsRepository.findExistingTime(startTime, endTime, courId, bokDate);
 
             for (SubCourt x : subCourts) {
                 for (BookingDetails y : bookingDetails) {
-                    if (x.getSubCourtID() == y.getSubCourt().getSubCourtID()){
+                    if (x.getSubCourtID() == y.getSubCourt().getSubCourtID()) {
                         x.setSubCourtStatus(false);
                     }
                 }
             }
         }
-        List<Integer> listexistSubCourt = bookingDetailsRepository.findSubCourtIds(courId,startDate,endDate,dayOfWeek,startTime,endTime);
-        for (Integer subCourtId : listexistSubCourt){
+        List<Integer> listexistSubCourt = bookingDetailsRepository.findSubCourtIds(courId, startDate, endDate, dayOfWeek, startTime, endTime);
+        for (Integer subCourtId : listexistSubCourt) {
             for (SubCourt y : subCourts) {
-                if (subCourtId == y.getSubCourtID()){
+                if (subCourtId == y.getSubCourtID()) {
                     y.setSubCourtStatus(false);
                 }
             }
@@ -354,6 +371,7 @@ public class BookingServiceImpl implements BookingService {
         subCourts = new ArrayList<>();
         return responseCourtDto;
     }
+
     public static List<LocalDate> getDatesForDayOfWeekInRange(LocalDate startDate, LocalDate endDate, DayOfWeek targetDayOfWeek) {
         List<LocalDate> dates = new ArrayList<>();
         LocalDate current = startDate;
@@ -366,7 +384,8 @@ public class BookingServiceImpl implements BookingService {
         }
         return dates;
     }
-    private double calTotalPrice(int courtID, LocalTime startTime, LocalTime endTime, LocalDate date) {
+
+    private double calTotalPrice(int courtID, LocalTime startTime, LocalTime endTime) {
         List<LocalTime> times = new ArrayList<>();
         double sum = 0;
         while (!startTime.isAfter(endTime)) {
@@ -375,21 +394,21 @@ public class BookingServiceImpl implements BookingService {
         }
         for (int i = 0; i < times.size() - 1; i++) {
             //Double tmp = priceRepository.getPriceOfSlot(courtID,times.get(i), times.get(i + 1), dayOfWeek)/2;
-            double tmp = getPrice(courtID, times.get(i), times.get(i + 1), date) / 2;
+            double tmp = getPrice(courtID, times.get(i), times.get(i + 1)) / 2;
             sum += tmp;
         }
         return sum;
     }
 
-    public double getPrice(int courtId, LocalTime startTime, LocalTime endTime, LocalDate date) {
-        DayOfWeek dayOfWeek = date.getDayOfWeek();
-        String activeStatus;
-
-        if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
-            activeStatus = "CT";
-        } else {
-            activeStatus = "TT";
-        }
+    public double getPrice(int courtId, LocalTime startTime, LocalTime endTime) {
+//        DayOfWeek dayOfWeek = date.getDayOfWeek();
+//        String activeStatus;
+//
+//        if (dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY) {
+//            activeStatus = "CT";
+//        } else {
+//            activeStatus = "TT";
+//        }
 
         List<Price> priceList = priceRepository.getPriceByCourtID(courtId);
         //("ALL".equals(pricing.getActiveStatus()) || pricing.getActiveStatus().equals(activeStatus)) &&
