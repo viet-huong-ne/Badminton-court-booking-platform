@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Controller;
 
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.UpdatePriceCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateStatusCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Dto.SubCourtDto;
@@ -150,9 +151,16 @@ public class CourtController {
     //TODO: UPDATE STATUS COURT
     @PutMapping("/updatestatuscourt")
     public ResponseEntity<CourtDto> updateStatusCourt(@RequestBody UpdateStatusCourtRequest updateStatusCourtRequest) {
-        var court = courtService.updateStatusCourt(updateStatusCourtRequest);
-        return new ResponseEntity<>(court, HttpStatus.OK);
+        var courtDTO = courtService.updateStatusCourt(updateStatusCourtRequest);
+        return new ResponseEntity<>(courtDTO, HttpStatus.OK);
 
+    }
+
+    //TODO: UPDATE PRICE COURT
+    @PutMapping("/updatepricecourt")
+    public ResponseEntity<CourtDto> updatePriceCourt(@RequestBody UpdatePriceCourtRequest updatePriceCourtRequest) {
+        var courtDTO = courtService.updatePriceCourt(updatePriceCourtRequest);
+        return new ResponseEntity<>(courtDTO, HttpStatus.OK);
     }
 
 

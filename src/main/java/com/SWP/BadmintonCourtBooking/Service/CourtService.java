@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Service;
 
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateInforCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.UpdatePriceCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateStatusCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
@@ -40,7 +41,7 @@ public interface CourtService {
     public CourtDto updatePriceCourt(UpdatePriceCourtRequest updatePriceCourtRequest);
 
     //TODO: UPDATE INFOR COURT
-
+    public CourtDto updateInforCourt(UpdateInforCourtRequest updateInforCourtRequest);
 
     //TODO: DELETE COURT
 
