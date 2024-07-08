@@ -13,6 +13,7 @@ import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -82,10 +83,9 @@ public class RecureBookingController {
 //    }
     //TODO API TRẢ VỀ TOTAL PRICE
     @PostMapping("/totalPrice")
-    public ResponseEntity<String> getTotalPrice(@RequestBody RecurringRequest requestDto) {
+    public ResponseEntity<Double> getTotalPrice(@RequestBody RecurringRequest requestDto) {
         double totalPrice = bookingService.getTotalPriceOfRecureBooking(requestDto);
-        String resp = "{ \"totalPrice\": '" + totalPrice + "'}";
-        return ResponseEntity.ok().body(resp);
+        return new ResponseEntity<>(totalPrice, HttpStatus.OK);
     }
     //TODO API CHECK TRẠNG THÁI SÂN
     @PostMapping("/GetAvailableSubCourt")
