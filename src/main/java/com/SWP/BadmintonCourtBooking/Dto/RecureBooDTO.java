@@ -25,7 +25,10 @@ public class RecureBooDTO {
     int userId;
     ArrayList<Integer> listSubCourt;
     ArrayList<DayOfWeek> listDayOfWeek;
-
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
     public int calculateTotalSessions() {
         int totalSessions = 0;
 

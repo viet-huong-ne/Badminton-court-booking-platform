@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -36,11 +37,11 @@ public interface BookingDetailsRepository extends JpaRepository<BookingDetails, 
                                 @Param("userId") int userId,
                                 @Param("totalPrice") double totalPrice);
     @Modifying
-    @Query(value = "INSERT INTO `badmintoncourtbookingdb`.`payment` (`bank_code`, `payment_amount`, `payment_status `, `payment_time`, `transaction_code`, `recurring_booking_id`,) VALUES " +
+    @Query(value = "INSERT INTO `badmintoncourtbookingdb`.`payment` (`bank_code`, `payment_amount`, `payment_status`, `payment_time`, `transaction_code`, `recurring_booking_id`) VALUES " +
             "(:bankCode, :amount, :paymentStatus, :paymentTime, :transactionCode, :recurringBookingId)", nativeQuery = true)
     @Transactional
     void insertPayment(@Param("bankCode") String bankCode,
-                                @Param("amount") double amount,
+                                @Param("amount") BigDecimal amount,
                                 @Param("paymentStatus") String paymentStatus,
                                 @Param("paymentTime") Date paymentTime,
                                 @Param("transactionCode") String transactionCode,

@@ -4,6 +4,7 @@ import com.SWP.BadmintonCourtBooking.Dto.*;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 
+import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Repository.*;
@@ -302,35 +303,63 @@ public class BookingServiceImpl implements BookingService {
         return responseBookingDTO;
     }
 
+//    @Override
+//    public double saveRecureBooking(RecureBooDTO dto) {
+//        double totalPrice = 0;
+//        double totalSessions = dto.calculateTotalSessions();
+//        totalPrice = calTotalPrice(dto.getCourtId(), dto.getStartTime(), dto.getEndTime()) * totalSessions * dto.getListSubCourt().size();
+//        bookingDetailsRepository.insertRecurringBooking(
+//                dto.getEndDate(),
+//                dto.getEndTime(),
+//                dto.getStartDate(),
+//                dto.getStartTime(),
+//                dto.getCourtId(),
+//                dto.getUserId(),
+//                totalPrice
+//        );
+//        //bookingDetailsRepository.insertPayment(totalPrice);
+//        int recurringBookingId = bookingDetailsRepository.getLastInsertId();
+//        for (int subCourtId : dto.getListSubCourt()) {
+//            bookingDetailsRepository.insertRecurringBookingSubCourt(recurringBookingId, subCourtId);
+//        }
+//        for (DayOfWeek bookingDay : dto.getListDayOfWeek()) {
+//            //DayOfWeek dayOfWeek = DayOfWeek.valueOf(bookingDay.getDayName().toUpperCase());
+//            bookingDetailsRepository.insertRecurringBookingDay(recurringBookingId, bookingDay.toString());
+////            bookingDetailsRepository.insertRecurringBookingDay(recurringBookingId, bookingDay.getDayName());
+////            totalPrice += calTotalPrice(dto.getCourtId(), dto.getStartTime(), dto.getEndTime());
+//        }
+//
+//        return totalPrice;
+//    }
+
     @Override
-    public double saveRecureBooking(RecureBooDTO dto) {
+    public double saveRecureBooking(RecurringBookingRequest dto) {
         double totalPrice = 0;
-        double totalSessions = dto.calculateTotalSessions();
-        totalPrice = calTotalPrice(dto.getCourtId(), dto.getStartTime(), dto.getEndTime()) * totalSessions * dto.getListSubCourt().size();
+        double totalSessions = dto.getRecureBooDTO().calculateTotalSessions();
+        totalPrice = calTotalPrice(dto.getRecureBooDTO().getCourtId(), dto.getRecureBooDTO().getStartTime(), dto.getRecureBooDTO().getEndTime()) * totalSessions * dto.getRecureBooDTO().getListSubCourt().size();
         bookingDetailsRepository.insertRecurringBooking(
-                dto.getEndDate(),
-                dto.getEndTime(),
-                dto.getStartDate(),
-                dto.getStartTime(),
-                dto.getCourtId(),
-                dto.getUserId(),
+                dto.getRecureBooDTO().getEndDate(),
+                dto.getRecureBooDTO().getEndTime(),
+                dto.getRecureBooDTO().getStartDate(),
+                dto.getRecureBooDTO().getStartTime(),
+                dto.getRecureBooDTO().getCourtId(),
+                dto.getRecureBooDTO().getUserId(),
                 totalPrice
         );
         //bookingDetailsRepository.insertPayment(totalPrice);
         int recurringBookingId = bookingDetailsRepository.getLastInsertId();
-        for (int subCourtId : dto.getListSubCourt()) {
+        for (int subCourtId : dto.getRecureBooDTO().getListSubCourt()) {
             bookingDetailsRepository.insertRecurringBookingSubCourt(recurringBookingId, subCourtId);
         }
-        for (DayOfWeek bookingDay : dto.getListDayOfWeek()) {
-            //DayOfWeek dayOfWeek = DayOfWeek.valueOf(bookingDay.getDayName().toUpperCase());
+        for (DayOfWeek bookingDay : dto.getRecureBooDTO().getListDayOfWeek()) {
             bookingDetailsRepository.insertRecurringBookingDay(recurringBookingId, bookingDay.toString());
-//            bookingDetailsRepository.insertRecurringBookingDay(recurringBookingId, bookingDay.getDayName());
-//            totalPrice += calTotalPrice(dto.getCourtId(), dto.getStartTime(), dto.getEndTime());
         }
+        Payment payment = createPayment(dto.getPaymentDTO());
+        bookingDetailsRepository.insertPayment(payment.getBankCode(),payment.getPaymentAmount(),payment.getPaymentStatus(),payment.getPaymentTime(), payment.getTransactionCode(), recurringBookingId);
+
 
         return totalPrice;
     }
-
     @Override
     public double getTotalPriceOfRecureBooking(RecureBooDTO dto) {
         double totalSessions = dto.calculateTotalSessions();
@@ -372,46 +401,6 @@ public class BookingServiceImpl implements BookingService {
         return responseCourtDto;
     }
 
-    @Override
-    public ResponseCourtDto getListAvailableSubCourtV2(int courId, LocalDate startDate, LocalDate endDate, List<String> dayOfWeek,
-                                                       LocalTime startTime, LocalTime endTime) {
-        List<DayOfWeek> dayOfWeeks = new ArrayList<>();
-        List<SubCourt> subCourts = subCourtRepository.getSubCourtByCourtID(courId);
-        for (String x : dayOfWeek) {
-            DayOfWeek targetDayOfWeek = DayOfWeek.valueOf(x.toUpperCase());
-            dayOfWeeks.add(targetDayOfWeek);
-        }
-        DayOfWeek targetDayOfWeek = DayOfWeek.valueOf("MONDAY");
-
-        List<LocalDate> dates = getDatesForDayOfWeekInRange(startDate, endDate, targetDayOfWeek);
-
-        for (LocalDate bokDate : dates) {
-            List<BookingDetails> bookingDetails = bookingDetailsRepository.findExistingTime(startTime, endTime, courId, bokDate);
-
-            for (SubCourt y : subCourts) {
-                for (BookingDetails z : bookingDetails) {
-                    if (y.getSubCourtID() == z.getSubCourt().getSubCourtID()) {
-                        y.setSubCourtStatus(false);
-                    }
-                }
-            }
-        }
-
-        List<Integer> listexistSubCourt = bookingDetailsRepository.findSubCourtIds(courId, startDate, endDate, "MONDAY", startTime, endTime);
-        for (DayOfWeek x : dayOfWeeks) {
-            for (Integer subCourtId : listexistSubCourt) {
-                for (SubCourt y : subCourts) {
-                    if (subCourtId == y.getSubCourtID()) {
-                        y.setSubCourtStatus(false);
-                    }
-                }
-            }
-        }
-        ResponseCourtDto responseCourtDto = new ResponseCourtDto(courId, subCourts, startDate, startTime, endTime);
-        subCourts = new ArrayList<>();
-        return responseCourtDto;
-    }
-
     //TODO API CHECK SUB COURT CÒN TRỐNG
     @Override
     public List<SubCourt> checkSubCourtAvailability(int courtId, LocalDate startDate, LocalDate endDate, List<DayOfWeek> daysOfWeek, LocalTime startTime, LocalTime endTime) {
@@ -433,18 +422,14 @@ public class BookingServiceImpl implements BookingService {
                 }
             }
         }
-        List<Integer> listSubCourtOfCurr = bookingRepository.findAvailableSubCourts(courtId, startDate, endDate, daysOfWeek, startTime, endTime);
+        List<RecurringBooking> list = recurringBookingRepository.findRecurringBookingsWithinDateRangeAndTime(courtId, startDate,endDate, startTime, endTime, daysOfWeek.stream().map(DayOfWeek::toString).collect(Collectors.toList()));
         for (SubCourt subCourt1 : subCourts) {
-            boolean found = false;
-            for (Integer subCourt2 : listSubCourtOfCurr) {
-                if (subCourt1.getSubCourtID().equals(subCourt2)) {
-                    found = true;
-                    break;
+            for (RecurringBooking l : list){
+                if(l.getSubCourts().contains(subCourt1)){
+                    subCourt1.setSubCourtStatus(false);
                 }
             }
-            if (!found) {
-                subCourt1.setSubCourtStatus(false);
-            }
+
         }
         return subCourts;
     }

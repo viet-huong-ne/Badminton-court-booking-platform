@@ -4,6 +4,7 @@ import com.SWP.BadmintonCourtBooking.Dto.BookingDay;
 import com.SWP.BadmintonCourtBooking.Dto.BookingResponseDTO;
 import com.SWP.BadmintonCourtBooking.Dto.RecureBooDTO;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.SubCourtAvailabilityRequest;
 import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
@@ -28,9 +29,9 @@ public class RecureBookingController {
     private static final Logger log = LoggerFactory.getLogger(BookingController.class);
     @Autowired
     private BookingService bookingService;
-
+    //TODO API THÊM ĐẶT LỊCH CỐ ĐỊNH
     @PostMapping("/add-booking")
-    public ResponseEntity<String> addBooking(@RequestBody RecureBooDTO requestDto) {
+    public ResponseEntity<String> addBooking(@RequestBody RecurringBookingRequest requestDto) {
 //        if (requestDto.getStartTime() == null || requestDto.getEndTime() == null
 //                || requestDto.getEndDate() == null || requestDto.getStartDate() == null
 //                || requestDto.getListDayOfWeek() == null || requestDto.getListSubCourt() == null) {
@@ -86,21 +87,11 @@ public class RecureBookingController {
         return ResponseEntity.ok().body(resp);
     }
     //TODO API CHECK TRẠNG THÁI SÂN
-    @GetMapping("GetAvailableSubCourt")
-    public ResponseEntity<ResponseCourtDto> GetAvailableSubCourt(@RequestParam("court_id") int courtId, @RequestParam("startDate") LocalDate startDate,
-                                                                 @RequestParam("endDate") LocalDate endDate, @RequestParam("dayOfWeek") List<String> dayOfWeek,
-                                                                 @RequestParam("startTime") LocalTime startTime, @RequestParam("endTime") LocalTime endTime) {
-
-        ResponseCourtDto responseCourtDto = bookingService.getListAvailableSubCourtV2(courtId, startDate, endDate, dayOfWeek, startTime, endTime);
-        return ResponseEntity.ok(responseCourtDto);
-    }
-    ////TODO API CHECK TRẠNG THÁI SÂN
     @PostMapping("/GetAvailableSubCourt")
     public List<SubCourt> getAvailableSubCourt(@RequestBody SubCourtAvailabilityRequest request) {
         List<DayOfWeek> daysOfWeek = request.getDayOfWeek().stream()
                 .map(day -> DayOfWeek.valueOf(day.toUpperCase()))
                 .collect(Collectors.toList());
-
         List<SubCourt> availableSubCourts = bookingService.checkSubCourtAvailability(
                 request.getCourtId(),
                 request.getStartDate(),

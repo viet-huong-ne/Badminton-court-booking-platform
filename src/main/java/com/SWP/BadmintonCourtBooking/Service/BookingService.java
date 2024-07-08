@@ -5,6 +5,7 @@ import com.SWP.BadmintonCourtBooking.Dto.BookingResponseDTO;
 import com.SWP.BadmintonCourtBooking.Dto.RecureBooDTO;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Booking;
@@ -30,9 +31,9 @@ public interface BookingService {
     List<BookingResponse> getBooking(Integer userID);
     List<BookingResponse> getBookingOfCourt(Integer courtID);
     ResponseCourtDto getListAvailableSubCourt(int courId, LocalDate startDate, LocalDate endDate, String dayOfWeek, LocalTime startTime , LocalTime endTime);
-    public double saveRecureBooking(RecureBooDTO dto);
+    double saveRecureBooking(RecurringBookingRequest dto);
     public double getTotalPriceOfRecureBooking(RecureBooDTO dto);
-    ResponseCourtDto getListAvailableSubCourtV2(int courId, LocalDate startDate, LocalDate endDate, List<String> dayOfWeek, LocalTime startTime , LocalTime endTime);
+    //ResponseCourtDto getListAvailableSubCourtV2(int courId, LocalDate startDate, LocalDate endDate, List<String> dayOfWeek, LocalTime startTime , LocalTime endTime);
     List<SubCourt> checkSubCourtAvailability(int courtId, LocalDate startDate, LocalDate endDate,
                                              List<DayOfWeek> daysOfWeek, LocalTime startTime, LocalTime endTime);
 }
