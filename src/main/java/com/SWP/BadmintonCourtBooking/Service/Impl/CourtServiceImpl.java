@@ -141,18 +141,18 @@ public class CourtServiceImpl implements CourtService {
         //Price
         //System.out.println("List: " + createCourtRequest.getPrice());
         List<Price> listPrices = new ArrayList<>();
-        for(int i = 0; i < createCourtRequest.getPrices().size(); i++){
+        for(int i = 0; i < createCourtRequest.getPrice().size(); i++){
             Price price = new Price();
             price.setCourt(court);
 
-            price.setStartTime(createCourtRequest.getPrices().get(i).getStartTime());
-            System.out.println("StartTime " + createCourtRequest.getPrices().get(i).getStartTime());
+            price.setStartTime(createCourtRequest.getPrice().get(i).getStartTime());
+            System.out.println("StartTime " + createCourtRequest.getPrice().get(i).getStartTime());
 
-            price.setEndTime(createCourtRequest.getPrices().get(i).getEndTime());
-            System.out.println("EndTime " + createCourtRequest.getPrices().get(i).getEndTime());
+            price.setEndTime(createCourtRequest.getPrice().get(i).getEndTime());
+            System.out.println("EndTime " + createCourtRequest.getPrice().get(i).getEndTime());
 
-            price.setUnitPrice(createCourtRequest.getPrices().get(i).getUnitPrice());
-            System.out.println("Price " + createCourtRequest.getPrices().get(i).getUnitPrice());
+            price.setUnitPrice(createCourtRequest.getPrice().get(i).getUnitPrice());
+            System.out.println("Price " + createCourtRequest.getPrice().get(i).getUnitPrice());
 
             listPrices.add(price);
         }
