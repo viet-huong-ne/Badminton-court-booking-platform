@@ -67,7 +67,6 @@ public class Court {
     @JsonIgnore
     private List<Booking> booking;
 
-
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "court_service",

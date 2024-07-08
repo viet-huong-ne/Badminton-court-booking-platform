@@ -1,5 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Controller;
 
+import com.SWP.BadmintonCourtBooking.Dto.Request.DeleteUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
 
 import com.SWP.BadmintonCourtBooking.Dto.Response.APIResponse;
@@ -34,6 +35,11 @@ public class UserController {
 
     //API: USER
 
+
+    @DeleteMapping("/deleteuser")
+    public boolean deleteUser(@RequestBody @Valid DeleteUserRequest request){
+        return userServiceImpl.deleteUser(request);
+    }
 
 
 

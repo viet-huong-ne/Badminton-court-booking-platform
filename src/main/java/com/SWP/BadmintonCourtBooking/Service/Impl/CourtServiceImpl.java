@@ -1,10 +1,7 @@
 package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
-import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
-import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateInforCourtRequest;
-import com.SWP.BadmintonCourtBooking.Dto.Request.UpdatePriceCourtRequest;
-import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateStatusCourtRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.*;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Repository.*;
@@ -144,18 +141,18 @@ public class CourtServiceImpl implements CourtService {
         //Price
         //System.out.println("List: " + createCourtRequest.getPrice());
         List<Price> listPrices = new ArrayList<>();
-        for(int i = 0; i < createCourtRequest.getPrice().size(); i++){
+        for(int i = 0; i < createCourtRequest.getPrices().size(); i++){
             Price price = new Price();
             price.setCourt(court);
 
-            price.setStartTime(createCourtRequest.getPrice().get(i).getStartTime());
-            System.out.println("StartTime " + createCourtRequest.getPrice().get(i).getStartTime());
+            price.setStartTime(createCourtRequest.getPrices().get(i).getStartTime());
+            System.out.println("StartTime " + createCourtRequest.getPrices().get(i).getStartTime());
 
-            price.setEndTime(createCourtRequest.getPrice().get(i).getEndTime());
-            System.out.println("EndTime " + createCourtRequest.getPrice().get(i).getEndTime());
+            price.setEndTime(createCourtRequest.getPrices().get(i).getEndTime());
+            System.out.println("EndTime " + createCourtRequest.getPrices().get(i).getEndTime());
 
-            price.setUnitPrice(createCourtRequest.getPrice().get(i).getUnitPrice());
-            System.out.println("Price " + createCourtRequest.getPrice().get(i).getUnitPrice());
+            price.setUnitPrice(createCourtRequest.getPrices().get(i).getUnitPrice());
+            System.out.println("Price " + createCourtRequest.getPrices().get(i).getUnitPrice());
 
             listPrices.add(price);
         }
@@ -176,7 +173,7 @@ public class CourtServiceImpl implements CourtService {
                 .phone(court.getUser().getPhone())
                 .statusCourt(court.getStatusCourt())
                 .serviceCourt(court.getServiceCourt())
-                .price(court.getPrice())
+                .prices(court.getPrice())
                 .build();
     }
 
@@ -197,13 +194,66 @@ public class CourtServiceImpl implements CourtService {
     }
 
 
-
+    /*
     @Override
     public CourtDto updatePriceCourt(UpdatePriceCourtRequest updatePriceCourtRequest) {
         //tìm ra cái sân
         Court existCourt = courtRepository.findById(updatePriceCourtRequest.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
 
         //Update infor sân
+        //existCourt.setCourtName(updatePriceCourtRequest.getCourtName());
+        //existCourt.setDistrict(updatePriceCourtRequest.getDistrict());
+        //existCourt.setCourtAddress(updatePriceCourtRequest.getCourtAddress());
+
+        //existCourt.setDuration(updatePriceCourtRequest.getDuration());
+        //existCourt.setStartTime(updatePriceCourtRequest.getStartTime());
+        //existCourt.setEndTime(updatePriceCourtRequest.getEndTime());
+
+        //update sub sân - lấy ra list cũ
+        /*
+        List<String> listReqSubCourt = updatePriceCourtRequest.getServiceCourt();
+        List<SubCourt> listExistSubCourt = existCourt.getSubCourt();
+        if(listExistSubCourt.size() > listReqSubCourt.size()){
+            //xóa các subcourt thừa
+            for (int k = listExistSubCourt.size() - 1; k >= listReqSubCourt.size(); k--) {
+                SubCourt subCourtToDelete = listExistSubCourt.get(k);
+                listExistSubCourt.remove(k);
+                subCourtRepository.delete(subCourtToDelete);
+            }
+        } else {
+            //thêm các subcourt
+            for (int k = 0; k < listReqSubCourt.size(); k++) {
+                //SubCourt subCourt = new SubCourt();
+                //subCourt.setSubCourtName("Sân " + (i + 1));
+                //subCourt.setCourt(existCourt);
+                //subCourt.setSubCourtStatus(true);
+                //list.add(subCourt);
+                listExistSubCourt.get(k).setSubCourtName(listReqSubCourt.get(k));
+                listExistSubCourt.get(k).setSubCourtStatus(true);
+            }
+        }
+        existCourt.setSubCourt(listExistSubCourt);
+         */
+
+
+        //update ảnh
+
+        //update service
+        /*
+        List<ServiceCourt> listServiceCourts = existCourt.getServiceCourt();
+        System.out.println("Service_DB: " + listServiceCourts.toString());
+
+        List<String> listServiceCourt = updatePriceCourtRequest.getServiceCourt();
+        System.out.println("Service_REQ: " + listServiceCourt.toString());
+
+        //= serviceRepository.findByServiceName(createCourtRequest.getCourtName());
+        for (int j = 0; j < listServiceCourt.size(); j++) {
+            ServiceCourt serviceCourt = new ServiceCourt();
+            serviceCourt = serviceRepository.findByServiceName(updatePriceCourtRequest.getServiceCourt().get(j));
+            listServiceCourts.add(serviceCourt);
+        }
+        existCourt.setServiceCourt(listServiceCourts);
+
 
 
         //Lấy ra list price danh sách cũ
@@ -211,28 +261,67 @@ public class CourtServiceImpl implements CourtService {
         if(existCourt.getStatusCourt() != 1){
             throw new RuntimeException("Court can not be updated");
         }
-
+        //Udpate Price
         if(updatePriceCourtRequest.getPrice().isEmpty()){
             System.out.println("List rỗng");
             existCourt.setPrice(listExistPrice);
         }else{
             List<Price> listReqPrice = updatePriceCourtRequest.getPrice();
+            System.out.println("Update tới đây" + listReqPrice.size());
+            /*
+            for(int i = 0; i < listReqPrice.size(); i++){
+                for(int j = 0; j < listExistPrice.size(); j++){
+                    listExistPrice.get(j).setStartTime(listReqPrice.get(i).getStartTime());
+                    listExistPrice.get(j).setEndTime(listReqPrice.get(i).getEndTime());
+                    listExistPrice.get(j).setUnitPrice(listReqPrice.get(i).getUnitPrice());
+                }
+//                listExistPrice.get(i).setStartTime(listReqPrice.get(i).getStartTime());
+//                listExistPrice.get(i).setStartTime(listReqPrice.get(i).getStartTime());
+//                listExistPrice.get(i).setEndTime(listReqPrice.get(i).getEndTime());
+//                listExistPrice.get(i).setUnitPrice(listReqPrice.get(i).getUnitPrice());
+            }
+
             for(int i = 0; i < listReqPrice.size(); i++){
                 listExistPrice.get(i).setStartTime(listReqPrice.get(i).getStartTime());
                 listExistPrice.get(i).setEndTime(listReqPrice.get(i).getEndTime());
                 listExistPrice.get(i).setUnitPrice(listReqPrice.get(i).getUnitPrice());
             }
             existCourt.setPrice(listExistPrice);
-            courtRepository.save(existCourt);
+            //courtRepository.save(existCourt);
         }
+        courtRepository.save(existCourt);
         CourtDto courtDto = convertToDto(existCourt);
         return courtDto;
     }
+         */
 
+    /*
     @Override
     public CourtDto updateInforCourt(UpdateInforCourtRequest updateInforCourtRequest) {
         return null;
     }
+     */
+
+    @Override
+    public boolean deleteCourt(DeleteCourtRequest deleteCourtRequest) {
+        //tìm ra cái sân
+        Court existCourt = courtRepository.findById(deleteCourtRequest.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
+        if(existCourt.getStatusCourt() == -1){
+            existCourt.getSubCourt().clear();
+            existCourt.getServiceCourt().clear();
+            existCourt.getPrice().clear();
+            existCourt.getImages().clear();
+            courtRepository.save(existCourt);
+            courtRepository.delete(existCourt);
+            System.out.println("Delete court successfully");
+            return true;
+        }else{
+            System.out.println("Delete court failed");
+            return false;
+        }
+    }
+
+
 
 
 }

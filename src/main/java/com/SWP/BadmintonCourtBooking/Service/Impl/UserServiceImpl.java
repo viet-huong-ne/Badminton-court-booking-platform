@@ -1,6 +1,7 @@
 package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 
+import com.SWP.BadmintonCourtBooking.Dto.Request.DeleteUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.RegisterResponse;
@@ -24,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @Data
@@ -75,6 +78,8 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+
+
     //TODO: LOGIN
 
 
@@ -86,5 +91,14 @@ public class UserServiceImpl implements UserService {
 
 
     //TODO: FORGOT PASSWORD
+
+    //TODO: DELETE USER
+    @Override
+    public boolean deleteUser(DeleteUserRequest deleteUserRequest) {
+        //tìm ra user
+        User user = userRepository.findById(deleteUserRequest.getUserID()).orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
+        return true;
+    }
 
 }

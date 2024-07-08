@@ -1,10 +1,7 @@
 package com.SWP.BadmintonCourtBooking.Service;
 
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
-import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
-import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateInforCourtRequest;
-import com.SWP.BadmintonCourtBooking.Dto.Request.UpdatePriceCourtRequest;
-import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateStatusCourtRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.*;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
@@ -38,12 +35,13 @@ public interface CourtService {
     public CourtDto updateStatusCourt(UpdateStatusCourtRequest updateStatusCourtRequest);
 
     //TODO: UPDATE PRICE COURT
-    public CourtDto updatePriceCourt(UpdatePriceCourtRequest updatePriceCourtRequest);
+    //public CourtDto updatePriceCourt(UpdatePriceCourtRequest updatePriceCourtRequest);
 
     //TODO: UPDATE INFOR COURT
-    public CourtDto updateInforCourt(UpdateInforCourtRequest updateInforCourtRequest);
+    //public CourtDto updateInforCourt(UpdateInforCourtRequest updateInforCourtRequest);
 
     //TODO: DELETE COURT
+    public boolean deleteCourt(DeleteCourtRequest deleteCourtRequest);
 
 
 

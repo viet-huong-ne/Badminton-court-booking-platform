@@ -1,5 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Service;
 
+import com.SWP.BadmintonCourtBooking.Dto.Request.DeleteUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.RegisterResponse;
@@ -24,5 +25,8 @@ public interface UserService {
 
     //TODO: FORGOT PASSWORD
 
+
+    //TODO: DELETE USER
+    boolean deleteUser(DeleteUserRequest deleteUserRequest);
 
 }
