@@ -16,5 +16,9 @@ public interface CourtRepository extends JpaRepository<Court, Integer> {
     @Query("SELECT c FROM Court c WHERE c.user.userID = :userID")
     List<Court> getCourtByUserID(@Param("userID") int userID);
 
+    /*
+    @Query
+    boolean deleteCourtByCourtID(@Param("courtID") int courtID);
+     */
 
 }
