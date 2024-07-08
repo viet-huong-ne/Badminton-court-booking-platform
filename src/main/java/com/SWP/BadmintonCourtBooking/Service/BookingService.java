@@ -8,8 +8,10 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Booking;
+import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -30,4 +32,7 @@ public interface BookingService {
     ResponseCourtDto getListAvailableSubCourt(int courId, LocalDate startDate, LocalDate endDate, String dayOfWeek, LocalTime startTime , LocalTime endTime);
     public double saveRecureBooking(RecureBooDTO dto);
     public double getTotalPriceOfRecureBooking(RecureBooDTO dto);
+    ResponseCourtDto getListAvailableSubCourtV2(int courId, LocalDate startDate, LocalDate endDate, List<String> dayOfWeek, LocalTime startTime , LocalTime endTime);
+    List<SubCourt> checkSubCourtAvailability(int courtId, LocalDate startDate, LocalDate endDate,
+                                             List<DayOfWeek> daysOfWeek, LocalTime startTime, LocalTime endTime);
 }

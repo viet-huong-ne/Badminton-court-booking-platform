@@ -372,6 +372,83 @@ public class BookingServiceImpl implements BookingService {
         return responseCourtDto;
     }
 
+    @Override
+    public ResponseCourtDto getListAvailableSubCourtV2(int courId, LocalDate startDate, LocalDate endDate, List<String> dayOfWeek,
+                                                       LocalTime startTime, LocalTime endTime) {
+        List<DayOfWeek> dayOfWeeks = new ArrayList<>();
+        List<SubCourt> subCourts = subCourtRepository.getSubCourtByCourtID(courId);
+        for (String x : dayOfWeek) {
+            DayOfWeek targetDayOfWeek = DayOfWeek.valueOf(x.toUpperCase());
+            dayOfWeeks.add(targetDayOfWeek);
+        }
+        DayOfWeek targetDayOfWeek = DayOfWeek.valueOf("MONDAY");
+
+        List<LocalDate> dates = getDatesForDayOfWeekInRange(startDate, endDate, targetDayOfWeek);
+
+        for (LocalDate bokDate : dates) {
+            List<BookingDetails> bookingDetails = bookingDetailsRepository.findExistingTime(startTime, endTime, courId, bokDate);
+
+            for (SubCourt y : subCourts) {
+                for (BookingDetails z : bookingDetails) {
+                    if (y.getSubCourtID() == z.getSubCourt().getSubCourtID()) {
+                        y.setSubCourtStatus(false);
+                    }
+                }
+            }
+        }
+
+        List<Integer> listexistSubCourt = bookingDetailsRepository.findSubCourtIds(courId, startDate, endDate, "MONDAY", startTime, endTime);
+        for (DayOfWeek x : dayOfWeeks) {
+            for (Integer subCourtId : listexistSubCourt) {
+                for (SubCourt y : subCourts) {
+                    if (subCourtId == y.getSubCourtID()) {
+                        y.setSubCourtStatus(false);
+                    }
+                }
+            }
+        }
+        ResponseCourtDto responseCourtDto = new ResponseCourtDto(courId, subCourts, startDate, startTime, endTime);
+        subCourts = new ArrayList<>();
+        return responseCourtDto;
+    }
+
+    //TODO API CHECK SUB COURT CÒN TRỐNG
+    @Override
+    public List<SubCourt> checkSubCourtAvailability(int courtId, LocalDate startDate, LocalDate endDate, List<DayOfWeek> daysOfWeek, LocalTime startTime, LocalTime endTime) {
+        List<SubCourt> subCourts = subCourtRepository.getSubCourtByCourtID(courtId);
+        List<LocalDate> dates = new ArrayList<>();
+        for (DayOfWeek x : daysOfWeek) {
+            List<LocalDate> date = getDatesForDayOfWeekInRange(startDate, endDate, x);
+            for (LocalDate bokDate : date) {
+                dates.add(bokDate);
+            }
+        }
+        for (LocalDate bokDate : dates) {
+            List<BookingDetails> bookingDetails = bookingDetailsRepository.findExistingTime(startTime, endTime, courtId, bokDate);
+            for (SubCourt x : subCourts) {
+                for (BookingDetails y : bookingDetails) {
+                    if (x.getSubCourtID() == y.getSubCourt().getSubCourtID()) {
+                        x.setSubCourtStatus(false);
+                    }
+                }
+            }
+        }
+        List<Integer> listSubCourtOfCurr = bookingRepository.findAvailableSubCourts(courtId, startDate, endDate, daysOfWeek, startTime, endTime);
+        for (SubCourt subCourt1 : subCourts) {
+            boolean found = false;
+            for (Integer subCourt2 : listSubCourtOfCurr) {
+                if (subCourt1.getSubCourtID().equals(subCourt2)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                subCourt1.setSubCourtStatus(false);
+            }
+        }
+        return subCourts;
+    }
+
     public static List<LocalDate> getDatesForDayOfWeekInRange(LocalDate startDate, LocalDate endDate, DayOfWeek targetDayOfWeek) {
         List<LocalDate> dates = new ArrayList<>();
         LocalDate current = startDate;

@@ -4,6 +4,7 @@ import com.SWP.BadmintonCourtBooking.Dto.BookingDay;
 import com.SWP.BadmintonCourtBooking.Dto.BookingResponseDTO;
 import com.SWP.BadmintonCourtBooking.Dto.RecureBooDTO;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.SubCourtAvailabilityRequest;
 import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
@@ -13,10 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -66,25 +69,46 @@ public class RecureBookingController {
         String resp = "{ \"totalPrice\": '" + totalPrice + "'}";
         return ResponseEntity.ok().body(resp);
     }
-//    @PostMapping("/total-price")
-//    public ResponseEntity<String> getTotalPrice(@RequestBody RecureBooDTO requestDto) {
-//        double totalPrice = bookingService.saveRecureBooking(requestDto);
-//        String resp = "{ \"totalPrice\": '" + totalPrice + "'}";
-//        return ResponseEntity.ok().body(resp);
+
+//    @GetMapping("GetAvailableSubCourt")
+//    public ResponseEntity<ResponseCourtDto> GetAvailableSubCourt(@RequestParam("court_id") int courtId, @RequestParam("startDate") LocalDate startDate,
+//                                                                 @RequestParam("endDate") LocalDate endDate, @RequestParam("dayOfWeek") String dayOfWeek,
+//                                                                 @RequestParam("startTime") LocalTime startTime, @RequestParam("endTime") LocalTime endTime) {
+//
+//        ResponseCourtDto responseCourtDto = bookingService.getListAvailableSubCourt(courtId, startDate, endDate, dayOfWeek.toUpperCase(), startTime, endTime);
+//        return ResponseEntity.ok(responseCourtDto);
 //    }
-
-    @GetMapping("GetAvailableSubCourt")
-    public ResponseEntity<ResponseCourtDto> GetAvailableSubCourt(@RequestParam("court_id") int courtId, @RequestParam("startDate") LocalDate startDate,
-                                                                 @RequestParam("endDate") LocalDate endDate, @RequestParam("dayOfWeek") String dayOfWeek,
-                                                                 @RequestParam("startTime") LocalTime startTime, @RequestParam("endTime") LocalTime endTime) {
-
-        ResponseCourtDto responseCourtDto = bookingService.getListAvailableSubCourt(courtId, startDate, endDate, dayOfWeek.toUpperCase(), startTime, endTime);
-        return ResponseEntity.ok(responseCourtDto);
-    }
+    //TODO API TRẢ VỀ TOTAL PRICE
     @PostMapping("/totalPrice")
     public ResponseEntity<String> getTotalPrice(@RequestBody RecureBooDTO requestDto) {
         double totalPrice = bookingService.getTotalPriceOfRecureBooking(requestDto);
         String resp = "{ \"totalPrice\": '" + totalPrice + "'}";
         return ResponseEntity.ok().body(resp);
+    }
+    //TODO API CHECK TRẠNG THÁI SÂN
+    @GetMapping("GetAvailableSubCourt")
+    public ResponseEntity<ResponseCourtDto> GetAvailableSubCourt(@RequestParam("court_id") int courtId, @RequestParam("startDate") LocalDate startDate,
+                                                                 @RequestParam("endDate") LocalDate endDate, @RequestParam("dayOfWeek") List<String> dayOfWeek,
+                                                                 @RequestParam("startTime") LocalTime startTime, @RequestParam("endTime") LocalTime endTime) {
+
+        ResponseCourtDto responseCourtDto = bookingService.getListAvailableSubCourtV2(courtId, startDate, endDate, dayOfWeek, startTime, endTime);
+        return ResponseEntity.ok(responseCourtDto);
+    }
+    ////TODO API CHECK TRẠNG THÁI SÂN
+    @PostMapping("/GetAvailableSubCourt")
+    public List<SubCourt> getAvailableSubCourt(@RequestBody SubCourtAvailabilityRequest request) {
+        List<DayOfWeek> daysOfWeek = request.getDayOfWeek().stream()
+                .map(day -> DayOfWeek.valueOf(day.toUpperCase()))
+                .collect(Collectors.toList());
+
+        List<SubCourt> availableSubCourts = bookingService.checkSubCourtAvailability(
+                request.getCourtId(),
+                request.getStartDate(),
+                request.getEndDate(),
+                daysOfWeek,
+                request.getStartTime(),
+                request.getEndTime()
+        );
+        return availableSubCourts;
     }
 }

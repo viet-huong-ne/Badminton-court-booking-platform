@@ -33,6 +33,10 @@ public class SubCourt {
     @OneToMany(mappedBy = "subCourt", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<BookingDetails> bookingDetails;
 
+    @ManyToMany(mappedBy = "subCourts")
+    @JsonIgnore
+    private List<RecurringBooking> recurringBookings;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "court_id")
