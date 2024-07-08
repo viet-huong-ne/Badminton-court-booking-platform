@@ -5,6 +5,7 @@ import com.SWP.BadmintonCourtBooking.Dto.BookingResponseDTO;
 import com.SWP.BadmintonCourtBooking.Dto.RecureBooDTO;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.SubCourtAvailabilityRequest;
 import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
@@ -81,7 +82,7 @@ public class RecureBookingController {
 //    }
     //TODO API TRẢ VỀ TOTAL PRICE
     @PostMapping("/totalPrice")
-    public ResponseEntity<String> getTotalPrice(@RequestBody RecureBooDTO requestDto) {
+    public ResponseEntity<String> getTotalPrice(@RequestBody RecurringRequest requestDto) {
         double totalPrice = bookingService.getTotalPriceOfRecureBooking(requestDto);
         String resp = "{ \"totalPrice\": '" + totalPrice + "'}";
         return ResponseEntity.ok().body(resp);

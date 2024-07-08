@@ -173,7 +173,7 @@ public class CourtServiceImpl implements CourtService {
                 .phone(court.getUser().getPhone())
                 .statusCourt(court.getStatusCourt())
                 .serviceCourt(court.getServiceCourt())
-                .prices(court.getPrice())
+                .price(court.getPrice())
                 .build();
     }
 

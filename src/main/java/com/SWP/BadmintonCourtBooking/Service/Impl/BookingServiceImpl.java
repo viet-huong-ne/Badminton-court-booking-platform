@@ -5,6 +5,7 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 
 import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Repository.*;
@@ -361,7 +362,7 @@ public class BookingServiceImpl implements BookingService {
         return totalPrice;
     }
     @Override
-    public double getTotalPriceOfRecureBooking(RecureBooDTO dto) {
+    public double getTotalPriceOfRecureBooking(RecurringRequest dto) {
         double totalSessions = dto.calculateTotalSessions();
         return calTotalPrice(dto.getCourtId(), dto.getStartTime(), dto.getEndTime()) * totalSessions * dto.getListSubCourt().size();
 
