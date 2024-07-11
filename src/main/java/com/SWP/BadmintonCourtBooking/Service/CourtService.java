@@ -25,24 +25,16 @@ public interface CourtService {
     //TODO: GET COURT BY ID
     public Optional<Court> getCourtByID(int courtID);
 
-    //TODO: GET ALL COURT V1
-    //public List<CourtDto> getAllCourtV1();
-
     //TODO: CREATE NEW COURT
     public CreateCourtResponse createNewCourt(CreateCourtRequest createCourtRequest);
 
     //TODO: UPDATE STATUS COURT
     public CourtDto updateStatusCourt(UpdateStatusCourtRequest updateStatusCourtRequest);
 
-    //TODO: UPDATE PRICE COURT
-    //public CourtDto updatePriceCourt(UpdatePriceCourtRequest updatePriceCourtRequest);
-
     //TODO: UPDATE INFOR COURT
-    //public CourtDto updateInforCourt(UpdateInforCourtRequest updateInforCourtRequest);
+    public CourtDto updateInforCourt(UpdateInforCourtRequest updateInforCourtRequest);
 
     //TODO: DELETE COURT
     public boolean deleteCourt(DeleteCourtRequest deleteCourtRequest);
-
-
 
 }
