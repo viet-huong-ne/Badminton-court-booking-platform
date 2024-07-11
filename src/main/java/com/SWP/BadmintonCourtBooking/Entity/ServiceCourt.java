@@ -27,8 +27,6 @@ public class ServiceCourt {
     @Column(name = "service_name")
     private String serviceName;
 
-    //@ManyToMany(mappedBy = "serviceCourtSet")
-    //private Set<Court> court = new HashSet<>();
     @JsonIgnore
     @ManyToMany(mappedBy = "serviceCourt")
     private List<Court> courts = new ArrayList<>();
