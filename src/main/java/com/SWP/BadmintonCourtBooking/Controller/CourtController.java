@@ -3,7 +3,7 @@ package com.SWP.BadmintonCourtBooking.Controller;
 import com.SWP.BadmintonCourtBooking.Dto.CourtDto;
 import com.SWP.BadmintonCourtBooking.Dto.Request.CreateCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.DeleteCourtRequest;
-import com.SWP.BadmintonCourtBooking.Dto.Request.UpdatePriceCourtRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateInforCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateStatusCourtRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateCourtResponse;
 import com.SWP.BadmintonCourtBooking.Dto.SubCourtDto;
@@ -26,15 +26,17 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/court")
 public class CourtController {
-    //private static final Logger logger = LoggerFactory.getLogger(CourtController.class);
+
     @Autowired
     private CourtService courtService;
+
     @Autowired
     private PriceService priceService;
 
     @Autowired
     private SubCourtService subCourtService;
 
+    //API-COURT
     //API DÙNG ĐỂ TÌM TẤT CẢ CÁC SÂN
     @GetMapping("/getAllCourt")
     public List<CourtDto> getAllCourt() {
@@ -48,6 +50,7 @@ public class CourtController {
 //    }
 
     //API DÙNG ĐỂ TÌM SÂN THEO QUẬN
+    //TODO SEARCH COURT BY DISTRICT
     @GetMapping("/{district}")
     public ResponseEntity<List<CourtDto>> getCourtByDistrict(@PathVariable String district) {
         List<Court> court = courtService.getCourtByDistrict(district);
@@ -79,7 +82,6 @@ public class CourtController {
                     .statusCourt(i.getStatusCourt())
                     .serviceCourt(i.getServiceCourt())
                     .build();
-
             courtDtoList.add(courtDto);
             // slotOfCourtDtoList = new ArrayList<>();
             subCourtDtoList = new ArrayList<>();
@@ -87,11 +89,16 @@ public class CourtController {
         }
         return new ResponseEntity<>(courtDtoList, HttpStatus.OK);
     }
-    //TODO LAY SAN THEO ID CHU SAN
+
+
+    //API LẤY SÂN THEO ID CHỦ SÂN
+    //TODO GET COURT BY USERID
     @GetMapping("/userid/{userID}")
     public ResponseEntity<List<CourtDto>> getCourtByUserID(@PathVariable int userID) {
         return new ResponseEntity<>(courtService.getCourtByUserID(userID),HttpStatus.OK);
     }
+
+
     //TODO GET COURT BY ID TO BOOKING
     @GetMapping("/id/{courtID}")
     public ResponseEntity<CourtDto> getCourtByID(@PathVariable Integer courtID) {
@@ -126,6 +133,7 @@ public class CourtController {
 
     }
 
+
     //TODO: CREATE NEW COURT
     @PostMapping("/createcourt")
     public ResponseEntity<CreateCourtResponse> createNewCourt(@RequestBody CreateCourtRequest createCourtRequest) {
@@ -144,10 +152,11 @@ public class CourtController {
                 .phone(court.getPhone())
                 .statusCourt(court.getStatusCourt())
                 .serviceCourt(court.getServiceCourt())
-                .prices(court.getPrices())
+                .price(court.getPrice())
                 .build();
         return new ResponseEntity<>(courtDto, HttpStatus.OK);
     }
+
 
     //TODO: UPDATE STATUS COURT
     @PutMapping("/updatestatuscourt")
@@ -157,14 +166,14 @@ public class CourtController {
 
     }
 
-    /*
-    //TODO: UPDATE PRICE COURT
-    @PutMapping("/updatepricecourt")
-    public ResponseEntity<CourtDto> updatePriceCourt(@RequestBody UpdatePriceCourtRequest updatePriceCourtRequest) {
-        var courtDTO = courtService.updatePriceCourt(updatePriceCourtRequest);
+
+    //TODO: UPDATE INFOR COURT
+    @PutMapping("/updatecourt")
+    public ResponseEntity<CourtDto> updateCourt(@RequestBody UpdateInforCourtRequest updateInforCourtRequest) {
+        var courtDTO = courtService.updateInforCourt(updateInforCourtRequest);
         return new ResponseEntity<>(courtDTO, HttpStatus.OK);
     }
-     */
+
 
     //TODO: DELETE COURT
     //@DeleteMapping("/{courtID}")

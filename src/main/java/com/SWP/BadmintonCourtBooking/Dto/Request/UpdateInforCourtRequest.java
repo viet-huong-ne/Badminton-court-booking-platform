@@ -18,6 +18,8 @@ import java.util.List;
 @Builder
 public class UpdateInforCourtRequest {
 
+    private Integer courtID;
+
     private String courtName;
 
     private String district;
@@ -32,17 +34,15 @@ public class UpdateInforCourtRequest {
 
     private Integer duration;
 
-    private Integer userID;
+//    private Integer userID;
 
-    private String phone;
+//    private String phone;
 
-    private Integer statusCourt;
+//    private Integer statusCourt;
 
-    private List<Images> images;
+    private List<String> images;
 
-    private List<SubCourt> subCourts;
+    private List<String> serviceCourt;
 
     private List<Price> price;
-
-    private List<ServiceCourt> serviceCourt;
 }

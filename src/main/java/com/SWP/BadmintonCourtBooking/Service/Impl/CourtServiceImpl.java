@@ -61,15 +61,6 @@ public class CourtServiceImpl implements CourtService {
         return courtRepository.findById(courtID);
     }
 
-//    @Override
-//    public List<CourtDto> getAllCourtV1() {
-//        List<CourtDto> listCourtDTO = new ArrayList<>();
-//        List<Court> listCourts = courtRepository.findAll();
-//        for (Court court : listCourts) {
-//            listCourtDTO.add(convertToDto(court));
-//        }
-//        return listCourtDTO;
-//    }
 
     public CourtDto convertToDto(Court court) {
         return CourtDto.builder()
@@ -129,7 +120,7 @@ public class CourtServiceImpl implements CourtService {
         court.setImages(listImages);
 
         //Service
-        List<ServiceCourt> listServiceCourts = new ArrayList<>(); //= serviceRepository.findByServiceName(createCourtRequest.getCourtName());
+        List<ServiceCourt> listServiceCourts = new ArrayList<>();
         for (int j = 0; j < createCourtRequest.getServiceCourt().size(); j++) {
             ServiceCourt serviceCourt = new ServiceCourt();
             serviceCourt = serviceRepository.findByServiceName(createCourtRequest.getServiceCourt().get(j));
@@ -139,9 +130,8 @@ public class CourtServiceImpl implements CourtService {
 
 
         //Price
-        //System.out.println("List: " + createCourtRequest.getPrice());
         List<Price> listPrices = new ArrayList<>();
-        for(int i = 0; i < createCourtRequest.getPrice().size(); i++){
+        for (int i = 0; i < createCourtRequest.getPrice().size(); i++) {
             Price price = new Price();
             price.setCourt(court);
 
@@ -157,7 +147,6 @@ public class CourtServiceImpl implements CourtService {
             listPrices.add(price);
         }
         court.setPrice(listPrices);
-        //  System.out.println("ListPrices: " + listPrices);
 
         courtRepository.save(court);
         return CreateCourtResponse.builder()
@@ -173,9 +162,10 @@ public class CourtServiceImpl implements CourtService {
                 .phone(court.getUser().getPhone())
                 .statusCourt(court.getStatusCourt())
                 .serviceCourt(court.getServiceCourt())
-                .prices(court.getPrice())
+                .price(court.getPrice())
                 .build();
     }
+
 
     @Override
     public CourtDto updateStatusCourt(UpdateStatusCourtRequest updateStatusCourtRequest) {
@@ -194,131 +184,129 @@ public class CourtServiceImpl implements CourtService {
     }
 
 
-    /*
     @Override
-    public CourtDto updatePriceCourt(UpdatePriceCourtRequest updatePriceCourtRequest) {
+    public CourtDto updateInforCourt(UpdateInforCourtRequest updateInforCourtRequest) {
         //tìm ra cái sân
-        Court existCourt = courtRepository.findById(updatePriceCourtRequest.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
+        Court existCourt = courtRepository.findById(updateInforCourtRequest.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
 
         //Update infor sân
-        //existCourt.setCourtName(updatePriceCourtRequest.getCourtName());
-        //existCourt.setDistrict(updatePriceCourtRequest.getDistrict());
-        //existCourt.setCourtAddress(updatePriceCourtRequest.getCourtAddress());
+        existCourt.setCourtName(updateInforCourtRequest.getCourtName());
+        existCourt.setDistrict(updateInforCourtRequest.getDistrict());
+        existCourt.setCourtAddress(updateInforCourtRequest.getCourtAddress());
+        existCourt.setDuration(updateInforCourtRequest.getDuration());
 
-        //existCourt.setDuration(updatePriceCourtRequest.getDuration());
-        //existCourt.setStartTime(updatePriceCourtRequest.getStartTime());
-        //existCourt.setEndTime(updatePriceCourtRequest.getEndTime());
 
         //update sub sân - lấy ra list cũ
-        /*
-        List<String> listReqSubCourt = updatePriceCourtRequest.getServiceCourt();
+        int sizeListReqSubCourt = updateInforCourtRequest.getCourtQuantity();
+        System.out.println("Size list sub new: " + sizeListReqSubCourt);
         List<SubCourt> listExistSubCourt = existCourt.getSubCourt();
-        if(listExistSubCourt.size() > listReqSubCourt.size()){
-            //xóa các subcourt thừa
-            for (int k = listExistSubCourt.size() - 1; k >= listReqSubCourt.size(); k--) {
-                SubCourt subCourtToDelete = listExistSubCourt.get(k);
-                listExistSubCourt.remove(k);
-                subCourtRepository.delete(subCourtToDelete);
+        System.out.println("Size list sub old: " + listExistSubCourt.size());
+        if(listExistSubCourt.size() != sizeListReqSubCourt){
+            //xóa hết các subcourt
+            existCourt.getSubCourt().clear();
+            System.out.println("ExistCourt: " + existCourt.getSubCourt());
+            for(int i = 0; i < sizeListReqSubCourt; i++){
+                SubCourt subCourt = new SubCourt();
+                subCourt.setCourt(existCourt);
+                subCourt.setSubCourtName("" + (i + 1));
+                subCourt.setSubCourtStatus(true);
+                listExistSubCourt.add(subCourt);
             }
+            System.out.println("List: " + listExistSubCourt);
+            existCourt.setSubCourt(listExistSubCourt);
         } else {
-            //thêm các subcourt
-            for (int k = 0; k < listReqSubCourt.size(); k++) {
-                //SubCourt subCourt = new SubCourt();
-                //subCourt.setSubCourtName("Sân " + (i + 1));
-                //subCourt.setCourt(existCourt);
-                //subCourt.setSubCourtStatus(true);
-                //list.add(subCourt);
-                listExistSubCourt.get(k).setSubCourtName(listReqSubCourt.get(k));
-                listExistSubCourt.get(k).setSubCourtStatus(true);
-            }
+            //Không thay đổi
+            System.out.println("Không thay đổi gì về subCourt");
         }
+        System.out.println("Update subcourt thành công");
         existCourt.setSubCourt(listExistSubCourt);
-         */
 
 
         //update ảnh
+        List<String> imagesReq = updateInforCourtRequest.getImages();
+        System.out.println("list images req: " + imagesReq.toString());
+        List<Images> imagesDB = existCourt.getImages();
+        System.out.println("list images DB: " + imagesDB.toString());
+        if(!imagesReq.isEmpty()) {
+            //xóa đi các ảnh cũ
+            imagesDB.clear();
+            //add ảnh
+            for (int j = 0; j < imagesReq.size(); j++) {
+                Images image = new Images();
+                image.setCourt(existCourt);
+                image.setImage(updateInforCourtRequest.getImages().get(j));
+                imagesDB.add(image);
+            }
+        } else {
+            System.out.println("Không thay đổi gì về images");
+        }
+        System.out.println("Update images thành công");
+        existCourt.setImages(imagesDB);
+
+
+
 
         //update service
-        /*
-        List<ServiceCourt> listServiceCourts = existCourt.getServiceCourt();
-        System.out.println("Service_DB: " + listServiceCourts.toString());
-
-        List<String> listServiceCourt = updatePriceCourtRequest.getServiceCourt();
+        List<ServiceCourt> listServiceCourtDB = existCourt.getServiceCourt();
+        System.out.println("Service_DB: " + listServiceCourtDB.toString());
+        List<String> listServiceCourt = updateInforCourtRequest.getServiceCourt();
         System.out.println("Service_REQ: " + listServiceCourt.toString());
-
-        //= serviceRepository.findByServiceName(createCourtRequest.getCourtName());
-        for (int j = 0; j < listServiceCourt.size(); j++) {
-            ServiceCourt serviceCourt = new ServiceCourt();
-            serviceCourt = serviceRepository.findByServiceName(updatePriceCourtRequest.getServiceCourt().get(j));
-            listServiceCourts.add(serviceCourt);
+        if(!listServiceCourtDB.isEmpty()) {
+            //lấy ra cái service cũ
+            existCourt.getServiceCourt().clear();
+            System.out.println("List Services DB: " + existCourt.getServiceCourt());
+            for (int j = 0; j < listServiceCourt.size(); j++) {
+                ServiceCourt serviceCourt = new ServiceCourt();
+                serviceCourt = serviceRepository.findByServiceName(updateInforCourtRequest.getServiceCourt().get(j));
+                listServiceCourtDB.add(serviceCourt);
+            }
+        } else{
+            System.out.println("Không thay đổi Services");
         }
-        existCourt.setServiceCourt(listServiceCourts);
+        System.out.println("Update Services thành công");
+        existCourt.setServiceCourt(listServiceCourtDB);
 
 
 
-        //Lấy ra list price danh sách cũ
-        List<Price> listExistPrice = existCourt.getPrice();
-        if(existCourt.getStatusCourt() != 1){
+        //Udpate Price
+        List<Price> listExistPrice = existCourt.getPrice(); //Lấy ra list price danh sách cũ
+        if (existCourt.getStatusCourt() == -1) {
             throw new RuntimeException("Court can not be updated");
         }
-        //Udpate Price
-        if(updatePriceCourtRequest.getPrice().isEmpty()){
+        if (updateInforCourtRequest.getPrice().isEmpty()) {
             System.out.println("List rỗng");
             existCourt.setPrice(listExistPrice);
-        }else{
-            List<Price> listReqPrice = updatePriceCourtRequest.getPrice();
+        } else {
+            List<Price> listReqPrice = updateInforCourtRequest.getPrice();
             System.out.println("Update tới đây" + listReqPrice.size());
-            /*
-            for(int i = 0; i < listReqPrice.size(); i++){
-                for(int j = 0; j < listExistPrice.size(); j++){
-                    listExistPrice.get(j).setStartTime(listReqPrice.get(i).getStartTime());
-                    listExistPrice.get(j).setEndTime(listReqPrice.get(i).getEndTime());
-                    listExistPrice.get(j).setUnitPrice(listReqPrice.get(i).getUnitPrice());
-                }
-//                listExistPrice.get(i).setStartTime(listReqPrice.get(i).getStartTime());
-//                listExistPrice.get(i).setStartTime(listReqPrice.get(i).getStartTime());
-//                listExistPrice.get(i).setEndTime(listReqPrice.get(i).getEndTime());
-//                listExistPrice.get(i).setUnitPrice(listReqPrice.get(i).getUnitPrice());
-            }
-
-            for(int i = 0; i < listReqPrice.size(); i++){
+            for (int i = 0; i < listReqPrice.size(); i++) {
                 listExistPrice.get(i).setStartTime(listReqPrice.get(i).getStartTime());
                 listExistPrice.get(i).setEndTime(listReqPrice.get(i).getEndTime());
                 listExistPrice.get(i).setUnitPrice(listReqPrice.get(i).getUnitPrice());
             }
             existCourt.setPrice(listExistPrice);
-            //courtRepository.save(existCourt);
         }
         courtRepository.save(existCourt);
         CourtDto courtDto = convertToDto(existCourt);
         return courtDto;
     }
-         */
 
-    /*
-    @Override
-    public CourtDto updateInforCourt(UpdateInforCourtRequest updateInforCourtRequest) {
-        return null;
-    }
-     */
+
+
+
 
     @Override
     public boolean deleteCourt(DeleteCourtRequest deleteCourtRequest) {
         //tìm ra cái sân
         Court existCourt = courtRepository.findById(deleteCourtRequest.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
-        if(existCourt.getStatusCourt() == -1){
-            existCourt.getSubCourt().clear();
-            existCourt.getServiceCourt().clear();
-            existCourt.getPrice().clear();
-            existCourt.getImages().clear();
-            courtRepository.save(existCourt);
-            courtRepository.delete(existCourt);
-            System.out.println("Delete court successfully");
-            return true;
-        }else{
-            System.out.println("Delete court failed");
-            return false;
-        }
+        existCourt.getSubCourt().clear();
+        existCourt.getServiceCourt().clear();
+        existCourt.getPrice().clear();
+        existCourt.getImages().clear();
+        courtRepository.save(existCourt);
+        courtRepository.delete(existCourt);
+        System.out.println("Delete court successfully");
+        return true;
     }
 
 
