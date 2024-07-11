@@ -14,8 +14,7 @@ import java.util.Optional;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
-    @Query("SELECT p FROM Payment p WHERE p.booking.court.courtID" +
-            " = :courtID")
+    @Query("SELECT p FROM Payment p WHERE p.booking.court.courtID = :courtID OR p.recurringBooking.court.courtID = :courtID")
     List<Payment> findByCourtID(@Param("courtID") int courtID);
 }
 

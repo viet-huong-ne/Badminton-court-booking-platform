@@ -41,6 +41,9 @@ public class Booking {
     @Column(name = "booking_type", columnDefinition = "nvarchar(255)")
     private String booking_type;
 
+    @Column(name = "status")
+    private boolean status;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)

@@ -3,6 +3,7 @@ package com.SWP.BadmintonCourtBooking.Controller;
 import com.SWP.BadmintonCourtBooking.Dto.Request.DeleteUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
 
+import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterStaffRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.APIResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.CreateNewUserResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.RegisterResponse;
@@ -41,7 +42,13 @@ public class UserController {
         return userServiceImpl.deleteUser(request);
     }
 
-
-
+    //TODO API TAO TAI KHOAN CHO STAFF
+    @PostMapping("/registerStaff")
+    public APIResponse<RegisterResponse> registerStaff(@RequestBody RegisterStaffRequest request){
+        var result = userServiceImpl.regiterStaff(request);
+        return APIResponse.<RegisterResponse>builder()
+                .result(result)
+                .build();
+    }
 
 }

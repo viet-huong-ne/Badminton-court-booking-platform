@@ -42,6 +42,10 @@ public class ServiceOfPayment {
     }
 
     public List<?> getPaymentsByCourtID(int courtID) {
+        List<Payment> payments = paymentRepository.findByCourtID(courtID);
+        for (Payment payment : payments) {
+            System.out.println(payment.toString());
+        }
         return convertToDTO(paymentRepository.findByCourtID(courtID));
     }
 }

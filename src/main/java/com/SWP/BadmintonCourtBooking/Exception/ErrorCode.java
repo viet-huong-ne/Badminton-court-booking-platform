@@ -9,6 +9,7 @@ public enum ErrorCode {
     INVALID_KEY("Invalid key"),
     USER_NOT_EXISTED("User Not Existed"),
     UNAUTHENTICATED("Unauthenticated"),
+    BOOKING_NOT_FOUND("Booking Not Found"),
     ;
     //Property
     private String message;

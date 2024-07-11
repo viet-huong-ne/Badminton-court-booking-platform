@@ -37,4 +37,5 @@ public interface BookingService {
     //ResponseCourtDto getListAvailableSubCourtV2(int courId, LocalDate startDate, LocalDate endDate, List<String> dayOfWeek, LocalTime startTime , LocalTime endTime);
     List<SubCourt> checkSubCourtAvailability(int courtId, LocalDate startDate, LocalDate endDate,
                                              List<DayOfWeek> daysOfWeek, LocalTime startTime, LocalTime endTime);
+    Booking checkInBooking(int bookingID);
 }

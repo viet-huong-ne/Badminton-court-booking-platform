@@ -30,7 +30,7 @@ public class UpdateInforCourtRequest {
 
     private LocalTime endTime;
 
-    private Integer courtQuantity;
+//    private Integer courtQuantity;
 
     private Integer duration;
 

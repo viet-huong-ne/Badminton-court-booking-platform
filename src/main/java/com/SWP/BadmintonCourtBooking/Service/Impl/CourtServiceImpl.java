@@ -102,7 +102,7 @@ public class CourtServiceImpl implements CourtService {
         List<SubCourt> list = new ArrayList<>();
         for (int i = 0; i < createCourtRequest.getCourtQuantity(); i++) {
             SubCourt subCourt = new SubCourt();
-            subCourt.setSubCourtName("Sân " + (i + 1));
+            subCourt.setSubCourtName("" + (i + 1));
             subCourt.setCourt(court);
             subCourt.setSubCourtStatus(true);
             list.add(subCourt);
@@ -194,32 +194,33 @@ public class CourtServiceImpl implements CourtService {
         existCourt.setDistrict(updateInforCourtRequest.getDistrict());
         existCourt.setCourtAddress(updateInforCourtRequest.getCourtAddress());
         existCourt.setDuration(updateInforCourtRequest.getDuration());
-
+        existCourt.setStartTime(updateInforCourtRequest.getStartTime());
+        existCourt.setEndTime(updateInforCourtRequest.getEndTime());
 
         //update sub sân - lấy ra list cũ
-        int sizeListReqSubCourt = updateInforCourtRequest.getCourtQuantity();
-        System.out.println("Size list sub new: " + sizeListReqSubCourt);
-        List<SubCourt> listExistSubCourt = existCourt.getSubCourt();
-        System.out.println("Size list sub old: " + listExistSubCourt.size());
-        if(listExistSubCourt.size() != sizeListReqSubCourt){
-            //xóa hết các subcourt
-            existCourt.getSubCourt().clear();
-            System.out.println("ExistCourt: " + existCourt.getSubCourt());
-            for(int i = 0; i < sizeListReqSubCourt; i++){
-                SubCourt subCourt = new SubCourt();
-                subCourt.setCourt(existCourt);
-                subCourt.setSubCourtName("" + (i + 1));
-                subCourt.setSubCourtStatus(true);
-                listExistSubCourt.add(subCourt);
-            }
-            System.out.println("List: " + listExistSubCourt);
-            existCourt.setSubCourt(listExistSubCourt);
-        } else {
-            //Không thay đổi
-            System.out.println("Không thay đổi gì về subCourt");
-        }
-        System.out.println("Update subcourt thành công");
-        existCourt.setSubCourt(listExistSubCourt);
+//        int sizeListReqSubCourt = updateInforCourtRequest.getCourtQuantity();
+//        System.out.println("Size list sub new: " + sizeListReqSubCourt);
+//        List<SubCourt> listExistSubCourt = existCourt.getSubCourt();
+//        System.out.println("Size list sub old: " + listExistSubCourt.size());
+//        if(listExistSubCourt.size() != sizeListReqSubCourt){
+//            //xóa hết các subcourt
+//            existCourt.getSubCourt().clear();
+//            System.out.println("ExistCourt: " + existCourt.getSubCourt());
+//            for(int i = 0; i < sizeListReqSubCourt; i++){
+//                SubCourt subCourt = new SubCourt();
+//                subCourt.setCourt(existCourt);
+//                subCourt.setSubCourtName("" + (i + 1));
+//                subCourt.setSubCourtStatus(true);
+//                listExistSubCourt.add(subCourt);
+//            }
+//            System.out.println("List: " + listExistSubCourt);
+//            existCourt.setSubCourt(listExistSubCourt);
+//        } else {
+//            //Không thay đổi
+//            System.out.println("Không thay đổi gì về subCourt");
+//        }
+//        System.out.println("Update subcourt thành công");
+//        existCourt.setSubCourt(listExistSubCourt);
 
 
         //update ảnh

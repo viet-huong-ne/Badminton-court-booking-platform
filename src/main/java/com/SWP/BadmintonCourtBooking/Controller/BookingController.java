@@ -5,10 +5,12 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Booking;
+import com.SWP.BadmintonCourtBooking.Exception.AppException;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -92,5 +94,15 @@ public class BookingController {
             throw new RuntimeException("No booking found for this court: " + courtID);
         }
         return new ResponseEntity<>(bookingList, HttpStatus.OK);
+    }
+    //TODO API CHECKIN DON DAT
+    @PutMapping("/checkin")
+    public ResponseEntity<?> checkInBooking(@RequestParam int bookingID) {
+        try {
+            Booking updatedBooking = bookingService.checkInBooking(bookingID);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (AppException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

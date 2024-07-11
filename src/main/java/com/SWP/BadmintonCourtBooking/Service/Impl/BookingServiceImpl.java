@@ -8,6 +8,8 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Entity.*;
+import com.SWP.BadmintonCourtBooking.Exception.AppException;
+import com.SWP.BadmintonCourtBooking.Exception.ErrorCode;
 import com.SWP.BadmintonCourtBooking.Repository.*;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import jakarta.transaction.Transactional;
@@ -225,6 +227,7 @@ public class BookingServiceImpl implements BookingService {
         booking.setEmail(bookingDto.getEmail());
         booking.setPhone(bookingDto.getPhone());
         booking.setBookingDate(bookingDto.getBookingDate());
+        //booking.setStatus(false);
         List<BookingDetails> bookingDetails = bookingDto.getBookingDetails().stream()
                 .map(detailDTO -> {
                     BookingDetails detail = new BookingDetails();
@@ -356,11 +359,12 @@ public class BookingServiceImpl implements BookingService {
             bookingDetailsRepository.insertRecurringBookingDay(recurringBookingId, bookingDay.toString());
         }
         Payment payment = createPayment(dto.getPaymentDTO());
-        bookingDetailsRepository.insertPayment(payment.getBankCode(),payment.getPaymentAmount(),payment.getPaymentStatus(),payment.getPaymentTime(), payment.getTransactionCode(), recurringBookingId);
+        bookingDetailsRepository.insertPayment(payment.getBankCode(), payment.getPaymentAmount(), payment.getPaymentStatus(), payment.getPaymentTime(), payment.getTransactionCode(), recurringBookingId);
 
 
         return totalPrice;
     }
+
     @Override
     public double getTotalPriceOfRecureBooking(RecurringRequest dto) {
         double totalSessions = dto.calculateTotalSessions();
@@ -423,16 +427,23 @@ public class BookingServiceImpl implements BookingService {
                 }
             }
         }
-        List<RecurringBooking> list = recurringBookingRepository.findRecurringBookingsWithinDateRangeAndTime(courtId, startDate,endDate, startTime, endTime, daysOfWeek.stream().map(DayOfWeek::toString).collect(Collectors.toList()));
+        List<RecurringBooking> list = recurringBookingRepository.findRecurringBookingsWithinDateRangeAndTime(courtId, startDate, endDate, startTime, endTime, daysOfWeek.stream().map(DayOfWeek::toString).collect(Collectors.toList()));
         for (SubCourt subCourt1 : subCourts) {
-            for (RecurringBooking l : list){
-                if(l.getSubCourts().contains(subCourt1)){
+            for (RecurringBooking l : list) {
+                if (l.getSubCourts().contains(subCourt1)) {
                     subCourt1.setSubCourtStatus(false);
                 }
             }
 
         }
         return subCourts;
+    }
+
+    @Override
+    public Booking checkInBooking(int bookingID) {
+        Booking booking = bookingRepository.findById(bookingID).orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
+        booking.setStatus(true);
+        return bookingRepository.save(booking);
     }
 
     public static List<LocalDate> getDatesForDayOfWeekInRange(LocalDate startDate, LocalDate endDate, DayOfWeek targetDayOfWeek) {

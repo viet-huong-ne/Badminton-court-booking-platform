@@ -3,15 +3,18 @@ package com.SWP.BadmintonCourtBooking.Service.Impl;
 
 import com.SWP.BadmintonCourtBooking.Dto.Request.DeleteUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterStaffRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.RegisterResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.UpdateUserResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Role;
+import com.SWP.BadmintonCourtBooking.Entity.Staff;
 import com.SWP.BadmintonCourtBooking.Entity.User;
 import com.SWP.BadmintonCourtBooking.Exception.AppException;
 import com.SWP.BadmintonCourtBooking.Exception.ErrorCode;
 import com.SWP.BadmintonCourtBooking.Mapper.UserMapper;
 import com.SWP.BadmintonCourtBooking.Repository.RoleRepository;
+import com.SWP.BadmintonCourtBooking.Repository.StaffRepository;
 import com.SWP.BadmintonCourtBooking.Repository.UserRepository;
 import com.SWP.BadmintonCourtBooking.Service.UserService;
 import lombok.AccessLevel;
@@ -43,11 +46,14 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private RoleRepository roleRepository;
 
+    @Autowired
+    private StaffRepository staffRepository;
+
     //API AUTHENTICATION
     //TODO: REGISTER
     @Override
-    public RegisterResponse registerUser(RegisterRequest request){
-        if(userRepository.existsByUserName(request.getUserName())){
+    public RegisterResponse registerUser(RegisterRequest request) {
+        if (userRepository.existsByUserName(request.getUserName())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
         //User user = userMapper.toUser(request); //tương đương với đoạn code dưới
@@ -67,7 +73,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UpdateUserResponse updateInforUser(UpdateUserRequest request) {
         //tìm user đó
-        if(!userRepository.existsByUserName(request.getUserName())){
+        if (!userRepository.existsByUserName(request.getUserName())) {
             throw new AppException(ErrorCode.USER_NOT_EXISTED);
         }
         User user = new User();
@@ -77,7 +83,6 @@ public class UserServiceImpl implements UserService {
 
         return null;
     }
-
 
 
     //TODO: LOGIN
@@ -99,6 +104,29 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(deleteUserRequest.getUserID()).orElseThrow(() -> new RuntimeException("User not found"));
         userRepository.delete(user);
         return true;
+    }
+
+    @Override
+    public RegisterResponse regiterStaff(RegisterStaffRequest request) {
+        if (userRepository.existsByUserName(request.getUserName())) {
+            throw new AppException(ErrorCode.USER_EXISTED);
+        }
+        User user = new User();
+        user.setUserName(request.getUserName());
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPhone(request.getPhone());
+        Role role = roleRepository.findByName("Staff");
+        user.setRole(role);
+        User user1 = userRepository.save(user);
+        Staff staff = new Staff();
+        staff.setUserID(user1.getUserID());
+        staff.setCourtID(request.getCourtID());
+        staffRepository.save(staff);
+        return userMapper.toUserResponse(user1);
     }
 
 }
