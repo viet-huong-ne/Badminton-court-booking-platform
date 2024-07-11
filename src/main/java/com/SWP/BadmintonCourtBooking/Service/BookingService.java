@@ -38,4 +38,5 @@ public interface BookingService {
     List<SubCourt> checkSubCourtAvailability(int courtId, LocalDate startDate, LocalDate endDate,
                                              List<DayOfWeek> daysOfWeek, LocalTime startTime, LocalTime endTime);
     Booking checkInBooking(int bookingID);
+    List<BookingResponse> getBookingForStaff(Integer staffID);
 }

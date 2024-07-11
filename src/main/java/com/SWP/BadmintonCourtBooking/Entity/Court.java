@@ -76,5 +76,8 @@ public class Court {
     //private Set<ServiceCourt> serviceCourtSet  = new HashSet<>();
     private List<ServiceCourt> serviceCourt = new ArrayList<>();
 
+    @OneToMany(mappedBy = "court", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<Staff> staff;
 
 }

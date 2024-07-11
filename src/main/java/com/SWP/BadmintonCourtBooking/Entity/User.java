@@ -51,6 +51,8 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Court> court;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    private Staff staff;
 //    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 //    private List<Payment> payment;
 

@@ -7,12 +7,14 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.RegisterStaffRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.UpdateUserRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.RegisterResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.UpdateUserResponse;
+import com.SWP.BadmintonCourtBooking.Entity.Court;
 import com.SWP.BadmintonCourtBooking.Entity.Role;
 import com.SWP.BadmintonCourtBooking.Entity.Staff;
 import com.SWP.BadmintonCourtBooking.Entity.User;
 import com.SWP.BadmintonCourtBooking.Exception.AppException;
 import com.SWP.BadmintonCourtBooking.Exception.ErrorCode;
 import com.SWP.BadmintonCourtBooking.Mapper.UserMapper;
+import com.SWP.BadmintonCourtBooking.Repository.CourtRepository;
 import com.SWP.BadmintonCourtBooking.Repository.RoleRepository;
 import com.SWP.BadmintonCourtBooking.Repository.StaffRepository;
 import com.SWP.BadmintonCourtBooking.Repository.UserRepository;
@@ -48,6 +50,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private StaffRepository staffRepository;
+    @Autowired
+    private CourtRepository courtRepository;
 
     //API AUTHENTICATION
     //TODO: REGISTER
@@ -122,9 +126,10 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepository.findByName("Staff");
         user.setRole(role);
         User user1 = userRepository.save(user);
+        Court court = courtRepository.findById(request.getCourtID()).orElseThrow(() -> new RuntimeException("Court not found"));
         Staff staff = new Staff();
-        staff.setUserID(user1.getUserID());
-        staff.setCourtID(request.getCourtID());
+        staff.setUser(user1);
+        staff.setCourt(court);
         staffRepository.save(staff);
         return userMapper.toUserResponse(user1);
     }

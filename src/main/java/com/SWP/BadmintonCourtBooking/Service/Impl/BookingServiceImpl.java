@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.math.BigDecimal;
 import java.time.*;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,6 +49,8 @@ public class BookingServiceImpl implements BookingService {
     private PaymentRepository paymentRepository;
     @Autowired
     private RecurringBookingRepository recurringBookingRepository;
+    @Autowired
+    private StaffRepository staffRepository;
 
     @Override
     public ResponseCourtDto checkCourtAvailability(BookingRequest bookingRequest) {
@@ -196,6 +199,7 @@ public class BookingServiceImpl implements BookingService {
                 .totalPrice(booking.getTotalPrice())
                 .bookingDate(booking.getBookingDate())
                 .bookingDetails(detailResponseDTOs)
+                .status(booking.isStatus())
                 .paymentResDTO(paymentResDto).build();
     }
 
@@ -444,6 +448,24 @@ public class BookingServiceImpl implements BookingService {
         Booking booking = bookingRepository.findById(bookingID).orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
         booking.setStatus(true);
         return bookingRepository.save(booking);
+    }
+
+    @Override
+    public List<BookingResponse> getBookingForStaff(Integer staffID) {
+
+        Staff staff = staffRepository.findCourtIDByUserID(staffID);
+        if (staff == null) {
+            throw new AppException(ErrorCode.STAFF_NOT_FOUND);
+        }
+        LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+        List<Booking> list = bookingRepository.findBookingsWithinCurrentWeek(startDate, endDate, staff.getCourt().getCourtID());
+        List<BookingResponse> bookingResponseList = new ArrayList<>();
+        for (Booking booking : list) {
+            BookingResponse bookingResponse = convertToBookingResponse(booking);
+            bookingResponseList.add(bookingResponse);
+        }
+        return bookingResponseList;
     }
 
     public static List<LocalDate> getDatesForDayOfWeekInRange(LocalDate startDate, LocalDate endDate, DayOfWeek targetDayOfWeek) {

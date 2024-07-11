@@ -22,6 +22,7 @@ public class BookingResponse {
     private String customerName;
     private String customerPhone;
     private double totalPrice;
+    private boolean status;
     private LocalDate bookingDate;
     private List<BookingDetailResponseDTO> bookingDetails;
     private PaymentResDTO paymentResDTO;

@@ -1,5 +1,6 @@
 package com.SWP.BadmintonCourtBooking.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,9 +12,12 @@ public class Staff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "user_id")
-    private Integer userID;
+    @OneToOne
+    @JsonIgnore
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    @Column(name = "court_id")
-    private Integer courtID;
+    @ManyToOne
+    @JoinColumn(name = "court_id", nullable = false)
+    private Court court;
 }

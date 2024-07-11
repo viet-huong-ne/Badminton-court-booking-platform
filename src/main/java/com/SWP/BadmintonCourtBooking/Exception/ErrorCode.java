@@ -10,6 +10,7 @@ public enum ErrorCode {
     USER_NOT_EXISTED("User Not Existed"),
     UNAUTHENTICATED("Unauthenticated"),
     BOOKING_NOT_FOUND("Booking Not Found"),
+    STAFF_NOT_FOUND("Staff Not Found"),
     ;
     //Property
     private String message;

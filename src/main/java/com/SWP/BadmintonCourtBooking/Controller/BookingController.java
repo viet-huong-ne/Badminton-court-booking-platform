@@ -5,6 +5,7 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Booking;
+import com.SWP.BadmintonCourtBooking.Entity.RecurringBooking;
 import com.SWP.BadmintonCourtBooking.Exception.AppException;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import org.slf4j.Logger;
@@ -93,6 +94,12 @@ public class BookingController {
         if (bookingList == null) {
             throw new RuntimeException("No booking found for this court: " + courtID);
         }
+        return new ResponseEntity<>(bookingList, HttpStatus.OK);
+    }
+    //TODO API LAY TAT CA ORDER TRONG TUAN CHO STAFF CHECK IN
+    @GetMapping("/Staff/{userID}")
+    public ResponseEntity<?> GetBookingForStaff(@PathVariable Integer userID) {
+        List<BookingResponse> bookingList = bookingService.getBookingForStaff(userID);
         return new ResponseEntity<>(bookingList, HttpStatus.OK);
     }
     //TODO API CHECKIN DON DAT
