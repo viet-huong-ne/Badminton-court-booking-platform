@@ -33,6 +33,6 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 //        "AND rb.daysOfWeek IN :daysOfWeek AND rb.startTime < :endTime AND rb.endTime > :startTime)", nativeQuery = true)
 //    List<SubCourt> findAvailableSubCourts(int courtId, LocalDate startDate, LocalDate endDate,
 //                                          List<DayOfWeek> daysOfWeek, LocalTime startTime, LocalTime endTime);
-    @Query("SELECT b FROM Booking b WHERE (b.bookingDate BETWEEN :startOfWeek AND :endOfWeek) AND b.court.courtID = :courtID AND b.status = false ")
+    @Query("SELECT b FROM Booking b WHERE (b.bookingDate BETWEEN :startOfWeek AND :endOfWeek) AND b.court.courtID = :courtID    ")
     List<Booking> findBookingsWithinCurrentWeek(@Param("startOfWeek") LocalDate startOfWeek, @Param("endOfWeek") LocalDate endOfWeek, @Param("courtID") int courtID);
 }

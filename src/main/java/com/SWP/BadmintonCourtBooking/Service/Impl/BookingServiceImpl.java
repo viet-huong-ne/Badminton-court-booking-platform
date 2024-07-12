@@ -459,7 +459,8 @@ public class BookingServiceImpl implements BookingService {
         }
         LocalDate startDate = LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate endDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
-        List<Booking> list = bookingRepository.findBookingsWithinCurrentWeek(startDate, endDate, staff.getCourt().getCourtID());
+        //List<Booking> list = bookingRepository.findBookingsWithinCurrentWeek(startDate, endDate, staff.getCourt().getCourtID());
+        List<Booking> list = bookingRepository.findByCourtID(staff.getCourt().getCourtID());
         List<BookingResponse> bookingResponseList = new ArrayList<>();
         for (Booking booking : list) {
             BookingResponse bookingResponse = convertToBookingResponse(booking);
