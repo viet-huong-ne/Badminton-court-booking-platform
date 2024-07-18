@@ -3,21 +3,19 @@ package com.SWP.BadmintonCourtBooking.Controller;
 import com.SWP.BadmintonCourtBooking.Dto.*;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Response.AllBookingResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Entity.Booking;
-import com.SWP.BadmintonCourtBooking.Entity.RecurringBooking;
 import com.SWP.BadmintonCourtBooking.Exception.AppException;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin("*")
 @RestController
@@ -33,9 +31,8 @@ public class BookingController {
         if (bookingRequest.getStartTime() == null || bookingRequest.getEndTime() == null) {
             return null;
         }
-//        ResponseCourtDto responseCourtDto = bookingService.checkCourtAvailability(bookingRequest);
-        ResponseCourtDto responseCourtDto = bookingService.checkSubCourtStatus(bookingRequest);
-        return responseCourtDto;
+        return bookingService.checkSubCourtStatus(bookingRequest);
+
     }
 
     //API GET LẤY CÁC SÂN NHỎ CÓ THỂ ĐẶT
@@ -87,7 +84,7 @@ public class BookingController {
         return new ResponseEntity<>(bookingList, HttpStatus.OK);
     }
 
-    //TODO API lay tat ca order của san
+    //TODO API lay tat ca order của san (OLD VERSION)
     @GetMapping("/AllBookingsOfCourt/{courtID}")
     public ResponseEntity<?> GetBookingOfCourt(@PathVariable Integer courtID) {
         List<BookingResponse> bookingList = bookingService.getBookingOfCourt(courtID);
@@ -96,6 +93,24 @@ public class BookingController {
         }
         return new ResponseEntity<>(bookingList, HttpStatus.OK);
     }
+
+    //TODO API lay tat ca order (NEW)
+    @GetMapping("/AllBookings")
+    public ResponseEntity<?> GetAllBooking() {
+        AllBookingResponse bookingList = bookingService.getAllBooking();
+
+        return new ResponseEntity<>(bookingList, HttpStatus.OK);
+    }
+
+    //TODO API LAY TAT CA CAC ORDER CHO CAC SAN CUNG 1 CHU
+    @GetMapping("/AllBookingForCourtOwner/{userID}")
+    public ResponseEntity<?> GetAllBookingForCourtOwner(@PathVariable Integer userID) {
+        AllBookingResponse bookingList = bookingService.getAllBookingForCourtOnwer(userID);
+
+        return new ResponseEntity<>(bookingList, HttpStatus.OK);
+    }
+
+
     //TODO API LAY TAT CA ORDER TRONG TUAN CHO STAFF CHECK IN
     @GetMapping("/Staff/{userID}")
     public ResponseEntity<?> GetBookingForStaff(@PathVariable Integer userID) {

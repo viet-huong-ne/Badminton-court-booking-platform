@@ -14,7 +14,20 @@ import java.util.Optional;
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Integer> {
 
-    @Query("SELECT p FROM Payment p WHERE p.booking.court.courtID = :courtID OR p.recurringBooking.court.courtID = :courtID")
+    @Query("SELECT p FROM Payment p WHERE p.booking.court.courtID = :courtID")
+//    @Query(value = "SELECT p.* FROM payment p " +
+//            "LEFT JOIN booking b ON p.booking_id = b.booking_id " +
+//            "LEFT JOIN court c ON b.court_id = c.court_id " +
+//            "LEFT JOIN recurring_booking rb ON p.recurring_booking_id = rb.id " +
+//            "LEFT JOIN court rc ON rb.court_id = rc.court_id WHERE c.court_id = :courtID OR rc.court_id = :courtID", nativeQuery = true)
     List<Payment> findByCourtID(@Param("courtID") int courtID);
+
+    @Query("SELECT p FROM Payment p WHERE p.recurringBooking.court.courtID = :courtID")
+    List<Payment> findByCourtIDV2(@Param("courtID") int courtID);
+    @Query("SELECT p.transactionCode FROM Payment p WHERE p.transactionCode = :transactionCode")
+    String findTransactionCode(@Param("transactionCode") String transactionCode);
+
+
+
 }
 

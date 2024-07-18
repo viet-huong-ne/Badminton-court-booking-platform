@@ -11,6 +11,7 @@ public enum ErrorCode {
     UNAUTHENTICATED("Unauthenticated"),
     BOOKING_NOT_FOUND("Booking Not Found"),
     STAFF_NOT_FOUND("Staff Not Found"),
+    COURT_NOT_FOUND("Court Not Found"),
     ;
     //Property
     private String message;

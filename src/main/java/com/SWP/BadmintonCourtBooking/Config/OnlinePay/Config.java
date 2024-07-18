@@ -17,15 +17,19 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Config {
-//    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
+    //    public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
 //    public static String vnp_ReturnUrl = "http://localhost:8080/pay_infor"; //http://localhost:8080/vnpay_jsp/vnpay_return.jsp, // /paymentvnpay_jsp/vnpay_return.jsp
 //    public static String vnp_TmnCode = "64ZRN0TF";
 //    public static String secretKey = "QKKWKPCCJIIUTUUQCTVMJAIMEIMPZIOZ";
 //    public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
     public static String vnp_PayUrl = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-    public static String vnp_ReturnUrl = "http://localhost:8080/payInforV2"; //http://localhost:8080/vnpay_jsp/vnpay_return.jsp, // /paymentvnpay_jsp/vnpay_return.jsp
+    //    public static String vnp_ReturnUrl = "http://localhost:8080/payInforV2"; //http://localhost:8080/vnpay_jsp/vnpay_return.jsp, // /paymentvnpay_jsp/vnpay_return.jsp
+    public static String vnp_ReturnUrl = "http://localhost:3000/payment-success";
     public static String vnp_TmnCode = "W1FP8Q14";
     public static String secretKey = "J1MJQN7S088M9P74OL8D0PN6IA0O3NRF";
     public static String vnp_ApiUrl = "https://sandbox.vnpayment.vn/merchant_webapi/api/transaction";
@@ -84,7 +88,7 @@ public class Config {
                 sb.append("&");
             }
         }
-        return hmacSHA512(secretKey,sb.toString());
+        return hmacSHA512(secretKey, sb.toString());
     }
 
     public static String hmacSHA512(final String key, final String data) {
@@ -132,6 +136,7 @@ public class Config {
         }
         return sb.toString();
     }
+
     public static int extractUserId(String orderInfo) {
         Pattern pattern = Pattern.compile("UserId:\\s*(\\d+)");
         Matcher matcher = pattern.matcher(orderInfo);

@@ -7,6 +7,7 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Response.AllBookingResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Booking;
@@ -39,4 +40,6 @@ public interface BookingService {
                                              List<DayOfWeek> daysOfWeek, LocalTime startTime, LocalTime endTime);
     Booking checkInBooking(int bookingID);
     List<BookingResponse> getBookingForStaff(Integer staffID);
+    AllBookingResponse getAllBooking();
+    AllBookingResponse getAllBookingForCourtOnwer(Integer userID);
 }

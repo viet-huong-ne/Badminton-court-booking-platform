@@ -3,18 +3,17 @@ package com.SWP.BadmintonCourtBooking.Dto;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class BookingDay {
-    private int bookingID;
+public class RecurringBookingDTO {
+    private int recurringBookingID;
     private int courtID;
     private String courtName;
-    private boolean status;
     private int courtOwnerID;
-    private LocalDate bookingDate;
-
+    private LocalDateTime bookingDate;
 }

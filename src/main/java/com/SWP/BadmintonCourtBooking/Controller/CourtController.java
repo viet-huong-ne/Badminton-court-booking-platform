@@ -10,6 +10,8 @@ import com.SWP.BadmintonCourtBooking.Dto.SubCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
 import com.SWP.BadmintonCourtBooking.Entity.Price;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
+import com.SWP.BadmintonCourtBooking.Exception.AppException;
+import com.SWP.BadmintonCourtBooking.Exception.ErrorCode;
 import com.SWP.BadmintonCourtBooking.Service.CourtService;
 import com.SWP.BadmintonCourtBooking.Service.PriceService;
 import com.SWP.BadmintonCourtBooking.Service.SubCourtService;
@@ -129,7 +131,7 @@ public class CourtController {
                     .serviceCourt(court.get().getServiceCourt())
                     .build();
             return new ResponseEntity<>(courtDto, HttpStatus.OK);
-        } else throw new IllegalArgumentException("Court not found for ID: " + courtID);
+        } else throw new AppException(ErrorCode.COURT_NOT_FOUND);
 
     }
 

@@ -1,15 +1,20 @@
 package com.SWP.BadmintonCourtBooking.Controller;
 
-import com.SWP.BadmintonCourtBooking.Dto.BookingDay;
+
 import com.SWP.BadmintonCourtBooking.Dto.BookingResponseDTO;
 import com.SWP.BadmintonCourtBooking.Dto.RecureBooDTO;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.SubCourtAvailabilityRequest;
+import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
 import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
+import com.SWP.BadmintonCourtBooking.Entity.AllBooking;
+import com.SWP.BadmintonCourtBooking.Entity.Booking;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
+import com.SWP.BadmintonCourtBooking.Exception.AppException;
 import com.SWP.BadmintonCourtBooking.Service.BookingService;
+import com.SWP.BadmintonCourtBooking.Service.RecurringBookingService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +36,8 @@ public class RecureBookingController {
     private static final Logger log = LoggerFactory.getLogger(BookingController.class);
     @Autowired
     private BookingService bookingService;
+    @Autowired
+    private RecurringBookingService recurringBookingService;
     //TODO API THÊM ĐẶT LỊCH CỐ ĐỊNH
     @PostMapping("/add-booking")
     public ResponseEntity<String> addBooking(@RequestBody RecurringBookingRequest requestDto) {
@@ -102,5 +109,19 @@ public class RecureBookingController {
                 request.getEndTime()
         );
         return availableSubCourts;
+    }
+    @GetMapping("/Staff/{userID}")
+    public ResponseEntity<?> GetBookingForStaff(@PathVariable Integer userID) {
+        List<BookingResponse> bookingList = recurringBookingService.getBookingForStaff(userID);
+        return new ResponseEntity<>(bookingList, HttpStatus.OK);
+    }
+    @PutMapping("/checkin")
+    public ResponseEntity<?> checkInBooking(@RequestParam int bookingID) {
+        try {
+            AllBooking updatedBooking = recurringBookingService.checkInBooking(bookingID);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (AppException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 }

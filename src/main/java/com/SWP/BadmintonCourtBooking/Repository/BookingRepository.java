@@ -35,4 +35,7 @@ public interface BookingRepository extends JpaRepository<Booking, Integer> {
 //                                          List<DayOfWeek> daysOfWeek, LocalTime startTime, LocalTime endTime);
     @Query("SELECT b FROM Booking b WHERE (b.bookingDate BETWEEN :startOfWeek AND :endOfWeek) AND b.court.courtID = :courtID    ")
     List<Booking> findBookingsWithinCurrentWeek(@Param("startOfWeek") LocalDate startOfWeek, @Param("endOfWeek") LocalDate endOfWeek, @Param("courtID") int courtID);
+
+    @Query("SELECT b FROM Booking b WHERE b.court.user.userID = :userid")
+    List<Booking> findByCourtOnwerID(@Param("userid") Integer userID);
 }
