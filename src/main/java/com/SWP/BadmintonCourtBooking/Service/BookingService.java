@@ -1,15 +1,12 @@
 package com.SWP.BadmintonCourtBooking.Service;
 
-import com.SWP.BadmintonCourtBooking.Dto.BookingDto;
-import com.SWP.BadmintonCourtBooking.Dto.BookingResponseDTO;
-import com.SWP.BadmintonCourtBooking.Dto.RecureBooDTO;
+import com.SWP.BadmintonCourtBooking.Dto.*;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingPaymentRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.BookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.AllBookingResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
-import com.SWP.BadmintonCourtBooking.Dto.ResponseCourtDto;
 import com.SWP.BadmintonCourtBooking.Entity.Booking;
 import com.SWP.BadmintonCourtBooking.Entity.SubCourt;
 import org.springframework.stereotype.Service;
@@ -42,4 +39,5 @@ public interface BookingService {
     List<BookingResponse> getBookingForStaff(Integer staffID);
     AllBookingResponse getAllBooking();
     AllBookingResponse getAllBookingForCourtOnwer(Integer userID);
+    AllBookingDTO getAllBookingForUser(Integer userID);
 }

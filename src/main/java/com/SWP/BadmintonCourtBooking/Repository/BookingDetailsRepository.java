@@ -27,7 +27,7 @@ public interface BookingDetailsRepository extends JpaRepository<BookingDetails, 
     List<BookingDetails> findExistingTime(@Param("startTime") LocalTime startTime, @Param("endTime") LocalTime endTime, @Param("courtID") int courtID, @Param("bookingDate") LocalDate bookingDate);
 
     @Modifying
-    @Query(value = "INSERT INTO `badmintoncourtbookingdb`.`recurring_booking` (`end_date`, `end_time`, `start_date`, `start_time`, `court_id`, `user_id`, `total_price`) VALUES (:endDate, :endTime, :startDate, :startTime, :courtId, :userId, :totalPrice)", nativeQuery = true)
+    @Query(value = "INSERT INTO `badmintoncourtbookingdb`.`recurring_booking` (`end_date`, `end_time`, `start_date`, `start_time`, `court_id`, `user_id`, `total_price`, `first_name`, `last_name`, `email`, `phone`) VALUES (:endDate, :endTime, :startDate, :startTime, :courtId, :userId, :totalPrice, :firstName, :lastName, :email, :phone)", nativeQuery = true)
     @Transactional
     void insertRecurringBooking(@Param("endDate") LocalDate endDate,
                                 @Param("endTime") LocalTime endTime,
@@ -35,7 +35,11 @@ public interface BookingDetailsRepository extends JpaRepository<BookingDetails, 
                                 @Param("startTime") LocalTime startTime,
                                 @Param("courtId") int courtId,
                                 @Param("userId") int userId,
-                                @Param("totalPrice") double totalPrice);
+                                @Param("totalPrice") double totalPrice,
+                                @Param("firstName") String firstName,
+                                @Param("lastName") String lastName,
+                                @Param("email") String email,
+                                @Param("phone") String phone);
     @Modifying
     @Query(value = "INSERT INTO `badmintoncourtbookingdb`.`payment` (`bank_code`, `payment_amount`, `payment_status`, `payment_time`, `transaction_code`, `recurring_booking_id`) VALUES " +
             "(:bankCode, :amount, :paymentStatus, :paymentTime, :transactionCode, :recurringBookingId)", nativeQuery = true)

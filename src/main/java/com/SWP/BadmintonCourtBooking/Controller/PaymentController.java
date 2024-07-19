@@ -2,6 +2,7 @@ package com.SWP.BadmintonCourtBooking.Controller;
 
 import com.SWP.BadmintonCourtBooking.Config.OnlinePay.Config;
 import com.SWP.BadmintonCourtBooking.Dto.PaymentResDTO;
+import com.SWP.BadmintonCourtBooking.Dto.Response.RevenueResponse;
 import com.SWP.BadmintonCourtBooking.Dto.TransactionStatusDTO;
 import com.SWP.BadmintonCourtBooking.Entity.Court;
 import com.SWP.BadmintonCourtBooking.Entity.Payment;
@@ -22,6 +23,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
 
@@ -214,113 +216,24 @@ public class PaymentController {
         List<?> payments = serviceOfPayment.getPaymentsByCourtID(courtID);
         return new ResponseEntity<>(payments, HttpStatus.OK);
     }
-
+    //TODO API TINH DOANH THU CỦA MỘT SÂN
     @GetMapping("/RevenueOfCourt/{courtID}")
     public ResponseEntity<?> getRevenueForCourt(@PathVariable(value = "courtID") int courtID) {
-        double total = 0;
-        List<?> payments = serviceOfPayment.getPaymentsByCourtID(courtID);
-        for (Object payment : payments) {
-            PaymentResDTO pay = (PaymentResDTO) payment;
-            total += pay.getPaymentAmount().doubleValue();
-        }
-        return new ResponseEntity<>(total, HttpStatus.OK);
+        LocalDateTime date = LocalDateTime.now();
+
+        RevenueResponse response = serviceOfPayment.getRevenue(date,courtID);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    //TODO API TINH DOANH THU CỦA MỘT SAN THEO NGÀY
-    @GetMapping("/RevenueOfCourtDay/{courtID}/{day}")
-    public ResponseEntity<?> getRevenueForCourtDay(@PathVariable(value = "courtID") int courtID, @PathVariable(value = "day") LocalDate day) {
-        double total = 0;
-        List<?> payments = serviceOfPayment.getPaymentsByCourtID(courtID);
-        for (Object payment : payments) {
-            PaymentResDTO pay = (PaymentResDTO) payment;
-            Date date = pay.getPaymentDate();
-            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            if (localDate.equals(day)) {
-                total += pay.getPaymentAmount().doubleValue();
-            }
-        }
-        return new ResponseEntity<>(total, HttpStatus.OK);
+
+    //TODO API TINH DOANH THU CỦA CHỦ SAN CÓ NHIEU SAN
+    @GetMapping("/RevenueForCourtOwner/{userID}")
+    public ResponseEntity<?> getRevenueForCourtOwnerDay(@PathVariable(value = "userID") int userID) {
+        LocalDateTime date = LocalDateTime.now();
+        RevenueResponse response = serviceOfPayment.getRevenueForOwner(date,userID);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    //TODO API TINH DOANH THU CỦA MỘT SAN THEO THÁNG
-    @GetMapping("/RevenueOfCourtMonth/{courtID}/{month}")
-    public ResponseEntity<?> getRevenueForCourtMonth(@PathVariable(value = "courtID") int courtID, @PathVariable(value = "month") int month) {
-        double total = 0;
-        List<?> payments = serviceOfPayment.getPaymentsByCourtID(courtID);
-        for (Object payment : payments) {
-            PaymentResDTO pay = (PaymentResDTO) payment;
-            Date date = pay.getPaymentDate();
-            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            if (localDate.getMonthValue() == month)
-                total += pay.getPaymentAmount().doubleValue();
-        }
-        return new ResponseEntity<>(total, HttpStatus.OK);
-    }
-    //TODO API TINH DOANH THU CỦA MỘT SAN THEO NĂM
-    @GetMapping("/RevenueOfCourtYear/{courtID}/{year}")
-    public ResponseEntity<?> getRevenueForCourtYear(@PathVariable(value = "courtID") int courtID, @PathVariable(value = "year") int year) {
-        double total = 0;
-        List<?> payments = serviceOfPayment.getPaymentsByCourtID(courtID);
-        for (Object payment : payments) {
-            PaymentResDTO pay = (PaymentResDTO) payment;
-            Date date = pay.getPaymentDate();
-            LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            if (localDate.getYear() == year)
-                total += pay.getPaymentAmount().doubleValue();
-        }
-        return new ResponseEntity<>(total, HttpStatus.OK);
-    }
-    //TODO API TINH DOANH THU CỦA CHỦ SAN CÓ NHIEU SAN THEO NGÀY
-    @GetMapping("/RevenueForCourtOwnerdDay{userID}/{day}")
-    public ResponseEntity<?> getRevenueForCourtOwnerDay(@PathVariable(value = "userID") int userID, @PathVariable(value = "day") int day) {
-        double total = 0;
-        List<Court> court = courtRepository.getCourtByUserID(userID);
-        for (Court c : court) {
-            List<?> payments = serviceOfPayment.getPaymentsByCourtID(c.getCourtID());
-            for (Object payment : payments) {
-                PaymentResDTO pay = (PaymentResDTO) payment;
-                Date date = pay.getPaymentDate();
-                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                if (localDate.equals(day)) {
-                    total += pay.getPaymentAmount().doubleValue();
-                }
-            }
-        }
-        return new ResponseEntity<>(total, HttpStatus.OK);
-    }
-    //TODO API TINH DOANH THU CỦA CHỦ SAN CÓ NHIEU SAN THEO THÁNG
-    @GetMapping("/RevenueForCourtOwnerMonth/{userID}/{month}")
-    public ResponseEntity<?> getRevenueForCourtOwnerMonth(@PathVariable(value = "userID") int userID, @PathVariable(value = "year") int month) {
-        double total = 0;
-        List<Court> court = courtRepository.getCourtByUserID(userID);
-        for (Court c : court) {
-            List<?> payments = serviceOfPayment.getPaymentsByCourtID(c.getCourtID());
-            for (Object payment : payments) {
-                PaymentResDTO pay = (PaymentResDTO) payment;
-                Date date = pay.getPaymentDate();
-                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                if (localDate.getMonthValue() == month) {
-                    total += pay.getPaymentAmount().doubleValue();
-                }
-            }
-        }
-        return new ResponseEntity<>(total, HttpStatus.OK);
-    }
-    //TODO API TINH DOANH THU CỦA CHỦ SAN CÓ NHIEU SAN THEO NĂM
-    @GetMapping("/RevenueForCourtOwnerYear/{userID}/{year}")
-    public ResponseEntity<?> getRevenueForCourtOwnerYear(@PathVariable(value = "userID") int userID, @PathVariable(value = "year") int year) {
-        double total = 0;
-        List<Court> court = courtRepository.getCourtByUserID(userID);
-        for (Court c : court) {
-            List<?> payments = serviceOfPayment.getPaymentsByCourtID(c.getCourtID());
-            for (Object payment : payments) {
-                PaymentResDTO pay = (PaymentResDTO) payment;
-                Date date = pay.getPaymentDate();
-                LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                if (localDate.getYear() == year) {
-                    total += pay.getPaymentAmount().doubleValue();
-                }
-            }
-        }
-        return new ResponseEntity<>(total, HttpStatus.OK);
-    }
+
+
 }
 

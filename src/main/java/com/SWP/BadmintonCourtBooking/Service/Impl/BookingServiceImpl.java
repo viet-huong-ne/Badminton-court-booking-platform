@@ -8,6 +8,7 @@ import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringBookingRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Request.RecurringRequest;
 import com.SWP.BadmintonCourtBooking.Dto.Response.AllBookingResponse;
 import com.SWP.BadmintonCourtBooking.Dto.Response.BookingResponse;
+import com.SWP.BadmintonCourtBooking.Dto.Response.RecurringBookingResponse;
 import com.SWP.BadmintonCourtBooking.Entity.*;
 import com.SWP.BadmintonCourtBooking.Exception.AppException;
 import com.SWP.BadmintonCourtBooking.Exception.ErrorCode;
@@ -371,7 +372,11 @@ public class BookingServiceImpl implements BookingService {
                 dto.getRecureBooDTO().getStartTime(),
                 dto.getRecureBooDTO().getCourtId(),
                 dto.getRecureBooDTO().getUserId(),
-                totalPrice
+                totalPrice,
+                dto.getRecureBooDTO().getFirstName(),
+                dto.getRecureBooDTO().getLastName(),
+                dto.getRecureBooDTO().getEmail(),
+                dto.getRecureBooDTO().getPhone()
         );
         //bookingDetailsRepository.insertPayment(totalPrice);
         int recurringBookingId = bookingDetailsRepository.getLastInsertId();
@@ -381,8 +386,9 @@ public class BookingServiceImpl implements BookingService {
         for (DayOfWeek bookingDay : dto.getRecureBooDTO().getListDayOfWeek()) {
             bookingDetailsRepository.insertRecurringBookingDay(recurringBookingId, bookingDay.toString());
         }
+
         Payment payment = createPayment(dto.getPaymentDTO());
-        bookingDetailsRepository.insertPayment(payment.getBankCode(), payment.getPaymentAmount(), payment.getPaymentStatus(), payment.getPaymentTime(), payment.getTransactionCode(), recurringBookingId);
+        bookingDetailsRepository.insertPayment(payment.getBankCode(), BigDecimal.valueOf(totalPrice), payment.getPaymentStatus(), payment.getPaymentTime(), payment.getTransactionCode(), recurringBookingId);
         List<LocalDate> dates = new ArrayList<>();
         for (DayOfWeek x : dto.getRecureBooDTO().getListDayOfWeek()) {
             List<LocalDate> date = getDatesForDayOfWeekInRange(dto.getRecureBooDTO().getStartDate(), dto.getRecureBooDTO().getEndDate(), x);
@@ -542,6 +548,55 @@ public class BookingServiceImpl implements BookingService {
         return allBookingResponse;
     }
 
+    @Override
+    public AllBookingDTO getAllBookingForUser(Integer userID) {
+        List<Booking> bookingList = bookingRepository.findByUserID(userID);
+        List<BookingResponse> bookingResponseList = new ArrayList<>();
+        for (Booking booking : bookingList) {
+            BookingResponse bookingResponse = convertToBookingResponse(booking);
+            bookingResponseList.add(bookingResponse);
+        }
+        List<RecurringBooking> recurringBookingList = recurringBookingRepository.findBookingOfUser(userID);
+        List<RecurringBookingResponse> recurringBookingResponseList = new ArrayList<>();
+        for (RecurringBooking recurringBooking : recurringBookingList) {
+            RecurringBookingResponse response = convertToRecurringBookingResponse(recurringBooking);
+            recurringBookingResponseList.add(response);
+        }
+        AllBookingDTO allBookingDTO = new AllBookingDTO();
+        allBookingDTO.setBookingResponseList(bookingResponseList);
+        allBookingDTO.setRecurringBookingResponseList(recurringBookingResponseList);
+        return allBookingDTO;
+    }
+    public RecurringBookingResponse convertToRecurringBookingResponse(RecurringBooking recurring){
+        //System.out.println(recurring.getPayment().getPaymentAmount());
+        List<String> subCourt = new ArrayList<>();
+        for (SubCourt x : recurring.getSubCourts()) {
+            subCourt.add(x.getSubCourtName());
+        }
+        List<String> dayOfWeek = new ArrayList<>();
+        for (DayOfWeek x : recurring.getDaysOfWeek()) {
+            dayOfWeek.add(x.toString());
+        }
+        PaymentResDTO paymentResDto = new PaymentResDTO();
+        paymentResDto.setBankCode(recurring.getPayment().getBankCode());
+        paymentResDto.setPaymentAmount(recurring.getPayment().getPaymentAmount());
+        paymentResDto.setPaymentDate(recurring.getPayment().getPaymentTime());
+        paymentResDto.setTransactionCode(recurring.getPayment().getTransactionCode());
+        return RecurringBookingResponse.builder()
+                .recurringBookingID(recurring.getId())
+                .courtName(recurring.getCourt().getCourtName())
+                .address(recurring.getCourt().getCourtAddress())
+                .courtPhoneNumber(recurring.getCourt().getUser().getPhone())
+                .customerName(recurring.getLastName())
+                .customerPhone(recurring.getPhone())
+                .totalPrice(recurring.getTotalPrice())
+                .startDate(recurring.getStartDate())
+                .endDate(recurring.getEndDate())
+                .subCourts(subCourt)
+                .daysOfWeek(dayOfWeek)
+                .paymentResDTO(paymentResDto)
+                .build();
+    }
     @Override
     public AllBookingResponse getAllBooking() {
         List<BookingDay> bookingDayList = new ArrayList<>();

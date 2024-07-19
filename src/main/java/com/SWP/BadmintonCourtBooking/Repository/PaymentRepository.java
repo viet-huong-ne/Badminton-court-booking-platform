@@ -1,6 +1,7 @@
 package com.SWP.BadmintonCourtBooking.Repository;
 
 
+import com.SWP.BadmintonCourtBooking.Dto.RevenueDTO;
 import com.SWP.BadmintonCourtBooking.Entity.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,7 +28,22 @@ public interface PaymentRepository extends JpaRepository<Payment, Integer> {
     @Query("SELECT p.transactionCode FROM Payment p WHERE p.transactionCode = :transactionCode")
     String findTransactionCode(@Param("transactionCode") String transactionCode);
 
+//    @Query("SELECT SUM(p.paymentAmount) FROM Payment p WHERE DATE(p.paymentTime) = DATE(:date) AND p.booking.court.courtID = :courtID")
+//    Double findDailyRevenue(LocalDateTime date);
+//
+//    @Query("SELECT SUM(p.paymentAmount) FROM Payment p WHERE YEAR(p.paymentTime) = YEAR(:date) AND MONTH(p.paymentTime) = MONTH(:date) AND p.booking.court.courtID = :courtID")
+//    Double findMonthlyRevenue(LocalDateTime date);
+//
+//    @Query("SELECT SUM(p.paymentAmount) FROM Payment p WHERE YEAR(p.paymentTime) = YEAR(:date) AND p.booking.court.courtID = :courtID")
+//    Double findYearlyRevenue(LocalDateTime date);
 
+    @Query("SELECT p FROM Payment p WHERE p.booking.court.courtID = :courtID AND p.paymentTime BETWEEN :startDate AND :endDate")
+    List<Payment> findPaymentsByDateRange(@Param("courtID")int courtID,@Param("startDate") LocalDateTime startDate,@Param("endDate") LocalDateTime endDate);
 
+//    @Query("SELECT p FROM Payment p WHERE p.booking.court.courtID = :courtID AND YEAR(p.paymentTime) = YEAR(:date) AND MONTH(p.paymentTime) = MONTH(:date)")
+//    List<Payment> findPaymentsByMonth(@Param("courtID")int courtID,@Param("date") LocalDateTime date);
+
+    @Query("SELECT p FROM Payment p WHERE p.booking.court.courtID = :courtID AND YEAR(p.paymentTime) = YEAR(:date)")
+    List<Payment> findPaymentsByYear(@Param("courtID")int courtID,@Param("date") LocalDateTime date);
 }
 

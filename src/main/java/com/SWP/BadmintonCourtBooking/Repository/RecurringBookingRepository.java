@@ -37,6 +37,10 @@ public interface RecurringBookingRepository extends JpaRepository<RecurringBooki
             @Param("endTime") LocalTime endTime,
             @Param("daysOfWeek") List<String> daysOfWeek
     );
+    //lay cac don của chu san
     @Query("SELECT b FROM RecurringBooking b WHERE b.court.user.userID = :userid")
     List<RecurringBooking> findByCourtOnwerID(@Param("userid") Integer userID);
+
+    @Query("SELECT b FROM RecurringBooking b WHERE b.user.userID = :userid")
+    List<RecurringBooking> findBookingOfUser(@Param("userid") Integer userID);
 }

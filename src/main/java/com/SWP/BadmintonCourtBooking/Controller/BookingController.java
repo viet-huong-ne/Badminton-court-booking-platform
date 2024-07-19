@@ -83,7 +83,12 @@ public class BookingController {
         }
         return new ResponseEntity<>(bookingList, HttpStatus.OK);
     }
-
+    //TODO API XEM LỊCH SỬ ĐẶT SÂN CỦA USER NEW VERSION
+    @GetMapping("/all-booked/{userID}")
+    public ResponseEntity<?> getAllBookingOfUser(@PathVariable Integer userID) {
+        AllBookingDTO allBooking = bookingService.getAllBookingForUser(userID);
+        return new ResponseEntity<>(allBooking, HttpStatus.OK);
+    }
     //TODO API lay tat ca order của san (OLD VERSION)
     @GetMapping("/AllBookingsOfCourt/{courtID}")
     public ResponseEntity<?> GetBookingOfCourt(@PathVariable Integer courtID) {
